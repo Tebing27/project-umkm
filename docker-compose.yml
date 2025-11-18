@@ -1,0 +1,74 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: laravel_app
+    volumes:
+      - ./laravel_app:/var/www/html
+    ports:
+      - "8000:80"
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_DATABASE: sasuma_db
+      DB_USERNAME: umkm
+      DB_PASSWORD: umkm_sasuma
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - laravel
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sasuma_db
+      MYSQL_USER: umkm
+      MYSQL_PASSWORD: umkm_sasuma
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+    networks:
+      - laravel
+
+  node:
+    image: node:22-alpine
+    container_name: node-1
+    working_dir: /var/www/html
+    volumes:
+      - ./laravel_app:/var/www/html
+    ports:
+      - "5173:5173" # ⚠️ TAMBAHKAN INI!
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    networks:
+      - laravel # ⚠️ TAMBAHKAN INI!
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - "8001:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - laravel
+
+networks:
+  laravel:
+
+volumes:
+  mysql-data:
