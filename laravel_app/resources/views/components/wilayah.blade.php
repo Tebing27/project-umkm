@@ -82,8 +82,9 @@
                                 <p class="text-gray-700 text-sm mb-4 md:mb-6 font-medium" x-text="item.count"></p>
 
                                 <div class="flex justify-center">
-                                    <a href="#"
-                                        class="inline-flex items-center gap-1 text-blue-600 font-medium text-sm pt-1 border-b border-transparent hover:border-blue-600">
+                                    <a href="#lokasi"
+                                        @click.prevent="$store.region.set(item.title); document.getElementById('lokasi').scrollIntoView({behavior: 'smooth'})"
+                                        class="inline-flex items-center gap-1 text-blue-600 font-medium text-sm pt-1 border-b border-transparent hover:border-blue-600 cursor-pointer">
                                         Lihat Lokasi
                                         <x-icons.svg name="arrow-wilayah" class="w-4 h-4" />
                                     </a>
