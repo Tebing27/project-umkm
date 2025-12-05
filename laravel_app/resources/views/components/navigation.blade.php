@@ -1,7 +1,10 @@
-<header class="absolute top-0 left-0 w-full z-10">
+<header class="fixed top-0 left-0 w-full z-50 transition-all duration-300" x-data="{ scrolled: false }"
+    @scroll.window="scrolled = (window.pageYOffset > 20)">
+
     <div class="mx-auto max-w-7xl px-4 md:px-6 lg:px-10 pt-4">
-        <nav
-            class="relative flex w-full items-center justify-between rounded-lg bg-white p-3 md:p-4 shadow-md md:rounded-2xl">
+        <nav :class="scrolled ? 'bg-white/80 backdrop-blur-md shadow-md border-transparent' :
+            'bg-white shadow-sm border border-slate-200'"
+            class="relative flex w-full items-center justify-between rounded-lg p-3 md:p-4 md:rounded-2xl transition-all duration-300 border">
 
             <a href="#" class="shrink-0 inline-flex items-center gap-4">
                 <span class="text-4xl md:text-3xl font-bold items-center text-slate-900">Logo</span>
@@ -11,7 +14,7 @@
                 <a href="#" class="text-lg font-reguler hover:text-black">Beranda</a>
                 <a href="#" class="text-lg font-reguler hover:text-black">Wilayah</a>
                 <a href="#" class="text-lg font-reguler hover:text-black">Lokasi</a>
-                <a href="#" class="text-lg font-reguler hover:text-black">Toko</a>
+                <a href="#" class="text-lg font-reguler hover:text-black">UMKKM</a>
             </div>
 
             <div class="hidden md:flex shrink-0 items-center space-x-2 md:space-x-3 lg:space-x-4">
@@ -36,7 +39,7 @@
                         x-transition:leave="transition ease-in duration-75"
                         x-transition:leave-start="opacity-100 transform scale-100"
                         x-transition:leave-end="opacity-0 transform scale-95"
-                        class="absolute right-0 mt-2 w-40 rounded-lg shadow-lg bg-white p-1 z-50"
+                        class="absolute right-0 mt-2 w-40 rounded-lg shadow-lg bg-white p-1 z-50 border border-slate-100"
                         style="display: none;">
                         <a href="#"
                             class="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
@@ -54,7 +57,7 @@
                 </div>
 
                 <a href="#"
-                    class="bg-yellow-400 text-black lg:px-12 lg:py-3 rounded-lg font-reguler text-xl hover:bg-yellow-500 md:py-2 md:px-6">
+                    class="bg-yellow-400 text-black lg:px-8 lg:py-2 rounded-lg font-reguler text-xl hover:bg-yellow-500 md:py-2 md:px-6">
                     Daftar
                 </a>
             </div>
@@ -78,9 +81,10 @@
                     x-transition:enter-end="opacity-100 transform scale-100"
                     x-transition:leave="transition ease-in duration-75"
                     x-transition:leave-start="opacity-100 transform scale-100"
-                    x-transition:leave-end="opacity-0 transform scale-95" class="absolute top-18 right-0 w-52 z-50"
-                    style="display: none;">
-                    <div class="rounded-xl bg-white shadow-lg p-6 space-y-0.5 text-center">
+                    x-transition:leave-end="opacity-0 transform scale-95"
+                    class="absolute top-[4.5rem] right-0 w-52 z-50" style="display: none;">
+
+                    <div class="rounded-xl bg-white shadow-lg border border-slate-200 p-6 space-y-0.5 text-center">
 
                         <a href="#"
                             class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
@@ -99,7 +103,7 @@
                             Toko
                         </a>
 
-                        <div x-data="{ langOpen: false }" class="mb-4 mt-4">
+                        <div x-data="{ langOpen: false }" class="!mb-4 !mt-6">
                             <button @click="langOpen = !langOpen"
                                 class="flex items-center mx-auto px-1.5 py-2 rounded-lg font-reguler bg-yellow-400 hover:bg-yellow-500">
                                 <span class="flex items-center space-x-2">
@@ -130,9 +134,8 @@
                             </div>
                         </div>
 
-
                         <a href="#"
-                            class="bg-yellow-400 text-black px-8 py-2 rounded-lg font-reguler text-xl hover:bg-yellow-500">
+                            class="bg-yellow-400 text-black px-6 py-2 !mt-4 block w-full rounded-lg font-reguler text-xl hover:bg-yellow-500">
                             Daftar
                         </a>
 

@@ -17,6 +17,7 @@
                 sidebarOpen: true,
                 search: '',
                 showCatDropdown: false,
+                showRegionDropdown: false,
                 selectedCategory: 'Semua',
                 minInput: '',
                 maxInput: '',
@@ -123,6 +124,9 @@
                 },
                 get categories() {
                     return ['Semua', ...new Set(this.umkms.map(item => item.category))];
+                },
+                get regions() {
+                    return [...new Set(this.umkms.map(item => item.region))];
                 },
                 get filteredList() {
                     return this.umkms.filter(item => {
@@ -314,7 +318,9 @@
                                 className: 'custom-popup-clean',
                                 closeButton: true,
                                 autoPan: true,
-                                autoPanPadding: [50, 50]
+                                autoPanPadding: window.innerWidth < 640 ? [10, 10] : [50,
+                                    50
+                                ]
                             });
                         marker.on('click', () => {
                             this.activeId = item.id;

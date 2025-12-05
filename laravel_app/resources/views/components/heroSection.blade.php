@@ -65,7 +65,7 @@
                             <a href="#"
                                 class="inline-flex items-center gap-1 text-blue-600 font-medium text-sm pt-1 border-b border-transparent hover:border-blue-600">
                                 Lihat Lokasi
-                                <x-icons.svg name="arrow-location" class="w-4 h-4" />
+                                <x-icons.svg name="arrow-wilayah" class="w-4 h-4" />
                             </a>
                         </div>
                     </div>
