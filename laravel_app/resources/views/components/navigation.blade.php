@@ -26,10 +26,8 @@
                             alt="ID" class="w-5 h-5 rounded-full object-cover">
                         <span class="text-sm font-reguler">ID</span>
 
-                        <svg x-bind:class="open ? 'rotate-180' : ''" class="h-4 w-4 transition-transform duration-200"
-                            fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path d="M6 9l6 6 6-6" />
-                        </svg>
+                        <x-icons.chevron-down x-bind:class="open ? 'rotate-180' : ''"
+                            class="h-4 w-4 transition-transform duration-200" />
 
                     </button>
 
@@ -65,14 +63,8 @@
             <div class="md:hidden" x-data="{ open: false }">
 
                 <button @click="open = !open" class="inline-flex p-2 rounded-md text-slate-800">
-                    <svg x-show="!open" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                    <svg x-show="open" style="display: none;" class="w-6 h-6" fill="none" stroke="currentColor"
-                        stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <x-icons.menu x-show="!open" class="w-6 h-6" />
+                    <x-icons.x-mark x-show="open" style="display: none;" class="w-6 h-6" />
                 </button>
 
                 <div x-show="open" @click.away="open = false" @scroll.window="open = false"
@@ -111,11 +103,8 @@
                                         alt="ID" class="w-5 h-5 rounded-full object-cover">
                                     <span>ID</span>
                                 </span>
-                                <svg x-bind:class="langOpen ? 'rotate-180' : ''"
-                                    class="h-4 w-4 transition-transform duration-200" fill="none"
-                                    stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path d="M6 9l6 6 6-6" />
-                                </svg>
+                                <x-icons.chevron-down x-bind:class="langOpen ? 'rotate-180' : ''"
+                                    class="h-4 w-4 transition-transform duration-200" />
                             </button>
 
                             <div x-show="langOpen" x-transition class="pl-5 pt-2 space-y-2 text-center">

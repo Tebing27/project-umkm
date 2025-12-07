@@ -65,11 +65,7 @@
                         <div class="relative group">
                             <input type="text" placeholder="Cari user atau usaha..."
                                 class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm group-hover:shadow-md">
-                            <svg class="w-5 h-5 text-slate-400 absolute left-3 top-3 group-focus-within:text-primary transition-colors"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
+                            <x-icons.magnifying-glass class="w-5 h-5 text-slate-400 absolute left-3 top-3 group-focus-within:text-primary transition-colors" />
                         </div>
                     </div>
                 </div>
@@ -109,11 +105,11 @@
                             {{-- Details --}}
                             <div class="space-y-3">
                                 <div class="flex items-start gap-3 text-sm text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                                    <svg class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    <x-icons.mail class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
                                     <span class="truncate font-medium">tebing@example.com</span>
                                 </div>
                                 <div class="flex items-start gap-3 text-sm text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                                    <svg class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                    <x-icons.phone class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
                                     <span class="truncate font-medium">081234567890</span>
                                 </div>
                             </div>
@@ -123,7 +119,7 @@
                         <div class="p-4 bg-slate-50 border-t border-slate-100 grid grid-cols-2 gap-3 mt-auto">
                             <a href="/admin/users/detail" class="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-600 rounded-xl text-sm font-bold hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm group/btn">
                                 Detail
-                                <svg class="w-4 h-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                <x-icons.chevron-right class="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
                             </a>
                             <button class="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-600 rounded-xl text-sm font-bold hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all shadow-sm">
                                 Hapus
@@ -158,11 +154,11 @@
 
                             <div class="space-y-3">
                                 <div class="flex items-start gap-3 text-sm text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                                    <svg class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    <x-icons.mail class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
                                     <span class="truncate font-medium">siti.rahma@example.com</span>
                                 </div>
                                 <div class="flex items-start gap-3 text-sm text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                                    <svg class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                    <x-icons.phone class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
                                     <span class="truncate font-medium">085678901234</span>
                                 </div>
                             </div>
@@ -206,11 +202,11 @@
 
                             <div class="space-y-3">
                                 <div class="flex items-start gap-3 text-sm text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                                    <svg class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    <x-icons.mail class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
                                     <span class="truncate font-medium">andi@example.com</span>
                                 </div>
                                 <div class="flex items-start gap-3 text-sm text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                                    <svg class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                    <x-icons.phone class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
                                     <span class="truncate font-medium">089988776655</span>
                                 </div>
                             </div>

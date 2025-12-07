@@ -85,10 +85,7 @@
                     {{-- Yellow Notification Banner (Hanya muncul jika isLaptop = true) --}}
                     <div x-show="isLaptop" x-transition
                         class="bg-[#FFC107] text-black px-4 py-3 rounded-lg text-sm font-medium shadow-sm max-w-md flex items-start gap-2">
-                        <svg class="w-5 h-5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
+                        <x-icons.info-circle class="w-5 h-5 mt-0.5 shrink-0" />
                         <span>Perangkat Anda sedang menggunakan laptop, lokasi akurat dapat diisi dengan titik
                             koordinat.</span>
                     </div>
@@ -103,11 +100,7 @@
                             <label class="font-medium text-gray-700">Nama Usaha <span
                                     class="text-red-500">*</span></label>
                             <div class="relative input-custom rounded-xl mt-2 px-4 py-3 flex items-center">
-                                <span class="mr-3 text-gray-500 "><svg class="w-5 h-5" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                                    </svg></span>
+                                <span class="mr-3 text-gray-500 "><x-icons.shopping-bag class="w-5 h-5" /></span>
                                 <input type="text" placeholder="Tebing"
                                     class="w-full bg-transparent border-none outline-none text-gray-800 placeholder-gray-400 focus:ring-0 p-0 text-sm md:text-base">
                             </div>
@@ -118,12 +111,7 @@
                             <label class="font-medium text-gray-700">Jenis Produk <span
                                     class="text-red-500">*</span></label>
                             <div class="relative mt-2 input-custom rounded-xl px-4 py-3 flex items-center">
-                                <span class="mr-3 text-gray-500"><svg class="w-5 h-5" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-                                        </path>
-                                    </svg></span>
+                                <span class="mr-3 text-gray-500"><x-icons.shopping-cart class="w-5 h-5" /></span>
                                 <input type="text" placeholder="Contoh: Makanan Ringan"
                                     class="w-full bg-transparent border-none outline-none text-gray-800 placeholder-gray-400 focus:ring-0 p-0 text-sm md:text-base">
                             </div>
@@ -134,12 +122,7 @@
                             <label class="block font-medium text-gray-700 text-lg">Alamat Usaha Lengkap <span
                                     class="text-red-500">*</span></label>
                             <div class="relative input-custom rounded-xl px-4 py-3 flex items-center mb-3">
-                                <svg class="w-5 h-5 text-gray-500 mr-3 flex-shrink-0" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                                    </path>
-                                </svg>
+                                <x-icons.location class="w-5 h-5 text-gray-500 mr-3 flex-shrink-0" stroke-width="1.5" />
                                 <input type="text" value="Jl. Merpati No. 45"
                                     class="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-500 focus:ring-0 p-0 font-medium">
                             </div>
@@ -182,22 +165,14 @@
                                         x-show="licenses.length > 1"
                                         class="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-colors shrink-0"
                                         title="Hapus Izin">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                            </path>
-                                        </svg>
+                                        <x-icons.trash class="w-5 h-5" />
                                     </button>
                                 </div>
                             </template>
 
                             <button type="button" @click="licenses.push({ type: '', number: '' })"
                                 class="mt-2 text-sm text-[#004a85] font-medium hover:underline flex items-center gap-1 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4v16m8-8H4"></path>
-                                </svg>
+                                <x-icons.plus class="w-4 h-4" />
                                 Tambah Izin Lain
                             </button>
                         </div>
@@ -285,10 +260,7 @@
                                 class="text-red-500">*</span></label>
                         <div class="relative mt-2 input-custom rounded-xl px-4 py-3 flex items-start h-full">
                             <span class="mr-3 text-gray-500 mt-1">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 6h16M4 12h16M4 18h7"></path>
-                                </svg>
+                                <x-icons.text-description class="w-5 h-5" />
                             </span>
                             {{-- Rows ditambah biar agak tinggi dikit proporsional --}}
                             <textarea rows="4" placeholder="Masukkan deskripsi yang sangat menarik"
@@ -317,28 +289,13 @@
                                     }">
 
                                     {{-- Icon Loading --}}
-                                    <svg x-show="geoStatus === 'locating'" class="animate-spin h-5 w-5 text-blue-700"
-                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10"
-                                            stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                        </path>
-                                    </svg>
+                                    <x-icons.loading x-show="geoStatus === 'locating'" class="animate-spin h-5 w-5 text-blue-700" />
 
                                     {{-- Icon Check --}}
-                                    <svg x-show="geoStatus === 'success'" class="w-5 h-5" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>
+                                    <x-icons.check x-show="geoStatus === 'success'" class="w-5 h-5" />
 
                                     {{-- Icon Error --}}
-                                    <svg x-show="geoStatus === 'error'" class="w-5 h-5" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
+                                    <x-icons.exclamation-circle x-show="geoStatus === 'error'" class="w-5 h-5" />
 
                                     <span x-text="geoMessage"></span>
                                 </div>
@@ -361,14 +318,7 @@
                                 <div class="space-y-2">
                                     <label class="font-medium text-gray-700">Longitude </label>
                                     <div class="relative mt-2 input-custom rounded-xl px-4 py-3 flex items-center">
-                                        <span class="mr-3 text-gray-500"><svg class="w-5 h-5" fill="none"
-                                                stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                                </path>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                            </svg></span>
+                                        <span class="mr-3 text-gray-500"><x-icons.location class="w-5 h-5" /></span>
                                         <input type="text" id="lngInput" placeholder="Contoh: 106.85..."
                                             class="w-full bg-transparent border-none outline-none text-gray-800 placeholder-gray-400 focus:ring-0 p-0 text-sm md:text-base">
                                     </div>
@@ -378,12 +328,7 @@
                                 <div class="space-y-2">
                                     <label class="font-medium text-gray-700">Latitude </label>
                                     <div class="relative mt-2 input-custom rounded-xl px-4 py-3 flex items-center">
-                                        <span class="mr-3 text-gray-500"><svg class="w-5 h-5" fill="none"
-                                                stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7">
-                                                </path>
-                                            </svg></span>
+                                        <span class="mr-3 text-gray-500"><x-icons.map-folded class="w-5 h-5" /></span>
                                         <input type="text" id="latInput" placeholder="Contoh: -6.32..."
                                             class="w-full bg-transparent border-none outline-none text-gray-800 placeholder-gray-400 focus:ring-0 p-0 text-sm md:text-base">
                                     </div>

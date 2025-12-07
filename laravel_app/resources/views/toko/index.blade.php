@@ -69,11 +69,7 @@
 
                         <button
                             class="absolute right-3 top-1/2 -translate-y-1/2 bg-[#FFC107] hover:bg-yellow-400 p-2.5 rounded-full text-slate-900 transition-all shadow-sm">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
+                            <x-icons.magnifying-glass class="w-5 h-5" stroke-width="2.5" />
                         </button>
                     </div>
 
@@ -87,12 +83,9 @@
                                     x-text="selectedCategory || 'Pilih Kategori'">
                                 </span>
 
-                                <svg class="w-5 h-5 text-slate-400 group-hover:text-primary transition-transform duration-200"
-                                    :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7"></path>
-                                </svg>
+                                <x-icons.chevron-down
+                                    class="w-5 h-5 text-slate-400 group-hover:text-primary transition-transform duration-200"
+                                    x-bind:class="open ? 'rotate-180' : ''" />
                             </button>
 
                             <div x-show="open" x-transition.origin.top x-cloak
@@ -102,11 +95,8 @@
                                     <div @click="selectedCategory = (cat === 'Semua' ? '' : cat); open = false"
                                         class="px-5 py-3 text-sm font-medium text-slate-600 hover:bg-yellow-50 hover:text-yellow-700 cursor-pointer flex items-center justify-between transition-colors">
                                         <span x-text="cat"></span>
-                                        <svg x-show="selectedCategory === cat" class="w-4 h-4 text-yellow-500"
-                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7"></path>
-                                        </svg>
+                                        <x-icons.check x-show="selectedCategory === cat"
+                                            class="w-4 h-4 text-yellow-500" />
                                     </div>
                                 </template>
                             </div>
@@ -120,12 +110,9 @@
                                     x-text="selectedLocation || 'Pilih Wilayah'">
                                 </span>
 
-                                <svg class="w-5 h-5 text-slate-400 group-hover:text-primary transition-transform duration-200"
-                                    :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 9l-7 7-7-7"></path>
-                                </svg>
+                                <x-icons.chevron-down
+                                    class="w-5 h-5 text-slate-400 group-hover:text-primary transition-transform duration-200"
+                                    x-bind:class="open ? 'rotate-180' : ''" />
                             </button>
 
                             <div x-show="open" x-transition.origin.top x-cloak
@@ -135,11 +122,8 @@
                                     <div @click="selectedLocation = (loc === 'Semua' ? '' : loc); open = false"
                                         class="px-5 py-3 text-sm font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-700 cursor-pointer flex items-center justify-between transition-colors">
                                         <span x-text="loc"></span>
-                                        <svg x-show="selectedLocation === loc" class="w-4 h-4 text-blue-500"
-                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7"></path>
-                                        </svg>
+                                        <x-icons.check x-show="selectedLocation === loc"
+                                            class="w-4 h-4 text-blue-500" />
                                     </div>
                                 </template>
                             </div>
@@ -180,67 +164,55 @@
 
             <template x-for="item in paginatedItems" :key="item.id">
                 <div
-                    class="group bg-white rounded-2xl shadow-sm border border-slate-100 transition-all duration-300 flex flex-col h-full overflow-hidden">
+                    class="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col h-full p-5">
 
-                    <!-- Card Header with Gradient -->
-                    <div class="h-24 relative overflow-hidden group">
-                        <img :src="item.image || 'https://via.placeholder.com/400x150'" alt="Cover Image"
-                            class="w-full h-full object-cover absolute inset-0 transition-transform duration-500 group-hover:scale-110">
+                    <div class="flex items-start gap-4 mb-4">
 
-                        <div class="absolute inset-0 bg-black/20"></div>
+                        <div
+                            class="w-14 h-14 shrink-0 rounded-full border border-slate-100 bg-slate-50 overflow-hidden">
+                            <img :src="item.image"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                :alt="item.name">
+                        </div>
 
-                        <div class="absolute top-3 right-3 z-10"> <span
-                                class="px-3 py-1 rounded-full bg-white/90 backdrop-blur text-xs font-bold text-slate-800 shadow-sm"
-                                x-text="item.category"></span>
+                        <div class="flex-1 min-w-0">
+
+                            <div class="flex justify-between items-start mb-1">
+                                <div class="flex items-center gap-1 text-xs font-medium text-slate-500">
+                                    <x-icons.location class="w-3.5 h-3.5 text-primary shrink-0" />
+                                    <span class="truncate" x-text="item.location"></span>
+                                </div>
+
+                                <span
+                                    class="text-xs px-3 py-1 rounded-md bg-[#FFC107] rounded-full text-slate-900 font-medium tracking-wide transition-colors"
+                                    x-text="item.category">
+                                </span>
+                            </div>
+
+                            <h3 class="text-lg font-bold text-slate-900 group-hover:text-primary transition-colors truncate"
+                                x-text="item.name"></h3>
                         </div>
                     </div>
 
-                    <div class="px-5 pb-6 flex-1 flex flex-col relative">
-                        <!-- Logo Avatar -->
-                        <div class="-mt-12 mb-3 relative">
-                            <div class="w-20 h-20 rounded-full">
-                                <img :src="item.image" class="w-full h-full object-cover rounded-full"
-                                    :alt="item.name">
-                            </div>
-                        </div>
-
-                        <!-- Content -->
-                        <div class="flex items-start justify-between mb-2">
-                            <div class="flex items-center gap-1.5 text-xs font-medium text-slate-500">
-                                <svg class="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                <span x-text="item.location"></span>
-                            </div>
-                        </div>
-
-                        <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-primary transition-colors line-clamp-1"
-                            x-text="item.name"></h3>
-
-                        <p class="text-sm text-slate-500 line-clamp-2 mb-6 leading-relaxed flex-1" x-text="item.desc">
+                    <div class="flex-1 mb-6 border-t border-slate-50 pt-3">
+                        <p class="text-sm text-slate-500 line-clamp-3 leading-relaxed" x-text="item.desc">
                         </p>
-
-                        <a href="/toko/detail"
-                            class="w-full inline-flex justify-center items-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-lg">
-                            Lihat Detail
-                        </a>
                     </div>
+
+                    <a href="/toko/detail"
+                        class="w-full inline-flex justify-center items-center gap-2 px-4 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl transition-all duration-200">
+                        Lihat Detail
+                    </a>
                 </div>
-            </template>
+        </div>
+        </template>
 
         </div>
 
         <!-- Empty State -->
         <div x-show="paginatedItems.length === 0" class="text-center py-20" x-cloak>
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 mb-4">
-                <svg class="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+                <x-icons.magnifying-glass class="w-8 h-8 text-slate-400" />
             </div>
             <h3 class="text-lg font-medium text-slate-900 mb-1">Tidak ada toko ditemukan</h3>
             <p class="text-slate-500">Coba kata kunci lain atau ubah filter pencarian Anda.</p>
@@ -251,9 +223,7 @@
 
             <button @click="prevPage" :disabled="currentPage === 1"
                 class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all bg-white shadow-sm">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
-                </svg>
+                <x-icons.chevron-left class="w-5 h-5" stroke-width="2.5" />
             </button>
 
             <template x-for="(page, index) in paginationNumbers" :key="index">
@@ -272,9 +242,7 @@
 
             <button @click="nextPage" :disabled="currentPage === totalPages"
                 class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all bg-white shadow-sm">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
-                </svg>
+                <x-icons.chevron-right class="w-5 h-5" stroke-width="2.5" />
             </button>
 
         </div>

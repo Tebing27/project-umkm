@@ -78,12 +78,7 @@
                                 {{-- Default Placeholder (Lingkaran) --}}
                                 <div class="w-32 h-32 rounded-full bg-[#F9F8F6] flex items-center justify-center border-2 border-dashed border-gray-300 group-hover:border-[#004a85] transition-colors"
                                     x-show="!photoPreview">
-                                    <svg class="w-10 h-10 text-gray-400 group-hover:text-[#004a85]" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                        </path>
-                                    </svg>
+                                    <x-icons.photo class="w-10 h-10 text-gray-400 group-hover:text-[#004a85]" />
                                 </div>
 
                                 {{-- Image Preview (Lingkaran) --}}
@@ -95,11 +90,7 @@
                                 {{-- Icon Edit (Floating Badge) --}}
                                 <div
                                     class="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-md border border-gray-200 text-gray-500 group-hover:text-[#004a85] transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                        </path>
-                                    </svg>
+                                    <x-icons.pencil class="w-4 h-4" />
                                 </div>
                             </div>
 
@@ -124,11 +115,7 @@
                                 <label class="block font-medium text-gray-700 text-lg">Nama Usaha <span
                                         class="text-red-500">*</span></label>
                                 <div class="relative input-custom rounded-xl px-4 py-3 flex items-center">
-                                    <svg class="w-5 h-5 text-gray-500 mr-3 flex-shrink-0" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                                    </svg>
+                                    <x-icons.store class="w-5 h-5 text-gray-500 mr-3 flex-shrink-0" />
                                     <input type="text" value="Tebing UMKM"
                                         class="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-500 focus:ring-0 p-0 font-medium">
                                 </div>
@@ -155,18 +142,14 @@
                                         {{-- Tombol Hapus --}}
                                         <button type="button" @click="licenses.splice(index, 1)" x-show="licenses.length > 1"
                                             class="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-colors shrink-0" title="Hapus Izin">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                            </svg>
+                                            <x-icons.trash class="w-5 h-5" />
                                         </button>
                                     </div>
                                 </template>
 
                                 <button type="button" @click="licenses.push({ type: '', number: '' })"
                                     class="mt-2 text-sm text-[#004a85] font-medium hover:underline flex items-center gap-1 transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                                    </svg>
+                                    <x-icons.plus class="w-4 h-4" />
                                     Tambah Izin Lain
                                 </button>
                             </div>
@@ -175,11 +158,7 @@
                             <div class="space-y-2">
                                 <label class="block font-medium text-gray-700 text-lg">Deskripsi Toko</label>
                                 <div class="relative input-custom rounded-xl px-4 py-3 flex items-start">
-                                    <svg class="w-5 h-5 text-gray-500 mr-3 flex-shrink-0 mt-1" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                            d="M4 6h16M4 12h16M4 18h7"></path>
-                                    </svg>
+                                    <x-icons.text-description class="w-5 h-5 text-gray-500 mr-3 flex-shrink-0 mt-1" />
                                     <textarea rows="4"
                                         class="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-500 focus:ring-0 p-0 font-medium resize-none"
                                         placeholder="Ceritakan tentang tokomu..."></textarea>
@@ -202,24 +181,6 @@
                                     @endforeach
                                 </div>
                             </div>
-
-                            {{-- Alamat Usaha Lengkap --}}
-                            <div class="space-y-2">
-                                <label class="block font-medium text-gray-700 text-lg">Alamat Usaha Lengkap <span
-                                        class="text-red-500">*</span></label>
-                                <div class="relative input-custom rounded-xl px-4 py-3 flex items-center mb-3">
-                                    <svg class="w-5 h-5 text-gray-500 mr-3 flex-shrink-0" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                                        </path>
-                                    </svg>
-                                    <input type="text" value="Jl. Merpati No. 45"
-                                        class="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-500 focus:ring-0 p-0 font-medium">
-                                </div>
-                                <div class="flex gap-4">
-                                    <div
-                                        class="relative input-custom rounded-xl px-4 py-3 flex items-center w-1/2 justify-center">
                                         <input type="text" value="005" placeholder="RT"
                                             class="w-full bg-transparent border-none outline-none text-center text-gray-900 placeholder-gray-500 focus:ring-0 p-0 font-medium">
                                     </div>
@@ -241,12 +202,7 @@
                                 <label class="block font-medium text-gray-700 text-lg">Nama Pemilik <span
                                         class="text-red-500">*</span></label>
                                 <div class="relative input-custom rounded-xl px-4 py-3 flex items-center">
-                                    <svg class="w-5 h-5 text-gray-500 mr-3 flex-shrink-0" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
-                                        </path>
-                                    </svg>
+                                    <x-icons.user class="w-5 h-5 text-gray-500 mr-3 flex-shrink-0" />
                                     <input type="text" value="Budi Santoso"
                                         class="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-500 focus:ring-0 p-0 font-medium">
                                 </div>
@@ -257,14 +213,12 @@
                                 <label class="block font-medium text-gray-700 text-lg">Sosial Media</label>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="relative input-custom rounded-xl px-4 py-3 flex items-center">
-                                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg"
-                                            class="w-5 h-5 mr-3 flex-shrink-0" alt="IG">
+                                        <x-icons.instagram class="w-5 h-5 mr-3 flex-shrink-0 text-[#E4405F]" />
                                         <input type="text" placeholder="@tebing_umkm"
                                             class="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-500 focus:ring-0 p-0 font-medium text-sm">
                                     </div>
                                     <div class="relative input-custom rounded-xl px-4 py-3 flex items-center">
-                                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
-                                            class="w-5 h-5 mr-3 flex-shrink-0" alt="FB">
+                                        <x-icons.facebook class="w-5 h-5 mr-3 flex-shrink-0 text-[#1877F2]" />
                                         <input type="text" placeholder="Tebing UMKM"
                                             class="w-full bg-transparent border-none outline-none text-gray-900 placeholder-gray-500 focus:ring-0 p-0 font-medium text-sm">
                                     </div>

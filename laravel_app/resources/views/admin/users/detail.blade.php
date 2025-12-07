@@ -57,7 +57,7 @@
                 {{-- Breadcrumb & Back --}}
                 <div class="flex items-center gap-2 mb-8 text-sm font-medium text-slate-500">
                     <a href="/admin/users" class="hover:text-primary transition-colors flex items-center gap-1">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        <x-icons.arrow-left class="w-4 h-4" />
                         Kembali
                     </a>
                     <span class="text-slate-300">/</span>
@@ -100,7 +100,7 @@
                         {{-- Informasi Pemilik --}}
                         <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
                             <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                <x-icons.user class="w-5 h-5 text-primary" />
                                 Informasi Pemilik
                             </h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -122,7 +122,7 @@
                         {{-- Informasi Usaha --}}
                         <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
                             <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                                <x-icons.store class="w-5 h-5 text-primary" />
                                 Informasi Usaha
                             </h3>
                             <div class="space-y-6">
@@ -153,7 +153,7 @@
                         {{-- Foto Tempat Usaha --}}
                         <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
                             <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <x-icons.photo class="w-5 h-5 text-primary" />
                                 Foto Tempat Usaha
                             </h3>
                             <div class="grid grid-cols-2 gap-3">
@@ -202,9 +202,7 @@
                     <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                         <div class="sm:flex sm:items-start">
                             <div class="mx-auto shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                </svg>
+                                <x-icons.exclamation-triangle class="h-6 w-6 text-red-600" />
                             </div>
                             <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                                 <h3 class="text-lg leading-6 font-bold text-slate-900" id="modal-title">Tolak Verifikasi</h3>

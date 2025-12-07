@@ -49,11 +49,6 @@
                             {{-- Header Card --}}
                             <div class="flex items-center justify-between">
                                 <span class="font-bold text-gray-700">Foto #{{ $i }}</span>
-                                <div class="flex items-center gap-2">
-                                    <input type="radio" name="is_banner" value="{{ $i }}" id="banner_{{ $i }}" {{ $i === 1 ? 'checked' : '' }}
-                                        class="w-4 h-4 text-[#004a85] focus:ring-[#004a85] border-gray-300">
-                                    <label for="banner_{{ $i }}" class="text-xs font-medium text-gray-500 cursor-pointer select-none">Jadikan Banner</label>
-                                </div>
                             </div>
 
                             {{-- Upload Area --}}
@@ -71,11 +66,7 @@
                                 {{-- Placeholder --}}
                                 <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 group-hover:text-[#004a85] transition-colors"
                                     x-show="!photoPreview">
-                                    <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                        </path>
-                                    </svg>
+                                    <x-icons.photo class="w-8 h-8 mb-2" />
                                     <span class="text-xs font-medium">Upload</span>
                                 </div>
 
@@ -88,11 +79,7 @@
                                 {{-- Edit Icon --}}
                                 <div class="absolute bottom-2 right-2 bg-white p-1.5 rounded-full shadow-md border border-gray-200 text-gray-500 group-hover:text-[#004a85] transition-colors"
                                     x-show="photoPreview">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                        </path>
-                                    </svg>
+                                    <x-icons.pencil class="w-3 h-3" />
                                 </div>
                             </div>
 
@@ -115,9 +102,7 @@
                             Batal
                         </button>
                         <button type="submit" class="px-6 py-3 rounded-full bg-[#004a85] text-white font-medium hover:bg-[#003366] shadow-lg shadow-blue-900/20 transition-all hover:scale-[1.02] text-sm flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                            </svg>
+                            <x-icons.check class="w-4 h-4" />
                             Simpan Perubahan
                         </button>
                     </div>

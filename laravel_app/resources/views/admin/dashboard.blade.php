@@ -69,14 +69,12 @@
                         
                         <div class="relative z-10">
                             <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-110 transition-transform duration-300">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                                </svg>
+                                <x-icons.store class="w-6 h-6" />
                             </div>
                             <h3 class="text-slate-500 font-semibold text-sm uppercase tracking-wider mb-1">Total UMKM</h3>
                             <p class="text-4xl font-extrabold text-slate-900">30</p>
                             <div class="mt-4 flex items-center gap-2 text-sm font-medium text-green-600 bg-green-50 w-fit px-2.5 py-1 rounded-full">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                                <x-icons.trending-up class="w-4 h-4" />
                                 <span>+2 minggu ini</span>
                             </div>
                         </div>
@@ -90,9 +88,7 @@
                             <div class="flex items-start justify-between mb-6">
                                 <div>
                                     <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center mb-6 text-orange-600 group-hover:scale-110 transition-transform duration-300">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                                        </svg>
+                                        <x-icons.users-group class="w-6 h-6" />
                                     </div>
                                     <h3 class="text-slate-500 font-semibold text-sm uppercase tracking-wider mb-1">Status Pendaftaran</h3>
                                     <p class="text-4xl font-extrabold text-slate-900">50 <span class="text-lg text-slate-400 font-medium">Total User</span></p>
@@ -103,7 +99,7 @@
                                 {{-- Terverifikasi --}}
                                 <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        <x-icons.check class="w-5 h-5" />
                                     </div>
                                     <div>
                                         <p class="text-2xl font-bold text-slate-900">10</p>
@@ -114,7 +110,7 @@
                                 {{-- Menunggu --}}
                                 <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 shrink-0">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <x-icons.clock class="w-5 h-5" />
                                     </div>
                                     <div>
                                         <p class="text-2xl font-bold text-slate-900">20</p>
@@ -125,7 +121,7 @@
                                 {{-- Gagal --}}
                                 <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 shrink-0">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                        <x-icons.x-mark class="w-5 h-5" />
                                     </div>
                                     <div>
                                         <p class="text-2xl font-bold text-slate-900">20</p>

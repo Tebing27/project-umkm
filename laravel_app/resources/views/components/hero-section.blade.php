@@ -65,7 +65,7 @@
                             <a href="#"
                                 class="inline-flex items-center gap-1 text-blue-600 font-medium text-sm pt-1 border-b border-transparent hover:border-blue-600">
                                 Lihat Lokasi
-                                <x-icons.svg name="arrow-wilayah" class="w-4 h-4" />
+                                <x-icons.arrow-right class="w-2 h-2" />
                             </a>
                         </div>
                     </div>
@@ -76,12 +76,12 @@
 
                         <button x-on:click="currentIndex = (currentIndex - 1 + items.length) % items.length"
                             class="absolute top-1/2 cursor-pointer -translate-y-1/2 -left-4 sm:left-0 sm:-translate-x-4 bg-blue-600 text-white p-2 rounded-full opacity-85 hover:opacity-100 transition-all">
-                            <x-icons.svg name="arrow-left" class="w-4 h-4" />
+                            <x-icons.arrow-left class="w-4 h-4" />
                         </button>
 
                         <button x-on:click="currentIndex = (currentIndex + 1) % items.length"
                             class="absolute top-1/2 cursor-pointer -translate-y-1/2 -right-4 sm:right-0 sm:translate-x-4 bg-blue-600 text-white p-2 rounded-full opacity-85 hover:opacity-100 transition-all">
-                            <x-icons.svg name="arrow-right" class="w-4 h-4" />
+                            <x-icons.arrow-right class="w-4 h-4" />
                         </button>
                     </div>
                     <div class="w-full block sm:hidden -mt-2">
@@ -89,7 +89,7 @@
                             <a href="#"
                                 class="inline-flex items-center gap-1 text-blue-600 font-medium text-sm pt-1 border-b border-transparent hover:border-blue-600">
                                 Lihat Lokasi
-                                <x-icons.svg name="arrow-location" class="w-4 h-4" />
+                                <x-icons.arrow-right class="w-2 h-2" />
                             </a>
                         </div>
                     </div>

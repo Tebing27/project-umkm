@@ -54,12 +54,12 @@
                         <button @click="prev()"
                             class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#005da6] hover:bg-[#004a85] flex items-center justify-center text-white transition-all shadow-lg active:scale-95"
                             aria-label="Previous Slide">
-                            <x-icons.svg name="area-left" class="w-4 h-4 md:w-5 md:h-5" />
+                            <x-icons.area-left class="w-4 h-4 md:w-5 md:h-5" />
                         </button>
                         <button @click="next()"
                             class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#005da6] hover:bg-[#004a85] flex items-center justify-center text-white transition-all shadow-lg active:scale-95"
                             aria-label="Next Slide">
-                            <x-icons.svg name="area-right" class="w-4 h-4 md:w-5 md:h-5" />
+                            <x-icons.area-right class="w-4 h-4 md:w-5 md:h-5" />
                         </button>
                     </div>
                 </div>
@@ -86,7 +86,7 @@
                                         @click.prevent="$store.region.set(item.title); document.getElementById('lokasi').scrollIntoView({behavior: 'smooth'})"
                                         class="inline-flex items-center gap-1 text-blue-600 font-medium text-sm pt-1 border-b border-transparent hover:border-blue-600 cursor-pointer">
                                         Lihat Lokasi
-                                        <x-icons.svg name="arrow-wilayah" class="w-4 h-4" />
+                                        <x-icons.arrow-right class="w-4 h-4" />
                                     </a>
                                 </div>
                             </div>
