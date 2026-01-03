@@ -9,6 +9,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+    <style>
+        /* Mencegah scroll horizontal pada level root */
+        html, body { overflow-x: hidden; }
+    </style>
 </head>
 
 <body class="bg-slate-50 font-sans text-slate-800 antialiased" x-data="{
@@ -16,20 +20,22 @@
     sidebarExpanded: true
 }">
 
-    <div class="flex min-h-screen relative">
+    <div class="flex min-h-screen relative overflow-hidden">
 
         {{-- SIDEBAR --}}
         <x-navigation-admin />
 
-        {{-- MAIN CONTENT --}}
-        <div class="flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out bg-slate-50"
-            :class="sidebarExpanded ? 'lg:ml-72' : 'lg:ml-8'">
+        {{-- MAIN CONTENT WRAPPER --}}
+        {{-- Added: overflow-x-hidden & w-full fix --}}
+        <div class="flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out bg-slate-50 relative overflow-x-hidden"
+            :class="sidebarExpanded ? 'lg:ml-72' : 'lg:ml-20'">
 
             {{-- MOBILE HEADER --}}
             <x-header-mobile :title="$headerTitle ?? 'Dashboard Admin'" :subtitle="$headerSubtitle ?? 'Overview & Statistik'" />
 
             {{-- CONTENT AREA --}}
-            <main class="flex-1 p-6 md:p-10 lg:p-12 w-full max-w-7xl mx-auto">
+            {{-- Adjusted: Padding dikurangi sedikit agar space lebih luas untuk konten --}}
+            <main class="flex-1 py-8 px-4 sm:px-6 lg:px-8 w-full mx-auto max-w-[1600px]">
                 {{ $slot }}
             </main>
         </div>

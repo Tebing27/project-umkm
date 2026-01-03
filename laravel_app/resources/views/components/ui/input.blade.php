@@ -16,7 +16,13 @@
         'lg' => 'text-base py-3.5',
     ];
 
+    $hasSuffix = isset($suffix);
     $paddingClass = $icon ? ($size === 'sm' ? 'pl-9 pr-3' : 'pl-11 pr-4') : ($size === 'sm' ? 'px-3' : 'px-4');
+    
+    // Adjust padding right if suffix exists
+    if ($hasSuffix) {
+        $paddingClass = $icon ? ($size === 'sm' ? 'pl-9 pr-10' : 'pl-11 pr-12') : ($size === 'sm' ? 'pl-3 pr-10' : 'px-4 pr-12');
+    }
 
     $variants = [
         'default' =>
@@ -51,4 +57,10 @@
 
     <input {{ $disabled ? 'disabled' : '' }} {{ $attributes->except(['class', 'style']) }}
         class="{{ $classes }} {{ $attributes->get('class') }}">
+
+    @if (isset($suffix))
+        <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+            {{ $suffix }}
+        </div>
+    @endif
 </div>

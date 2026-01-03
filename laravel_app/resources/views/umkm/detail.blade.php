@@ -1,4 +1,4 @@
-<x-layouts.app title="Detail Toko - UMKM Sasuma">
+<x-layouts.app :title="translate('Detail Toko - UMKM Sasuma')">
 
     <x-navigation />
 
@@ -11,75 +11,111 @@
                 {{-- Store Image --}}
                 <div
                     class="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-white shadow-lg shrink-0 mx-auto md:mx-0">
-                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=300&q=80"
-                        class="w-full h-full object-cover" alt="Toko">
+                    <img src="{{ $shop->logo_url }}"
+                        class="w-full h-full object-cover" alt="{{ $shop->name }}">
                 </div>
 
                 {{-- Store Info --}}
                 <div class="flex-1 space-y-4 w-full">
                     <div>
-                        <div class="text-slate-600 font-medium mb-1">Tebing</div>
+                        <p class="text-slate-500 font-medium text-base mb-1">{{translate('Pemilik')}}: <span
+                        class="text-slate-900 font-bold">{{ $shop->user->name ?? 'Nama Pemilik' }}</span></p>
                         <div class="flex flex-wrap items-center gap-3 mb-2">
-                            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900">Tebing UMKM</h1>
+                            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900">{{ $shop->name }}</h1>
 
-                            <x-ui.badge class="px-2.5 py-1">Kuliner</x-ui.badge>
+                            <x-ui.badge class="px-2.5 py-1">{{ $shop->business_type }}</x-ui.badge>
                         </div>
 
-                        <div class="flex items-start gap-2 text-slate-600 text-sm">
-                            <x-icons.location class="!w-5 !h-5 shrink-0" />
-                            <span class="mt-1">Jl. Podang 14 No 113 RT 03/12 blok H2 BSI 2 pengasinan sawangan
-                                Depok</span>
+                        <div class="flex items-start gap-2 text-slate-900 text-base">
+                            <x-icons.location class="shrink-0" />
+                            <span>{{ $shop->address }}</span>
                         </div>
                     </div>
 
                     {{-- Omset --}}
-                    <div class="border-t border-slate-200/60 pt-3">
-                        <h3 class="font-bold text-slate-900 text-base mb-1">Omset Penjualan</h3>
-                        <p class="text-slate-600 text-sm">Rp. 10.000 - Rp. 10.000.000</p>
+                    @if($shop->omset_min || $shop->omset_max)
+                    <div class="border-t border-[#FFF0A6] pt-3">
+                        <h3 class="font-bold text-slate-900 text-base mb-1">{{translate('Omset Penjualan')}}</h3>
+                        <p class="text-slate-900 text-base">
+                            {{ $shop->omset_min ? 'Rp. ' . number_format((float) preg_replace('/[^0-9]/', '', $shop->omset_min), 0, ',', '.') : '' }}
+                            {{ $shop->omset_min && $shop->omset_max ? '-' : '' }}
+                            {{ $shop->omset_max ? 'Rp. ' . number_format((float) preg_replace('/[^0-9]/', '', $shop->omset_max), 0, ',', '.') : '' }}
+                        </p>
                     </div>
+                    @endif
 
                     {{-- Izin --}}
-                    <div class="border-t border-slate-200/60 pt-3">
-                        <h3 class="font-bold text-slate-900 text-base mb-1">Izin Usaha</h3>
-                        <p class="text-slate-600 text-sm">SIB, Sertifikat Halal</p>
-                    </div>
+                   @if($shop->licenses)
+<div class="border-t border-[#FFF0A6] pt-3">
+    <h3 class="font-bold text-slate-900 text-base mb-2">{{translate('Izin Usaha')}}</h3>
+    
+    {{-- Tambahkan grid-cols-1 (mobile) dan sm:grid-cols-2 (desktop) di sini --}}
+    <ol class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 list-decimal list-inside text-base text-slate-900">
+        @foreach(json_decode($shop->licenses) as $license)
+           <li>
+                <span class="font-semibold text-slate-900">{{ $license->type }}</span>
+                <span class="mx-1 text-slate-400">—</span>
+                <span class="font-medium text-slate-700">{{ $license->number }}</span>
+            </li>
+        @endforeach
+    </ol>
+</div>
+@endif
 
                     {{-- Social Media Links --}}
-                    <div class="border-t border-slate-200/60 pt-3 grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4">
-                        <div class="flex items-center gap-2">
-                            <x-icons.instagram class="w-5 h-5 text-red-500" />
-                            <span class="text-sm text-slate-900">@tebingtsaaa</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <x-icons.facebook class="text-[#1877F2]" />
-                            <span class="text-sm text-slate-900">tebingtsaaa</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <x-icons.tiktok class="text-slate-900" />
-                            <span class="text-sm text-slate-600">tebingtsaaa</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <x-icons.globe class="w-5 h-5 text-slate-900" />
-                            <span class="text-sm text-slate-600">google.com</span>
-                        </div>
+                    <div class="border-t border-[#FFF0A6] pt-3 grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4">
+                    {{-- IG --}}
+                    @if ($shop->instagram_username)
+                        <a href="https://instagram.com/{{ $shop->instagram_username }}" target="_blank"
+                            class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                            <x-icons.instagram class="text-red-500" />
+                            <span class="font-medium text-base text-slate-900">{{ '@' . $shop->instagram_username }}</span>
+                        </a>
+                    @endif
 
-                    </div>
+                    {{-- Tiktok --}}
+                    @if ($shop->tiktok_username)
+                        <a href="{{ 'https://tiktok.com/@' . $shop->tiktok_username }}" target="_blank"
+                            class="flex items-center gap-1 hover:opacity-80 transition-opacity">
+                            <x-icons.tiktok class="text-slate-900" />
+                            <span class="font-medium text-base text-slate-900">{{ '@' . $shop->tiktok_username }}</span>
+                        </a>
+                    @endif
+
+                    {{-- FB --}}
+                    @if ($shop->facebook_username)
+                        <a href="https://facebook.com/{{ $shop->facebook_username }}" target="_blank"
+                            class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                            <x-icons.facebook class="text-[#1877F2]" />
+                            <span class="font-medium text-base text-slate-900">{{ $shop->facebook_username }}</span>
+                        </a>
+                    @endif
+
+                    {{-- Website --}}
+                    @if ($shop->website_url)
+                        <a href="{{ $shop->website_url }}"
+                            target="_blank" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                            <x-icons.globe class="text-slate-900" />
+                            <span class="font-medium text-base text-slate-900">Website</span>
+                        </a>
+                    @endif
+                </div>
 
                     {{-- Description --}}
-                    <div class="border-t border-slate-200/60 pt-3">
-                        <p class="text-slate-600 text-sm leading-relaxed">
-                            UMKM kuliner kami menghadirkan jajanan kekinian favorit anak muda, yaitu Cilor (Aci Telor)
-                            dan Maklor (Makaroni Telor). Dibuat dari bahan pilihan dengan cita rasa gurih, pedas, dan
-                            nikmat, jajanan ini cocok dinikmati kapan saja, baik sebagai camilan santai maupun teman
-                            berkumpul bersama teman.
+                    <div class="border-t border-[#FFF0A6] pt-3">
+                        <p class="text-slate-900 leading-relaxed">
+                            {{ translate($shop->description) }}
                         </p>
                     </div>
 
                     {{-- Action Button --}}
                     <div class="pt-2">
                         <x-ui.button
-                            class="bg-[#FFC107] hover:bg-yellow-400 text-slate-900 font-medium px-6 py-2.5 rounded-lg shadow-sm transition-all active:scale-95 text-sm h-auto border-none">
-                            Lihat Lokasi
+                            tag="a"
+                            href="https://www.google.com/maps/dir/?api=1&destination={{ $shop->latitude }},{{ $shop->longitude }}"
+                            target="_blank"
+                            class="bg-[#FFC107] hover:bg-yellow-400 text-slate-900 font-medium px-6 py-2.5 rounded-lg shadow-sm transition-all active:scale-95 text-base h-auto border-none inline-flex decoration-0">
+                            {{translate('Lihat Lokasi')}}
                         </x-ui.button>
                     </div>
                 </div>
@@ -87,65 +123,59 @@
         </div>
 
         {{-- Product Section Logic --}}
-        <div x-data="productLogic()">
+        <div x-data='productLogic(@json($productsData), "{{ translate("Semua") }}")'>
 
-            {{-- Header Produk (Judul & Filter) --}}
-            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+    {{-- Header Produk (Judul, Search, Filter) --}}
+<div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+    
+    {{-- 1. Judul (Kiri di Desktop, Atas di Mobile) --}}
+    <div class="text-left w-full md:w-auto order-1 shrink-0">
+        <h2 class="text-2xl font-bold text-slate-900">{{translate('Daftar Produk')}}</h2>
+        <p class="text-base text-slate-500 mt-1 hidden md:block">
+            {{translate('Kategori')}}: <span class="font-bold text-primary" x-text="category"></span>
+        </p>
+    </div>
 
-                {{-- Judul --}}
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-900 shrink-0">Daftar Produk</h2>
-                    <p class="text-sm text-slate-500 mt-1">
-                        Menampilkan: <span class="font-bold text-primary"
-                            x-text="category === 'Semua' ? 'Semua Kategori' : category"></span>
-                    </p>
-                </div>
+    {{-- 2. Filter (Tengah di Desktop, Bawah di Mobile - YouTube Style) --}}
+    {{-- Mobile: Order 3 (paling bawah), Desktop: Order 2 (di tengah) --}}
+    <div class="w-full order-3 md:order-2 md:flex-1 md:mx-6 overflow-hidden">
+        
+        {{-- Container Scroll --}}
+        {{-- overflow-x-auto: Agar bisa discroll --}}
+        {{-- md:justify-center: Agar rata tengah di desktop jika muat --}}
+        {{-- -mx-4 px-4: Agar scroll mentok pinggir layar di HP --}}
+        <div class="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 md:justify-center items-center pb-2 md:pb-0">
+            
+                <template x-for="cat in ['{{ translate('Semua') }}', ...{{ json_encode($productCategories) }}]" :key="cat">
+                <button 
+                    @click="setCategory(cat)" 
+                    class="px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border whitespace-nowrap"
+                    x-bind:class="category === cat 
+                        ? 'bg-[#004a85] text-white border-[#004a85] shadow-md' 
+                        : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'"
+                >
+                    <span x-text="cat"></span>
+                </button>
+            </template>
 
-                {{-- Tools: Search & Filter --}}
-                <div class="flex flex-row sm:flex-row gap-3 w-full md:w-auto">
+        </div>
+    </div>
 
-                    {{-- Search Input --}}
-                    <div class="relative w-64 sm:w-64">
-                        <div
-                            class="absolute left-3 top-1/2 -translate-y-[46%] md:-translate-y-[54%] pointer-events-none text-slate-400">
-                            <x-icons.location-search class="w-5 h-5" />
-                        </div>
+    {{-- 3. Search (Kanan di Desktop, Tengah di Mobile) --}}
+    {{-- Mobile: Order 2, Desktop: Order 3 --}}
+    <div class="relative w-full md:w-72 order-2 md:order-3 shrink-0">
+        <div class="absolute left-3 top-1/2 -translate-y-[46%] md:-translate-y-[54%] pointer-events-none text-slate-400">
+            <x-icons.location-search class="w-5 h-5" />
+        </div>
+        
+        <x-ui.input variant="search" name="search" x-model="search" placeholder="{{translate('Cari produk...')}}">
+            <x-slot:icon>
+                <x-icons.location-search class="w-5 h-5" />
+            </x-slot:icon>
+        </x-ui.input>
+    </div>
 
-                        {{-- Menggunakan input biasa sesuai request design, tapi dibungkus logic x-model --}}
-                        <input type="text" x-model.debounce.300ms="search" placeholder="Cari menu favorit..."
-                            class="pl-10 pr-4 py-2.5 rounded-xl border-slate-200 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none w-full bg-slate-50 focus:bg-white transition-all shadow-sm">
-                    </div>
-
-                    {{-- Dropdown Filter --}}
-                    <div class="relative" @click.outside="filterOpen = false">
-                        <x-ui.button @click="filterOpen = !filterOpen" variant="ghost" size="icon"
-                            x-bind:class="category !== 'Semua' ? 'bg-[#FFC107] text-slate-900' :
-                                'bg-slate-100 text-slate-500 hover:text-primary'"
-                            class="rounded-lg transition-colors border border-transparent w-9 h-9">
-                            <x-icons.filter class="w-5 h-5" />
-                        </x-ui.button>
-
-                        {{-- Dropdown Menu --}}
-                        <div x-show="filterOpen" x-transition.origin.top.right x-cloak
-                            class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 z-50 overflow-hidden py-1">
-
-                            <div
-                                class="px-4 py-2 bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                                Filter Kategori
-                            </div>
-
-                            <template x-for="cat in ['Semua', 'Makanan', 'Minuman']">
-                                <x-ui.button @click="setCategory(cat)" variant="ghost"
-                                    class="w-full text-left px-4 py-2 text-sm hover:bg-slate-50 flex justify-between items-center rounded-none"
-                                    x-bind:class="category === cat ? 'text-primary font-bold' : 'text-slate-600'">
-                                    <span x-text="cat"></span>
-                                    <span x-show="category === cat" class="text-primary">✓</span>
-                                </x-ui.button>
-                            </template>
-                        </div>
-                    </div>
-                </div>
-            </div>
+</div>
 
             {{-- Product Grid --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -172,7 +202,7 @@
                             <div>
                                 <h3 class="font-bold text-slate-900 text-lg line-clamp-1 group-hover:text-primary transition-colors mb-1"
                                     x-text="product.name"></h3>
-                                <p class="text-sm text-slate-500 line-clamp-2" x-text="product.variant"></p>
+                                <p class="text-base text-slate-500 line-clamp-2" x-text="product.variant"></p>
                             </div>
 
                             <div class="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
@@ -188,7 +218,7 @@
                 {{-- Empty State --}}
                 <div x-show="filteredProducts.length === 0" x-cloak class="col-span-full text-center py-12">
                     <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 inline-block">
-                        <p class="text-slate-600 mb-2">Produk "<span x-text="search" class="font-bold"></span>" tidak
+                        <p class="text-slate-900 mb-2">Produk "<span x-text="search" class="font-bold"></span>" tidak
                             ditemukan.</p>
                         <x-ui.button @click="resetAll" variant="link"
                             class="text-primary font-bold hover:underline p-0 h-auto">Reset Semua
@@ -200,8 +230,8 @@
             {{-- Load More Button --}}
             <div class="mt-8 text-center" x-show="hasMore" x-cloak>
                 <x-ui.button @click="loadMore" variant="outline"
-                    class="group flex items-center gap-2 mx-auto px-6 py-2.5 rounded-full border-slate-200 text-slate-600 font-bold text-sm hover:border-primary hover:text-primary hover:bg-slate-50 transition-all duration-300 shadow-sm hover:shadow-md">
-                    <span>Lihat Lebih Banyak</span>
+                    class="group flex items-center gap-2 mx-auto px-6 py-2.5 rounded-full border-slate-200 text-slate-900 font-bold text-base hover:border-primary hover:text-primary hover:bg-slate-50 transition-all duration-300 shadow-sm hover:shadow-md">
+                    <span>{{translate('Lihat Lebih Banyak')}}</span>
                     <x-icons.chevron-down class="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
                 </x-ui.button>
             </div>
@@ -211,139 +241,7 @@
 
     {{-- Script AlpineJS --}}
     @push('scripts')
-        <script>
-            function productLogic() {
-                return {
-                    search: '',
-                    category: 'Semua',
-                    filterOpen: false,
-                    limit: 4,
-                    itemsPerLoad: 4,
-                    products: [{
-                            id: 1,
-                            name: 'Cilor Maklor',
-                            category: 'Makanan',
-                            variant: 'Pedas / Sedang / Tidak Pedas',
-                            price: 'Rp 5.000',
-                            image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=80'
-                        },
-                        {
-                            id: 2,
-                            name: 'Es Teh Manis',
-                            category: 'Minuman',
-                            variant: 'Dingin / Hangat',
-                            price: 'Rp 3.000',
-                            image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=300&q=80'
-                        },
-                        {
-                            id: 3,
-                            name: 'Nasi Goreng Spesial',
-                            category: 'Makanan',
-                            variant: 'Pedas / Sedang',
-                            price: 'Rp 15.000',
-                            image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=300&q=80'
-                        },
-                        {
-                            id: 4,
-                            name: 'Pizza Mini',
-                            category: 'Makanan',
-                            variant: 'Sosis / Keju',
-                            price: 'Rp 10.000',
-                            image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=300&q=80'
-                        },
-                        {
-                            id: 5,
-                            name: 'Kopi Susu Gula Aren',
-                            category: 'Minuman',
-                            variant: 'Dingin',
-                            price: 'Rp 12.000',
-                            image: 'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=300&q=80'
-                        },
-                        {
-                            id: 6,
-                            name: 'Seblak Ceker',
-                            category: 'Makanan',
-                            variant: 'Level 1-5',
-                            price: 'Rp 12.000',
-                            image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=300&q=80'
-                        },
-                        {
-                            id: 7,
-                            name: 'Thai Tea',
-                            category: 'Minuman',
-                            variant: 'Large Cup',
-                            price: 'Rp 8.000',
-                            image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=300&q=80'
-                        },
-                        {
-                            id: 8,
-                            name: 'Dimsum Ayam',
-                            category: 'Makanan',
-                            variant: 'Isi 4 Pcs',
-                            price: 'Rp 13.000',
-                            image: 'https://images.unsplash.com/photo-1496116218417-1a781b1c423c?auto=format&fit=crop&w=300&q=80'
-                        },
-                        {
-                            id: 9,
-                            name: 'Roti Bakar Coklat',
-                            category: 'Makanan',
-                            variant: 'Keju / Coklat',
-                            price: 'Rp 10.000',
-                            image: 'https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?auto=format&fit=crop&w=300&q=80'
-                        },
-                        {
-                            id: 10,
-                            name: 'Jus Alpukat',
-                            category: 'Minuman',
-                            variant: 'Tanpa Gula',
-                            price: 'Rp 10.000',
-                            image: 'https://images.unsplash.com/photo-1601039641847-7857b994d704?auto=format&fit=crop&w=300&q=80'
-                        },
-                    ],
-
-                    setCategory(cat) {
-                        this.category = cat;
-                        this.filterOpen = false;
-                        this.limit = this.itemsPerLoad;
-                    },
-
-                    resetAll() {
-                        this.search = '';
-                        this.category = 'Semua';
-                        this.limit = this.itemsPerLoad;
-                    },
-
-                    get filteredProducts() {
-                        const q = this.search.toLowerCase();
-                        return this.products.filter(item => {
-                            const matchSearch = item.name.toLowerCase().includes(q) ||
-                                item.category.toLowerCase().includes(q) ||
-                                item.variant.toLowerCase().includes(q);
-                            const matchCategory = this.category === 'Semua' || item.category === this.category;
-                            return matchSearch && matchCategory;
-                        });
-                    },
-
-                    get displayedProducts() {
-                        return this.filteredProducts.slice(0, this.limit);
-                    },
-
-                    get hasMore() {
-                        return this.limit < this.filteredProducts.length;
-                    },
-
-                    loadMore() {
-                        this.limit += this.itemsPerLoad;
-                    },
-
-                    init() {
-                        this.$watch('search', () => {
-                            this.limit = this.itemsPerLoad;
-                        });
-                    }
-                }
-            }
-        </script>
+        
     @endpush
 
 </x-layouts.app>

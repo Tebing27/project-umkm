@@ -13,21 +13,51 @@
         @csrf
         @method('put')
 
-        <div>
+        <div x-data="{ show: false }">
             <x-input-label for="update_password_current_password" :value="__('Current Password')" />
-            <x-text-input id="update_password_current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" />
+            <x-ui.input id="update_password_current_password" name="current_password" ::type="show ? 'text' : 'password'" class="mt-1 block w-full" autocomplete="current-password">
+                <x-slot:icon>
+                    <x-icons.key class="w-5 h-5" />
+                </x-slot:icon>
+                <x-slot:suffix>
+                     <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
+                        <x-icons.eye x-show="!show" class="w-5 h-5" />
+                        <x-icons.eye-off x-show="show" class="w-5 h-5" />
+                    </button>
+                </x-slot:suffix>
+            </x-ui.input>
             <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
         </div>
 
-        <div>
+        <div x-data="{ show: false }">
             <x-input-label for="update_password_password" :value="__('New Password')" />
-            <x-text-input id="update_password_password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" />
+            <x-ui.input id="update_password_password" name="password" ::type="show ? 'text' : 'password'" class="mt-1 block w-full" autocomplete="new-password">
+                <x-slot:icon>
+                    <x-icons.key class="w-5 h-5" />
+                </x-slot:icon>
+                <x-slot:suffix>
+                     <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
+                        <x-icons.eye x-show="!show" class="w-5 h-5" />
+                        <x-icons.eye-off x-show="show" class="w-5 h-5" />
+                    </button>
+                </x-slot:suffix>
+            </x-ui.input>
             <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
         </div>
 
-        <div>
+        <div x-data="{ show: false }">
             <x-input-label for="update_password_password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input id="update_password_password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" />
+            <x-ui.input id="update_password_password_confirmation" name="password_confirmation" ::type="show ? 'text' : 'password'" class="mt-1 block w-full" autocomplete="new-password">
+                <x-slot:icon>
+                    <x-icons.key class="w-5 h-5" />
+                </x-slot:icon>
+                <x-slot:suffix>
+                     <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
+                        <x-icons.eye x-show="!show" class="w-5 h-5" />
+                        <x-icons.eye-off x-show="show" class="w-5 h-5" />
+                    </button>
+                </x-slot:suffix>
+            </x-ui.input>
             <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
         </div>
 

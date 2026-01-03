@@ -1,10 +1,9 @@
-<x-layouts.guest title="Dashboard User - UMKM Sasuma" header-title="Dashboard" header-subtitle="Ringkasan Aktivitas">
+<x-layouts.guest :title="translate('Dashboard User - UMKM Sasuma')" :header-title="translate('Dashboard')" :header-subtitle="translate('Ringkasan Aktivitas')">
     {{-- Welcome Section --}}
     <div class="relative overflow-hidden text-slate-900">
         <div class="relative z-10">
             <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">Hi, {{ Auth::user()->name }} 👋</h2>
-            <p class="text-slate-900 text-lg font-medium max-w-2xl mb-4">Selamat datang kembali! Berikut adalah ringkasan
-                performa toko Anda hari ini.</p>
+            <p class="text-slate-900 text-lg font-medium max-w-2xl mb-4">{{translate('Selamat datang kembali! Berikut adalah ringkasan performa toko Anda hari ini.')}}</p>
         </div>
 
         {{-- Decorative Circles --}}
@@ -25,19 +24,19 @@
                 @if ($shop && $shop->is_verified)
                     <span
                         class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase tracking-wide border border-green-200">
-                        Terverifikasi
+                        {{translate('Terverifikasi')}}
                     </span>
                 @else
                     <span
                         class="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-bold uppercase tracking-wide border border-yellow-200">
-                        Belum Terverifikasi
+                        {{translate('Belum Terverifikasi')}}
                     </span>
                 @endif
             </div>
             <div>
-                <p class="text-slate-500 text-sm font-medium mb-1">Status Toko</p>
-                <h3 class="text-xl font-bold text-slate-900">{{ $shop->name ?? 'Belum ada toko' }}</h3>
-                <p class="text-xs text-slate-400 mt-1">Pemilik: {{ Auth::user()->name }}</p>
+                <p class="text-slate-500 text-sm font-medium mb-1">{{translate('Status Toko')}}</p>
+                <h3 class="text-xl font-bold text-slate-900">{{ $shop->name ?? translate('Belum ada toko') }}</h3>
+                <p class="text-xs text-slate-400 mt-1">{{translate('Pemilik:')}} {{ Auth::user()->name }}</p>
             </div>
         </x-ui.card>
 
@@ -49,15 +48,15 @@
                         class="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
                         <x-icons.eye class="w-6 h-6" />
                     </div>
-                    <span class="flex items-center text-green-600 text-xs font-bold bg-green-50 px-2 py-1 rounded-lg">
+                    {{-- <span class="flex items-center text-green-600 text-xs font-bold bg-green-50 px-2 py-1 rounded-lg">
                         <x-icons.trending-up class="w-3 h-3 mr-1" />
                         +15%
-                    </span>
+                    </span> --}}
                 </div>
                 <div>
-                    <p class="text-slate-500 text-sm font-medium mb-1">Total Dilihat</p>
-                    <h3 class="text-3xl font-extrabold text-slate-900">2,450</h3>
-                    <p class="text-xs text-slate-400 mt-1">Dalam 30 hari terakhir</p>
+                    <p class="text-slate-500 text-sm font-medium mb-1">{{translate('Total Dilihat')}}</p>
+                    <h3 class="text-3xl font-extrabold text-slate-900">{{ number_format($totalViews ?? 0) }}</h3>
+                    <p class="text-xs text-slate-400 mt-1">{{translate('Dalam 30 hari terakhir')}}</p>
                 </div>
             </x-ui.card>
 
@@ -70,10 +69,10 @@
                     </div>
                 </div>
                 <div>
-                    <p class="text-slate-500 text-sm font-medium mb-1">Total Produk</p>
-                    <h3 class="text-3xl font-extrabold text-slate-900">30 <span
-                            class="text-lg text-slate-400 font-semibold">Item</span></h3>
-                    <p class="text-xs text-slate-400 mt-1">Produk aktif di etalase</p>
+                    <p class="text-slate-500 text-sm font-medium mb-1">{{translate('Total Produk')}}</p>
+                    <h3 class="text-3xl font-extrabold text-slate-900">{{ $activeProducts ?? 0 }} <span
+                            class="text-lg text-slate-400 font-semibold">{{translate('Barang')}}</span></h3>
+                    <p class="text-xs text-slate-400 mt-1">{{translate('Produk aktif di etalase')}}</p>
                 </div>
             </x-ui.card>
 
@@ -86,22 +85,22 @@
                     </div>
                 </div>
                 <div>
-                    <p class="text-slate-500 text-sm font-medium mb-3">Kategori Produk</p>
+                    <p class="text-slate-500 text-sm font-medium mb-3">{{translate('Kategori Produk')}}</p>
                     <div class="space-y-3">
-                        <div class="flex justify-between items-center text-sm">
-                            <div class="flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                                <span class="text-slate-600 font-medium">Makanan</span>
+                        @php
+                            $colors = ['bg-blue-500', 'bg-orange-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500'];
+                        @endphp
+                        @forelse($productCategories as $index => $cat)
+                            <div class="flex justify-between items-center text-sm">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full {{ $colors[$index % count($colors)] }}"></span>
+                                    <span class="text-slate-600 font-medium">{{ $cat->category }}</span>
+                                </div>
+                                <span class="font-bold text-slate-900">{{ $cat->total }}</span>
                             </div>
-                            <span class="font-bold text-slate-900">20</span>
-                        </div>
-                        <div class="flex justify-between items-center text-sm">
-                            <div class="flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                                <span class="text-slate-600 font-medium">Minuman</span>
-                            </div>
-                            <span class="font-bold text-slate-900">10</span>
-                        </div>
+                        @empty
+                            <p class="text-xs text-slate-400">{{translate('Belum ada kategori')}}</p>
+                        @endforelse
                     </div>
                 </div>
             </x-ui.card>
@@ -115,19 +114,18 @@
                         </div>
                         <div class="ml-3">
                             <p class="text-sm text-yellow-700 font-bold mb-1">
-                                UMKM Anda belum terverifikasi oleh Admin.
+                                {{translate('UMKM Anda belum terverifikasi oleh Admin')}}
                             </p>
                             @if ($shop->rejection_reason)
                                 <div
                                     class="mt-2 text-sm text-yellow-800 bg-yellow-100 p-3 rounded-lg border border-yellow-200">
-                                    <p class="font-bold mb-1">Alasan Penolakan:</p>
-                                    <p>{{ $shop->rejection_reason }}</p>
-                                    <p class="mt-2 text-xs italic">Silakan perbaiki data Anda di menu "Kelola Lokasi"
-                                        atau "Kelola Toko" dan hubungi Admin untuk verifikasi ulang.</p>
+                                    <p class="font-bold mb-1">{{translate('Alasan Penolakan')}}:</p>
+                                    <p class="whitespace-pre-line">{{ $shop->rejection_reason }}</p>
+                                    <p class="mt-2 text-xs italic">{{translate('Silakan perbaiki data Anda di menu "Kelola Lokasi" atau "Kelola Toko" dan hubungi Admin untuk verifikasi ulang.')}}</p>
                                 </div>
                             @else
                                 <p class="text-sm text-yellow-700">
-                                    UMKM Anda belum bisa terpublish. Mohon tunggu verifikasi dari Admin.
+                                    {{translate('UMKM Anda belum bisa terpublish. Mohon tunggu verifikasi dari Admin.')}}
                                 </p>
                             @endif
                         </div>

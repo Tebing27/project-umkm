@@ -12,16 +12,17 @@
         x-bind:class="sidebarExpanded ? 'h-28 items-center justify-between px-8' : 'h-auto flex-col items-center pt-6 gap-3'">
 
         {{-- LOGO --}}
+        {{-- LOGO --}}
         <a href="/users/dashboard" class="flex items-center gap-3 overflow-hidden whitespace-nowrap group relative z-10">
             {{-- Logo Icon (Collapsed) --}}
             <div x-show="!sidebarExpanded" class="w-10 h-10 flex items-center justify-center transition-colors shrink-0">
-                <span class="text-2xl font-bold font-sans text-primary">L.</span>
+                <span class="text-2xl font-bold font-sans text-primary">S.</span>
             </div>
 
             {{-- Logo Teks Full (Expanded) --}}
             <div class="flex flex-col transition-opacity duration-300" x-show="sidebarExpanded"
                 x-transition:enter="delay-100">
-                <h1 class="text-2xl font-bold tracking-wide leading-tight pb-1 text-primary">Logo.</h1>
+                <h1 class="text-2xl font-bold tracking-wide leading-tight pb-1 text-primary">Sasuma.</h1>
             </div>
         </a>
 
@@ -38,35 +39,7 @@
     <nav class="flex-1 px-4 space-y-2 mt-2 overflow-y-auto overflow-x-hidden flex flex-col scrollbar-hide"
         x-bindx-bind:class="sidebarExpanded ? 'items-stretch' : 'items-center'">
 
-        @php
-            $menus = [
-                [
-                    'name' => 'Dashboard',
-                    'url' => '/users/dashboard',
-                    'icon' => 'dashboard',
-                ],
-                [
-                    'name' => 'Kelola Foto',
-                    'url' => '/users/foto',
-                    'icon' => 'photo',
-                ],
-                [
-                    'name' => 'Kelola Lokasi',
-                    'url' => '/users/lokasi',
-                    'icon' => 'location',
-                ],
-                [
-                    'name' => 'Kelola Toko',
-                    'url' => '/users/toko',
-                    'icon' => 'store',
-                ],
-                [
-                    'name' => 'Setting',
-                    'url' => '/users/setting',
-                    'icon' => 'settings',
-                ],
-            ];
-        @endphp
+
 
         @foreach ($menus as $menu)
             <a href="{{ $menu['url'] }}"
@@ -113,12 +86,12 @@
             <div
                 class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blue-50 to-transparent rounded-bl-full -mr-4 -mt-4 transition-transform duration-500 group-hover:scale-150">
             </div>
-
+            
             {{-- Profile --}}
             <div class="flex items-center gap-3 mb-3 pb-3 border-b border-slate-200 relative z-10"
                 x-bind:class="sidebarExpanded ? 'justify-start' : 'lg:justify-center justify-start'">
                 <div class="relative shrink-0 cursor-pointer">
-                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=80"
+                    <img src="{{ Auth::user()->shop->logo_url ?? 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&background=0D8ABC&color=fff' }}"
                         class="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-md transition-transform duration-300 group-hover:scale-105">
                     <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full ring-2 ring-white">
                     </div>
@@ -126,8 +99,8 @@
 
                 <div class="overflow-hidden" x-show="sidebarExpanded || window.innerWidth < 1024">
                     <p class="text-sm font-bold text-slate-800 truncate group-hover:text-primary transition-colors">
-                        Tebing UMKM</p>
-                    <p class="text-xs text-slate-500 truncate font-medium">Administrator</p>
+                        {{ Auth::user()->name }}</p>
+                    <p class="text-xs text-slate-500 truncate font-medium">{{ Auth::user()->email }}</p>
                 </div>
             </div>
 

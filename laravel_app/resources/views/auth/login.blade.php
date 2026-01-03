@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masuk Usaha - UMKM Sasuma</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+   
 </head>
 
 <body>
@@ -15,29 +17,17 @@
 
             <!-- Judul -->
             <h1 class="text-center text-3xl md:text-4xl font-bold mb-8 text-gray-900 tracking-tight">
-                Masuk Usaha
+                {{translate('Masuk Usaha')}}
             </h1>
-
-            <!-- Session Status -->
-            <x-auth-session-status class="mb-4" :status="session('status')" />
 
             <form action="{{ route('login') }}" method="POST" class="space-y-5">
                 @csrf
-                @if ($errors->any())
-                    <div class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
-                        <ul class="list-disc pl-5">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
+                
                 <!-- Input Email / No HP -->
                 <div>
-                    <label class="block mb-2 text-sm font-semibold text-gray-700">Email</label>
+                    <label class="block mb-2 text-sm font-semibold text-gray-700">{{translate('Email')}}</label>
                     <x-ui.input type="email" name="email" value="{{ old('email') }}"
-                        placeholder="Contoh: john@gmail.com"
+                        placeholder="{{ translate('Contoh: john@gmail.com') }}"
                         class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal"
                         required autofocus autocomplete="username">
                         <x-slot:icon>
@@ -50,14 +40,19 @@
                 </div>
 
                 <!-- Input Password -->
-                <div>
-                    <label class="block mb-2 text-sm font-semibold text-gray-700">Kata Sandi</label>
-                    <x-ui.input type="password" name="password" placeholder="Masukkan kata sandi"
-                        class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal"
-                        required autocomplete="current-password">
+                <div x-data="{ show: false }">
+                    <label class="block mb-2 text-sm font-semibold text-gray-700">{{translate('Kata Sandi')}}</label>
+                    <x-ui.input ::type="show ? 'text' : 'password'" name="password" placeholder="{{ translate('Masukkan kata sandi') }}"
+                        class="appearance-none bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                         <x-slot:icon>
                             <x-icons.key class="w-5 h-5" />
                         </x-slot:icon>
+                        <x-slot:suffix>
+                             <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
+                                <x-icons.eye x-show="!show" class="w-5 h-5" />
+                                <x-icons.eye-off x-show="show" class="w-5 h-5" />
+                            </button>
+                        </x-slot:suffix>
                     </x-ui.input>
                     @error('password')
                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
@@ -67,7 +62,7 @@
                     <div class="flex justify-end mt-2">
                         <a href="{{ route('password.request') }}"
                             class="text-xs text-gray-600 hover:text-blue-600 transition-colors font-medium underline-offset-4 hover:underline">
-                            Lupa kata sandi?
+                            {{translate('Lupa kata sandi?')}}
                         </a>
                     </div>
                 </div>
@@ -78,7 +73,7 @@
                         <input id="remember_me" type="checkbox"
                             class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                             name="remember">
-                        <span class="ms-2 text-sm text-gray-600">{{ __('Ingat saya') }}</span>
+                        <span class="ms-2 text-sm text-gray-600">{{ translate('Ingat saya') }}</span>
                     </label>
                 </div>
 
@@ -86,14 +81,14 @@
                 <div class="pt-2 space-y-6">
                     <x-ui.button type="submit"
                         class="w-full py-2.5 md:py-3 px-4 text-sm md:text-base font-semibold rounded-lg transition-all shadow-md hover:shadow-lg">
-                        Masuk
+                        {{translate('Masuk')}}
                     </x-ui.button>
 
                     <p class="text-center text-gray-600 text-sm">
-                        Belum memiliki akun?
+                        {{translate('Belum memiliki akun?')}}
                         <a href="{{ route('register') }}"
                             class="text-blue-600 hover:text-blue-700 font-medium p-0 h-auto underline-offset-4 hover:underline">
-                            Daftar Sekarang
+                            {{translate('Daftar Sekarang')}}
                         </a>
                     </p>
                 </div>

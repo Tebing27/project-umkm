@@ -5,9 +5,8 @@
         <x-icons.plus class="w-8 h-8 text-slate-400 group-hover:text-[#004a85] transition-colors" />
     </div>
     <span
-        class="font-bold text-slate-500 group-hover:text-[#004a85] text-lg transition-colors z-10">Tambah
-        Produk</span>
-    <span class="text-xs text-slate-400 mt-1 z-10">Upload produk barumu sekarang</span>
+        class="font-bold text-slate-500 group-hover:text-[#004a85] text-lg transition-colors z-10">{{translate('Tambah Produk')}}</span>
+    <span class="text-xs text-slate-400 mt-1 z-10">{{translate('Upload produk barumu sekarang')}}</span>
 
     {{-- Decor bg --}}
     <div

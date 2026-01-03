@@ -1,12 +1,8 @@
+@props(['items', 'title', 'subtitle', 'desc'])
+
 <section class="py-12 bg-white overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" x-data="{
-        items: [
-            { title: 'Cinangka', count: '22 UMKM', color: 'bg-[#c3daff]', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80' },
-            { title: 'Kedaung', count: '20 UMKM', color: 'bg-[#cbf3e3]', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80' },
-            { title: 'Sawangan', count: '15 UMKM', color: 'bg-[#c3daff]', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80' },
-            { title: 'Pengasinan', count: '20 UMKM', color: 'bg-[#cbf3e3]', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80' },
-            { title: 'Bojongsari', count: '18 UMKM', color: 'bg-[#c3daff]', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80' }
-        ],
+        items: {{ json_encode($items) }},
         getScrollAmount() {
             const card = this.$refs.slider.firstElementChild;
             return card ? card.offsetWidth + 24 : 344;
@@ -32,7 +28,7 @@
     }">
         <h1
             class="text-center lg:text-center text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-8 lg:mb-16 tracking-tight">
-            Wilayah
+            {{ translate($title) }}
         </h1>
 
         <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -43,10 +39,10 @@
 
                     <div class="w-full px-4 sm:px-6">
                         <h2 class="text-2xl md:text-3xl font-bold text-black leading-tight mb-2 lg:mb-4">
-                            Ayo Jelajahi
+                            {{ translate($subtitle) }}
                         </h2>
                         <p class="text-gray-600 text-sm md:text-lg leading-relaxed text-balance">
-                            berbagai jenis usaha lokal di wilayah kalian berada
+                            {{ translate($desc) }}
                         </p>
                     </div>
 
@@ -84,7 +80,7 @@
                                     <x-ui.button
                                         @click.prevent="$store.region.set(item.title); document.getElementById('lokasi').scrollIntoView({behavior: 'smooth'})"
                                         variant="link" size="icon-link" class="p-0 text-sm">
-                                        Lihat Lokasi
+                                        {{ translate('Lihat Lokasi') }}
                                         <x-icons.arrow-right class="w-4 h-4" />
                                     </x-ui.button>
 

@@ -12,15 +12,6 @@
     $baseClasses = 'text-xs font-medium ';
     $variantClasses = $variants[$variant] ?? $variants['default'];
     
-    // Default rounded-md unless class overrides (hard to detect) or we add a prop.
-    // Let's rely on the user passing class="rounded-full" and remove the forced rounded-md from here 
-    // IF we are sure all existing badges can handle explicit roundedness??
-    // No, that breaks existing usages (which expect rounded-md).
-    
-    // Better approach: merge smartly or just append. 
-    // But for this project, I'll add 'rounded-md' to the variants themselves if they don't have it? 
-    // Or just let it be. 
-    
     $classes = 'rounded-md text-xs font-medium ' . ($variants[$variant] ?? $variants['default']);
 @endphp
 

@@ -1,3 +1,4 @@
+@props(['mapShops', 'regions', 'regionsMap'])
 <x-home.maps.style />
 <x-home.maps.popup />
 
@@ -10,9 +11,9 @@
 
 <section id="lokasi" class="py-0 md:py-12 bg-white overflow-hidden" x-data="umkmMap" x-init="initMap()">
     <div class="container mx-auto max-w-7xl">
-        <h1
-            class="text-center lg:text-center text-3xl md:text-4xl lg:text-5xl font-medium text-black mb-4 md:mb-8 lg:mb-16 tracking-tight pt-4 md:pt-0">
-            Lokasi
+       <h1
+            class="text-center lg:text-center text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-8 lg:mb-16 tracking-tight">
+            {{ translate('Lokasi') }}
         </h1>
 
         <div
@@ -31,12 +32,12 @@
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                                 <x-icons.location-search class="w-5 h-5" />
                             </span>
-                            <input type="text" x-model="search" placeholder="Cari..."
+                            <input type="text" x-model.debounce.500ms="search" placeholder="{{ translate('Cari Nama UMKM...') }}"
                                 class="w-full h-[40px] pl-10 pr-10 bg-white rounded-lg text-sm focus:outline-none text-gray-700 font-medium shadow-sm border border-gray-100">
-                            <x-ui.button x-show="search.length > 0" @click="search = ''"
-                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 w-auto">
-                                <x-icons.location-search class="w-5 h-5" />
-                            </x-ui.button>
+                            <button x-show="search.length > 0" @click="search = ''"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-red-500 w-auto">
+                                <x-icons.x-mark />
+                            </button>
                         </div>
 
                         <div class="relative w-[120px] flex-shrink-0" @click.outside="showRegionDropdown = false">
@@ -46,7 +47,7 @@
                                 class="w-full h-[40px] px-2.5">
                                 <div class="flex items-center gap-1 overflow-hidden">
                                     <span class="truncate text-sm md:text-sm"
-                                        x-text="$store.region.selected === '' ? 'Wilayah' : $store.region.selected"></span>
+                                        x-text="$store.region.selected === '' ? '{{ translate('Wilayah') }}' : $store.region.selected"></span>
                                 </div>
                                 <x-icons.arrow-down
                                     class="w-4 h-4 text-gray-400 group-hover:text-[#003366] transition-transform duration-200 flex-shrink-0"
@@ -60,17 +61,17 @@
                                         class="group flex items-center gap-2 px-3 py-1.5 text-[12px] text-gray-700 hover:bg-blue-50 hover:text-[#003366] transition"
                                         :class="$store.region.selected === '' ?
                                             'bg-blue-50 font-reguler text-[#003366]' : ''">
-                                        <span>Semua</span>
+                                        <span>{{ translate('Wilayah') }}</span>
                                     </a>
-                                    <template x-for="region in regions" :key="region">
+                                    @foreach($regions as $region)
                                         <a href="#"
-                                            @click.prevent="$store.region.set(region); showRegionDropdown = false"
+                                            @click.prevent="$store.region.set('{{ $region->name }}'); showRegionDropdown = false"
                                             class="group flex items-center gap-2 px-3 py-1.5 text-[12px] text-gray-700 hover:bg-blue-50 hover:text-[#003366] transition"
-                                            :class="$store.region.selected === region ?
+                                            :class="$store.region.selected === '{{ $region->name }}' ?
                                                 'bg-blue-50 font-reguler text-[#003366]' : ''">
-                                            <span x-text="region"></span>
+                                            <span>{{ $region->name }}</span>
                                         </a>
-                                    </template>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -92,7 +93,7 @@
                                         x-html="getCategoryIcon(selectedCategory)">
                                     </div>
                                     <span class="truncate text-sm md:text-sm"
-                                        x-text="(selectedCategory === 'Semua' || selectedCategory === '') ? 'Semua' : selectedCategory"></span>
+                                        x-text="(selectedCategory === 'Semua' || selectedCategory === '') ? '{{ translate('Kategori') }}' : selectedCategory"></span>
                                 </div>
                                 <x-icons.arrow-down
                                     class="w-4 h-4 text-gray-400 group-hover:text-[#003366] transition-transform duration-200 flex-shrink-0"
@@ -101,12 +102,12 @@
                             <div x-show="showCatDropdown"
                                 class="absolute top-full left-0 mt-1 w-[140px] bg-white rounded-lg shadow-xl z-[100] overflow-hidden border border-gray-100">
                                 <div class="py-1">
-                                    <template x-for="cat in categories" :key="cat">
+                                    <template x-for="(cat, idx) in categories" :key="idx">
                                         <a href="#"
                                             @click.prevent="selectedCategory = cat; showCatDropdown = false"
                                             class="group flex items-center gap-2 px-3 py-1.5 text-[12px] text-gray-700 hover:bg-blue-50 hover:text-[#003366] transition"
                                             :class="selectedCategory === cat ? 'bg-blue-50 font-reguler text-[#003366]' : ''">
-                                            <div class="w-3.5 h-3.5" x-show="cat !== 'Semua'"
+                                            <div class="w-3.5 h-3.5" x-show="cat !== '{{ translate('Kategori') }}' && cat !== 'Semua'"
                                                 x-html="getCategoryIcon(cat)"></div>
                                             <span x-text="cat"></span>
                                         </a>
@@ -121,7 +122,7 @@
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <span class="text-[11px] font-bold text-gray-400">Rp</span>
                                 </div>
-                                <input type="text" x-model="minInput" placeholder="Min"
+                                <input type="text" x-model="minInput" placeholder="{{ translate('Min') }}"
                                     class="w-full h-full py-1 pl-8 pr-2 rounded-lg text-[12px] focus:outline-none font-medium bg-transparent"
                                     :class="minInput !== '' ? 'text-black' : 'text-gray-700'">
                             </div>
@@ -131,7 +132,7 @@
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <span class="text-[11px] font-bold text-gray-400">Rp</span>
                                 </div>
-                                <input type="text" x-model="maxInput" placeholder="Max"
+                                <input type="text" x-model="maxInput" placeholder="{{ translate('Max') }}"
                                     class="w-full h-full py-1 pl-8 pr-2 rounded-lg text-[12px] focus:outline-none font-medium bg-transparent"
                                     :class="maxInput !== '' ? 'text-black' : 'text-gray-700'">
                             </div>
@@ -150,19 +151,19 @@
                                     <div class="flex-1 flex flex-col justify-between h-full py-0.5 min-w-0">
                                         <div>
                                             <div class="flex items-center gap-2 mb-2 flex-wrap">
-                                                <h3 class="text-base font-bold text-gray-800 leading-tight line-clamp-2"
+                                                <h3 class="text-base font-semibold text-gray-800 leading-tight line-clamp-2"
                                                     x-text="item.name"></h3>
-                                                <x-ui.badge x-text="item.badge" class="px-2 py-0.5"></x-ui.badge>
+                                                <x-ui.badge x-text="item.badge" class="px-2 py-1"></x-ui.badge>
                                             </div>
                                             <div class="text-[11px]">
-                                                <p class="font-medium">Omset: </p>
+                                                <p class="font-medium">{{ translate('Omset') }}: </p>
                                                 <p class="font-reguler" x-text="item.omset"></p>
                                             </div>
                                         </div>
                                         <div class="w-full flex justify-center mt-2">
                                             <x-ui.button @click="focusLocation(item)" variant="link" size="icon-link"
                                                 class="p-0 text-[12px]">
-                                                Lihat Lokasi
+                                                {{ translate('Lihat Lokasi') }}
                                                 <x-icons.area-right class="w-3 h-3" />
                                             </x-ui.button>
 
@@ -171,7 +172,7 @@
                                 </div>
                             </template>
                             <div x-show="filteredList.length === 0"
-                                class="text-center text-white/70 mt-4 text-sm w-full">Tidak ada data.</div>
+                                class="text-center text-white/70 mt-4 text-sm w-full">{{ translate('Tidak ada data.') }}</div>
                         </div>
                         <x-ui.button variant="circle-white" size="icon-lg" @click="prevPage()"
                             x-bind:disabled="currentPage == 1" class="flex-shrink-0">
@@ -196,20 +197,20 @@
                                     </div>
                                     <div class="flex-1 flex flex-col justify-between h-full py-0.5 min-w-0">
                                         <div>
-                                            <div class="flex items-center gap-2 mb-2 flex-wrap md:mb-6">
+                                            <div class="flex items-center gap-2 mb-2 flex-wrap">
                                                 <h3 class="text-base md:text-lg font-bold text-gray-800 leading-tight line-clamp-2"
                                                     x-text="item.name"></h3>
-                                                <x-ui.badge x-text="item.badge" class="px-2.5 py-1"></x-ui.badge>
+                                                <x-ui.badge x-text="item.badge" class="px-2.5 py-1.5"></x-ui.badge>
                                             </div>
                                             <div class="text-[12px] md:text-[16px]">
-                                                <p class="font-medium">Omset: </p>
+                                                <p class="font-medium">{{ translate('Omset') }}: </p>
                                                 <p class="font-reguler" x-text="item.omset"></p>
                                             </div>
                                         </div>
-                                        <div class="w-full flex justify-center mt-2">
+                                        <div class="w-full flex justify-center">
                                             <x-ui.button @click="focusLocation(item)" variant="link" size="icon-link"
                                                 class="p-0 text-sm">
-                                                Lihat Lokasi
+                                                {{ translate('Lihat Lokasi') }}
                                                 <x-icons.area-right class="w-3 h-3" />
                                             </x-ui.button>
                                         </div>
@@ -217,7 +218,7 @@
                                 </div>
                             </template>
                             <div x-show="filteredList.length === 0"
-                                class="text-center text-white/70 mt-4 text-sm w-full">Tidak ada data.</div>
+                                class="text-center text-white/70 mt-4 text-sm w-full">{{ translate('Tidak ada data.') }}</div>
                         </div>
                     </div>
 
@@ -269,8 +270,7 @@
                         </div>
                         <div class="flex flex-col text-left">
                             <span
-                                class="text-[#003366] text-[11px] md:text-xs font-bold tracking-wider whitespace-nowrap">Cari
-                                Lokasi</span>
+                                class="text-[#003366] text-[11px] md:text-xs font-bold tracking-wider whitespace-nowrap">{{ translate('Cari Lokasi') }}</span>
                         </div>
                     </x-ui.button>
                 </div>
@@ -292,4 +292,4 @@
         </div>
     </div>
 </section>
-<x-home.maps.script />
+<x-home.maps.script :map-shops="$mapShops" :regions-map="$regionsMap" />

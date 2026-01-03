@@ -40,25 +40,7 @@
     <nav class="flex-1 px-4 space-y-2 mt-2 overflow-y-auto overflow-x-hidden flex flex-col scrollbar-hide"
         x-bind:class="sidebarExpanded ? 'items-stretch' : 'items-center'">
 
-        @php
-            $menus = [
-                [
-                    'name' => 'Dashboard',
-                    'url' => '/admin/dashboard',
-                    'icon' => 'dashboard',
-                ],
-                [
-                    'name' => 'Kelola User',
-                    'url' => '/admin/users',
-                    'icon' => 'users',
-                ],
-                [
-                    'name' => 'Setting',
-                    'url' => '/admin/setting',
-                    'icon' => 'settings',
-                ],
-            ];
-        @endphp
+
 
         @foreach ($menus as $menu)
             <a href="{{ $menu['url'] }}"
@@ -111,13 +93,20 @@
 
             {{-- Profile --}}
             <div class="flex items-center gap-3 mb-3 pb-3 border-b border-slate-200 relative z-10"
-                x-bind:class="sidebarExpanded ? 'justify-start' : 'lg:justify-center justify-start'">
-                <div class="relative shrink-0 cursor-pointer">
-                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80"
-                        class="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-md transition-transform duration-300 group-hover:scale-105">
-                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full ring-2 ring-white">
-                    </div>
-                </div>
+     x-bind:class="sidebarExpanded ? 'justify-start' : 'lg:justify-center justify-start'">
+    
+    <div class="relative shrink-0 cursor-pointer group">
+        
+        <div class="w-10 h-10 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
+            <div class="w-full h-full flex items-center justify-center bg-[#0D8ABC] text-white text-xs font-bold transition-transform duration-300 group-hover:scale-105">
+                {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 2)) }}
+            </div>
+        </div>
+
+        <div class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full ring-2 ring-white">
+        </div>
+        
+    </div>
 
                 <div class="overflow-hidden" x-show="sidebarExpanded || window.innerWidth < 1024">
                     <p class="text-sm font-bold text-slate-800 truncate group-hover:text-primary transition-colors">

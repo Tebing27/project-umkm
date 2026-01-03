@@ -1,11 +1,43 @@
-@props(['image', 'category', 'name', 'price', 'initialActive' => true])
+@props(['image', 'category', 'name', 'price', 'initialActive' => true, 'product'])
 
-<div x-data="{ active: {{ $initialActive ? 'true' : 'false' }} }"
-    x-show="activeTab === 'semua' || (activeTab === 'aktif' && active) || (activeTab === 'tidak_aktif' && !active)"
+<div x-data="{ 
+    active: {{ $initialActive ? 'true' : 'false' }},
+    loading: false,
+
+    toggleStatus() {
+        this.loading = true;
+        
+        fetch('/toko/produk/{{ $product->id }}/toggle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Ensure boolean type
+                this.active = !!data.is_active;
+            } else {
+                this.active = !this.active;
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            this.active = !this.active;
+        })
+        .finally(() => {
+            this.loading = false;
+        });
+    }
+}"
+    x-show="status === 'semua' || (status === 'aktif' && active) || (status === 'tidak_aktif' && !active)"
     :class="{ 'opacity-75': !active }"
     class="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 group overflow-hidden flex flex-col hover:-translate-y-1">
     <div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
         <img src="{{ $image }}"
+            loading="lazy"
             :class="{ 'grayscale': !active }"
             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
             alt="{{ $name }}">
@@ -38,9 +70,10 @@
                 <div class="flex items-center gap-2">
                     <span class="text-slate-400">Status:</span>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" value="" class="sr-only peer" x-model="active">
+                        <input type="checkbox" class="sr-only peer" x-model="active" @change="toggleStatus()">
                         <div
-                            class="w-9 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#004a85]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500">
+                            class="w-9 h-5 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#004a85]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500"
+                            :class="{ 'opacity-50': loading }">
                         </div>
                     </label>
                 </div>
@@ -48,13 +81,13 @@
 
             {{-- Action Buttons --}}
             <div class="grid grid-cols-2 gap-2">
-                <button @click="editProductModal = true"
+                <button @click='$dispatch("edit-product", {!! json_encode($product, JSON_HEX_APOS) !!})'
                     class="flex items-center justify-center gap-2 px-3 py-2 bg-slate-100 text-slate-600 rounded-lg text-sm font-bold hover:bg-[#004a85] hover:text-white transition-all duration-200 group/btn">
                     <x-icons.pencil class="w-4 h-4" />
 
                     Edit
                 </button>
-                <button
+                <button @click="$dispatch('delete-product', {{ $product->id }})"
                     class="flex items-center justify-center gap-2 px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-bold hover:bg-red-600 hover:text-white transition-all duration-200 group/btn">
                     <x-icons.trash class="w-4 h-4" />
                     Hapus

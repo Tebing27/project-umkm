@@ -25,7 +25,7 @@
         'trigger' =>
             'justify-between bg-transparent hover:bg-transparent text-slate-700 hover:text-primary font-semibold border-none rounded-lg text-left',
         'filter' => 'rounded-full border shadow-sm transition-all duration-300',
-        'tab' => 'rounded-xl transition-all duration-200 whitespace-nowrap',
+        'tab' => 'rounded-lg transition-all duration-200 whitespace-nowrap',
         'fab' =>
             'bg-[#FFC107] text-slate-900 hover:bg-blue-800 active:scale-95 flex items-center justify-center rounded-full',
         'circle-white' =>

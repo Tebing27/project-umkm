@@ -10,8 +10,22 @@ class AdminDashboardController extends Controller
     public function index()
     {
         // Stats only for main dashboard
-        $shops = Shop::all(); 
-        return view('admin.dashboard', compact('shops'));
+        $shops = Shop::all();
+        
+        $totalShops = $shops->count();
+        $verifiedShopsCount = $shops->where('is_verified', true)->count();
+        $rejectedShopsCount = $shops->where('is_verified', false)->whereNotNull('rejection_reason')->count();
+        $pendingShopsCount = $shops->where('is_verified', false)->whereNull('rejection_reason')->count();
+        $newShopsThisWeek = $shops->where('created_at', '>=', now()->subWeek())->count();
+        
+        return view('admin.dashboard', compact(
+            'shops', 
+            'totalShops', 
+            'verifiedShopsCount', 
+            'pendingShopsCount', 
+            'rejectedShopsCount',
+            'newShopsThisWeek'
+        ));
     }
 
     public function users(Request $request)
@@ -27,10 +41,29 @@ class AdminDashboardController extends Controller
                                    ->orWhere('email', 'like', "%{$search}%");
                              });
             })
+            ->when($request->status === 'verified', function ($q) {
+                $q->where('is_verified', true);
+            })
+            ->when($request->status === 'pending', function ($q) {
+                $q->where('is_verified', false)->whereNull('rejection_reason');
+            })
+            ->when($request->status === 'rejected', function ($q) {
+                $q->where('is_verified', false)->whereNotNull('rejection_reason');
+            })
             ->latest()
             ->get();
 
-        return view('admin.users', compact('shops', 'search'));
+
+        $tabs = [
+            ['id' => 'all', 'label' => 'Semua'],
+            ['id' => 'verified', 'label' => 'Terverifikasi'],
+            ['id' => 'pending', 'label' => 'Menunggu'],
+            ['id' => 'rejected', 'label' => 'Ditolak'],
+        ];
+
+        $currentStatus = $request->status ?? 'all';
+
+        return view('admin.users', compact('shops', 'search', 'tabs', 'currentStatus'));
     }
 
     public function userDetail($id)
@@ -41,12 +74,18 @@ class AdminDashboardController extends Controller
 
     public function setting()
     {
-        return view('admin.setting');
+        $user = auth()->user();
+        return view('admin.setting', compact('user'));
     }
 
     public function verifyShop($id)
     {
         $shop = Shop::findOrFail($id);
+
+        if (!$shop->isComplete()) {
+            return redirect()->back()->with('error', 'Data UMKM belum lengkap. Mohon lengkapi nama, deskripsi, alamat, lokasi (peta), wilayah, jenis usaha, omset, upload minimal 1 produk, dan upload visualisasi foto sebelum verifikasi.');
+        }
+
         $shop->update([
             'is_verified' => true,
             'rejection_reason' => null
@@ -68,5 +107,38 @@ class AdminDashboardController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'UMKM telah ditolak dengan alasan yang diberikan.');
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($user->id)],
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+
+        return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
+        ]);
+
+        $user = auth()->user();
+
+        $user->update([
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+        ]);
+
+        return redirect()->back()->with('success', 'Password berhasil diperbarui.');
     }
 }

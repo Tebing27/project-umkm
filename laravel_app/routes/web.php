@@ -4,19 +4,21 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PublicController;
+
+Route::get('/lang/{locale}', function ($locale) {
+    if (in_array($locale, ['id', 'en'])) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('switch_language');
 
 // Public Routes
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [HomeController::class, 'index']);
 
-Route::get('/umkm', function () {
-    return view('umkm.index');
-});
-
-Route::get('/umkm/detail', function () {
-    return view('umkm.detail');
-});
+Route::get('/umkm', [PublicController::class, 'index'])->name('umkm.index');
+Route::get('/umkm/{id}', [PublicController::class, 'show'])->name('umkm.comment');
 
 // Dashboard Redirect
 Route::get('/dashboard', function () {
@@ -40,7 +42,15 @@ Route::middleware(['auth', \App\Http\Middleware\CheckRole::class . ':users'])->g
     Route::post('/users/edit-toko', [UserDashboardController::class, 'updateToko'])->name('users.update-toko');
     
     Route::get('/users/setting', [UserDashboardController::class, 'setting']);
+    Route::post('/users/setting/profile', [UserDashboardController::class, 'updateProfile'])->name('users.setting.profile');
+    Route::post('/users/setting/password', [UserDashboardController::class, 'updatePassword'])->name('users.setting.password');
     Route::get('/users/foto', [UserDashboardController::class, 'foto']);
+    // Product & Photo Management
+    Route::post('/users/foto/store', [UserDashboardController::class, 'storePhoto'])->name('user.toko.foto.store');
+    Route::post('/users/toko/produk', [UserDashboardController::class, 'storeProduct'])->name('user.toko.produk.store');
+    Route::post('/toko/produk/{id}/toggle', [UserDashboardController::class, 'toggleProductStatus'])->name('user.toko.produk.toggle');
+    Route::put('/toko/produk/{id}', [UserDashboardController::class, 'updateProduct'])->name('user.toko.produk.update');
+    Route::delete('/toko/produk/{id}', [UserDashboardController::class, 'deleteProduct'])->name('user.toko.produk.destroy');
 });
 
 // Admin Routes
@@ -54,6 +64,13 @@ Route::middleware(['auth', \App\Http\Middleware\CheckRole::class . ':admin'])->g
     Route::get('/admin/users', [AdminDashboardController::class, 'users']);
     Route::get('/admin/users/detail/{id}', [AdminDashboardController::class, 'userDetail']);
     Route::get('/admin/setting', [AdminDashboardController::class, 'setting']);
+    Route::post('/admin/setting/profile', [AdminDashboardController::class, 'updateProfile'])->name('admin.setting.profile');
+    Route::post('/admin/setting/password', [AdminDashboardController::class, 'updatePassword'])->name('admin.setting.password');
+    Route::resource('/admin/contents', \App\Http\Controllers\Admin\ContentController::class, ['as' => 'admin']);
+    Route::put('/admin/regions/{id}/image', [\App\Http\Controllers\Admin\RegionController::class, 'updateImage'])->name('admin.regions.update_image');
+    Route::put('/admin/regions/{id}/featured-shop', [\App\Http\Controllers\Admin\RegionController::class, 'updateFeaturedShop'])->name('admin.regions.update_featured_shop');
+    Route::delete('/admin/contents/{id}/image', [\App\Http\Controllers\Admin\ContentController::class, 'deleteImage'])->name('admin.contents.delete_image');
+    Route::delete('/admin/regions/{id}/image', [\App\Http\Controllers\Admin\RegionController::class, 'deleteImage'])->name('admin.regions.delete_image');
 });
 
 Route::middleware('auth')->group(function () {

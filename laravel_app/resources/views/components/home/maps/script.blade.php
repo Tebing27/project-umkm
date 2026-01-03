@@ -1,3 +1,11 @@
+@props(['mapShops', 'regionsMap'])
+
+@php
+    // Data passed directly from controller, already transformed.
+    $umkmData = $mapShops;
+    $regionsData = $regionsMap;
+@endphp
+
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
@@ -27,85 +35,12 @@
                 map: null,
                 activeId: null,
                 markers: [],
+                geoJsonLayer: null,
 
                 // --- DATA UMKM (DITAMBAHKAN FIELD 'REGION') ---
                 // Pastikan ejaan 'region' SAMA PERSIS dengan title di slider wilayah
-                umkms: [{
-                        id: 1,
-                        name: 'Warung Seblak',
-                        region: 'Cinangka',
-                        badge: 'Kuliner',
-                        category: 'Kuliner',
-                        iconType: 'food',
-                        omset: 'Rp 10 Jt - Rp 100 Jt',
-                        omsetVal: 10,
-                        description: 'UMKM Ayam Geprek Tebingg...',
-                        surat: 'SIUP, IUMK, NIB Berisiko',
-                        // UBAH KOORDINAT AGAR MASUK BATAS
-                        lat: -6.2800, // Masuk dalam range -6.25 s/d -6.35
-                        lng: 106.8200, // Masuk dalam range 106.75 s/d 106.90
-                        images: [
-                            'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=400&q=80'
-                        ],
-                        img: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=200&q=80'
-                    },
-                    {
-                        id: 2,
-                        name: 'Tebing Craft',
-                        region: 'Cinangka',
-                        badge: 'Jasa',
-                        category: 'Jasa',
-                        iconType: 'work',
-                        omset: 'Rp 5 Jt - Rp 50 Jt',
-                        omsetVal: 5,
-                        description: 'Kerajinan tangan lokal...',
-                        lat: -6.3000, // Masuk
-                        lng: 106.8500, // Masuk
-                        img: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=200&q=80'
-                    },
-                    {
-                        id: 3,
-                        name: 'Kopi Senja',
-                        region: 'Cinangka',
-                        badge: 'Kuliner',
-                        category: 'Kuliner',
-                        iconType: 'food',
-                        omset: 'Rp 20 Jt - Rp 200 Jt',
-                        omsetVal: 20,
-                        description: 'Kopi nikmat senja hari...',
-                        lat: -6.3200, // Masuk
-                        lng: 106.7800, // Masuk
-                        img: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=200&q=80'
-                    },
-                    {
-                        id: 4,
-                        name: 'Tebing Style',
-                        region: 'Cinangka',
-                        badge: 'Fashion',
-                        category: 'Fashion',
-                        iconType: 'fashion',
-                        omset: 'Rp 15 Jt - Rp 150 Jt',
-                        omsetVal: 15,
-                        description: 'Fashion kekinian...',
-                        lat: -6.2900, // Masuk
-                        lng: 106.8800, // Masuk
-                        img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=200&q=80'
-                    },
-                    {
-                        id: 5,
-                        name: 'Sate Taichan',
-                        region: 'Cinangka',
-                        badge: 'Kuliner',
-                        category: 'Kuliner',
-                        iconType: 'food',
-                        omset: 'Rp 50 Jt - Rp 150 Jt',
-                        omsetVal: 50,
-                        description: 'Sate pedas mantap...',
-                        lat: -6.3400, // Masuk (Hampir batas bawah)
-                        lng: 106.7600, // Masuk
-                        img: 'https://images.unsplash.com/photo-1529566657458-9adc180d2d9d?auto=format&fit=crop&w=200&q=80'
-                    },
-                ],
+                umkms: @json($umkmData),
+                regionList: @json($regionsData),
 
                 svgIcons: {
                     grid: document.getElementById('icon-grid')?.innerHTML || '',
@@ -123,7 +58,7 @@
                     return Math.ceil(this.filteredList.length / this.itemsPerPage);
                 },
                 get categories() {
-                    return ['Semua', ...new Set(this.umkms.map(item => item.category))];
+                    return ['Semua', 'Kuliner', 'Pakaian & Aksesoris', 'Kelontong', 'Agribisnis', 'Jasa', 'Kerajinan Tangan'];
                 },
                 get regions() {
                     return [...new Set(this.umkms.map(item => item.region))];
@@ -158,23 +93,65 @@
                 // --- INIT ---
                 init() {
                     // WATCHER UNTUK STORE WILAYAH
-                    // Ketika tombol di slide atas diklik, ini akan jalan otomatis
                     this.$watch('$store.region.selected', (val) => {
                         this.currentPage = 1;
-                        this.search = ''; // Optional: Reset search text biar hasil lebih jelas
-                        this.selectedCategory = 'Semua'; // Optional: Reset kategori
-                        this.updateMarkers();
+                        this.search = ''; 
+                        this.selectedCategory = 'Semua'; 
 
-                        // Optional: Pindahkan peta ke marker pertama yang ketemu di wilayah itu
-                        setTimeout(() => {
-                            if (this.filteredList.length > 0) {
-                                // Fokus ke item pertama di wilayah itu
-                                this.focusLocation(this.filteredList[0], true, false);
-                            } else {
-                                // Jika wilayah kosong, kembalikan zoom ke default
-                                this.map.flyTo([-6.3900, 106.7600], 13);
+                        // 1. CLEANUP PRE-ANIMATION (Mencegah crash & glitch)
+                        // Hapus markers existing
+                        this.markers.forEach(m => this.map.removeLayer(m.marker));
+                        this.markers = [];
+                        
+                        // Hapus sementara GeoJSON Layer agar tooltips tidak error "latLngToLayerPoint" saat animasi flyTo
+                        if (this.geoJsonLayer) {
+                            this.map.removeLayer(this.geoJsonLayer);
+                        }
+
+                        // 2. CALLBACK POST-ANIMATION
+                        const restoreMapState = () => {
+                            // Restore GeoJSON
+                            if (this.geoJsonLayer) {
+                                if (!this.map.hasLayer(this.geoJsonLayer)) {
+                                    this.map.addLayer(this.geoJsonLayer);
+                                }
                             }
-                        }, 300);
+                            // Restore/Update Markers
+                            this.updateMarkers();
+                        };
+
+                        // 3. DETERMINE FLIGHT LOGIC
+                        let isFlying = false;
+
+                        if (val) {
+                            const selectedRegionData = this.regionList.find(r => r.name === val);
+                            
+                            // VALIDASI STRICT
+                            if (selectedRegionData && selectedRegionData.lat && selectedRegionData.lng && 
+                                selectedRegionData.lat !== 0 && selectedRegionData.lng !== 0) {
+                                
+                                isFlying = true;
+                                this.map.flyTo([selectedRegionData.lat, selectedRegionData.lng], 14, {
+                                    animate: true,
+                                    duration: 1.5
+                                });
+                                this.map.once('moveend', restoreMapState);
+                            } else {
+                                // Fallback jika koordinat region tidak valid
+                                restoreMapState(); // Update markers immediately
+                                if (this.filteredList.length > 0) {
+                                    this.focusLocation(this.filteredList[0], true, false);
+                                }
+                            }
+                        } else {
+                            // Reset to default view (Semua Wilayah)
+                            isFlying = true;
+                            this.map.flyTo([-6.4025, 106.7720], 13, {
+                                animate: true,
+                                duration: 1.5
+                            });
+                            this.map.once('moveend', restoreMapState);
+                        }
                     });
 
                     // Watcher standar
@@ -230,65 +207,87 @@
                 },
 
                 // --- MAP LOGIC ---
+                // --- MAP LOGIC ---
                 initMap() {
                     if (this.map) {
                         this.map.off();
                         this.map.remove();
                     }
-                    let centerLat = -6.3900; // Default jika data kosong
+                    // Default Focus (Kecamatan Sawangan Tengah)
+                    let centerLat = -6.3970;
                     let centerLng = 106.7600;
 
-                    // Cek apakah ada data UMKM?
-                    if (this.umkms.length > 0) {
-                        // Ambil koordinat item pertama
-                        centerLat = this.umkms[0].lat;
-                        centerLng = this.umkms[0].lng;
+                    const latMin = -6.4500; // Selatan (Before: -6.44)
+                    const latMax = -6.3300; // Utara (Before: -6.35) -> Buffer buat Kedaung
+                    const lngMin = 106.7200; // Barat (Before: 106.73)
+                    const lngMax = 106.8100; // Timur (Before: 106.795)
 
-                        // Opsi Tambahan: Jika ingin marker agak ke bawah (supaya space atas lega)
-                        centerLat = this.umkms[0].lat + 0.005;
-                    }
-
-                    // 1. KOORDINAT ASLI
-                    const latMin = -6.350;
-                    const latMax = -6.250;
-                    const lngMin = 106.750;
-                    const lngMax = 106.900;
-
-                    // 2. PERBAIKAN BUFFER (Jauh lebih longgar)
-                    // Buffer Vertical (Atas/Bawah)
-                    const vBuffer = 0.05;
-                    const topBuffer = 0.15; // Tetap besar untuk Popup
-
-                    // Buffer Horizontal (Kiri/Kanan) -> DIPERBESAR
-                    // Agar di layar sempit tablet, user bisa geser jauh ke kanan/kiri
-                    const hBuffer = 0.15;
-
-                    const southWest = L.latLng(latMin - vBuffer, lngMin - hBuffer);
-                    const northEast = L.latLng(latMax + topBuffer, lngMax + hBuffer);
+                    const southWest = L.latLng(latMin, lngMin);
+                    const northEast = L.latLng(latMax, lngMax);
                     const myBounds = L.latLngBounds(southWest, northEast);
 
                     // 3. INISIALISASI
+                    // FIX: Menggunakan this.$refs.mapContainer karena tidak ada id='map'
                     this.map = L.map(this.$refs.mapContainer, {
                         zoomControl: false,
                         maxBounds: myBounds,
-
-                        // UBAH JADI 0.2 (Sangat Kenyal)
-                        // Ini kuncinya! Peta tidak akan "mentok" keras seperti tembok.
-                        // User bisa tarik peta keluar batas, dan peta akan membal pelan.
-                        maxBoundsViscosity: 0.2,
-
-                        minZoom: 12, // Izinkan zoom out sedikit lebih jauh biar lega
-                        maxZoom: 18
-                    }).setView([centerLat, centerLng], 13);
+                        maxBoundsViscosity: 1.0, 
+                        minZoom: 13,
+                        maxZoom: 18,
+                        center: [centerLat, centerLng],
+                        zoom: 13
+                    });
 
                     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         maxZoom: 19,
                         attribution: '© OpenStreetMap'
                     }).addTo(this.map);
 
+                    // 4. GARIS BATAS WILAYAH (BOUNDARY LINES)
+                    // Menggunakan GeoJSON Asset
+                    const geoJsonUrl = "{{ asset('maps/sawangan.geojson') }}";
+
+                    fetch(geoJsonUrl)
+                        .then(response => {
+                            if (!response.ok) throw new Error("Gagal memuat GeoJSON");
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (this.geoJsonLayer) {
+                                this.map.removeLayer(this.geoJsonLayer);
+                            }
+                            this.geoJsonLayer = L.geoJSON(data, {
+                                // Style untuk garis batas (melingkari wilayah)
+                                style: function(feature) {
+                                    return {
+                                        color: '#FF0000', // Warna Garis Merah
+                                        weight: 2, // Tebal Garis
+                                        opacity: 0.8, // Transparansi Garis
+                                        dashArray: '10, 10', // Garis Putus-putus
+                                        fillColor: 'red', // Warna Isi
+                                        fillOpacity: 0.03 // Transparansi Isi (0.05 = sangat transparan)
+                                    };
+                                },
+                                // Optional: Menambahkan label saat mouse di atas wilayah
+                                onEachFeature: (feature, layer) => {
+                                    if (feature.properties && feature.properties
+                                        .village) {
+                                        layer.bindTooltip(feature.properties.village, {
+                                            permanent: false,
+                                            direction: 'center'
+                                        });
+                                    }
+                                }
+                            }).addTo(this.map);
+                        })
+                        .catch(error => console.error('Error loading GeoJSON:', error));
+                    
+                    // 5. RESIZE OBSERVER (PENTING AGAR MAP TIDAK GREY/BLANK SAAT RESIZE)
                     if (window.ResizeObserver && this.$refs.mapContainer) {
                         new ResizeObserver(() => {
-                            if (this.map) this.map.invalidateSize();
+                            if (this.map) {
+                                this.map.invalidateSize();
+                            }
                         }).observe(this.$refs.mapContainer);
                     }
 
@@ -299,6 +298,9 @@
                     this.markers.forEach(m => this.map.removeLayer(m.marker));
                     this.markers = [];
                     this.filteredList.forEach(item => {
+                        // Adding marker
+
+                        
                         const customIcon = L.divIcon({
                             className: 'custom-leaflet-icon',
                             html: this.getIconHtml(item.iconType),
@@ -324,6 +326,8 @@
                             });
                         marker.on('click', () => {
                             this.activeId = item.id;
+                            // TEMP DEBUG:
+                            // console.log(`DEBUG: ${item.name} | Region: ${item.region} | Lat: ${item.lat} | Lng: ${item.lng}`);
                         });
                         this.markers.push({
                             id: item.id,
@@ -365,10 +369,15 @@
                     return `<div style='background-color: ${color}; width: 36px; height: 36px; border-radius: 50%; border: 3px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; color: white;'><div style="width: 16px; height: 16px;">${svgContent}</div></div>`;
                 },
                 getCategoryIcon(categoryName) {
-                    if (categoryName === 'Semua') return this.svgIcons.grid;
-                    if (categoryName === 'Kuliner') return this.svgIcons.food;
-                    if (categoryName === 'Fashion') return this.svgIcons.fashion;
-                    if (categoryName === 'Jasa') return this.svgIcons.work;
+                    if (!categoryName) return this.svgIcons.grid;
+                    const lower = categoryName.toLowerCase();
+                    if (lower === 'semua') return this.svgIcons.grid;
+                    if (lower.includes('kuliner')) return this.svgIcons.food;
+                    if (lower.includes('kelontong')) return this.svgIcons.food;
+                    if (lower.includes('fashion') || lower.includes('pakaian')) return this.svgIcons.fashion;
+                    if (lower.includes('kerajinan')) return this.svgIcons.fashion;
+                    if (lower.includes('jasa')) return this.svgIcons.work;
+                    if (lower.includes('agribisnis')) return this.svgIcons.work;
                     return this.svgIcons.grid;
                 },
                 // Update fungsi ini
@@ -376,9 +385,11 @@
                     this.activeId = item.id;
 
                     // Logic Offset (Biar tidak ketutup region atas)
-                    const latOffset = 0.012;
+                    // REVISI: Offset dihapus (0) agar map benar-benar centering di titik marker
+                    // User report: "popup tidak sesuai dengan titik marker" -> kemungkinan karena offset kejauhan
+                    const latOffset = 0;
 
-                    this.map.flyTo([item.lat + latOffset, item.lng], 15, {
+                    this.map.flyTo([item.lat + latOffset, item.lng], 16, { // Zoom sedikit lebih dekat (16)
                         animate: animate,
                         duration: 1.5
                     });

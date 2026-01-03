@@ -13,9 +13,9 @@
 
     <div class="container mx-auto max-w-7xl px-4 md:px-8 lg:px-16 pt-12">
 
-        <h1 class="text-center text-4xl md:text-5xl font-bold mb-12 tracking-tight">Daftar Usaha</h1>
-        <p class="text-gray-600 mb-6 font-normal text-center">Sudah memiliki akun? <a href="{{ route('login') }}"
-                class="text-blue-600 hover:text-blue-700 font-medium p-0 h-auto underline-offset-4 hover:underline">Masuk</a>.
+        <h1 class="text-center text-4xl md:text-5xl font-bold mb-12 tracking-tight">{{ translate('Daftar Usaha') }}</h1>
+        <p class="text-gray-600 mb-6 font-normal text-center">{{ translate('Sudah memiliki akun?') }} <a href="{{ route('login') }}"
+                class="text-blue-600 hover:text-blue-700 font-medium p-0 h-auto underline-offset-4 hover:underline">{{ translate('Masuk') }}</a>.
         </p>
 
         <form action="{{ route('register') }}" method="POST">
@@ -27,16 +27,16 @@
                     <div class="border-b border-gray-200 pb-2 mb-4">
                         <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
                             <x-icons.store class="w-5 h-5" />
-                            Data Usaha
+                            {{ translate('Data Usaha') }}
                         </h2>
                     </div>
 
                     {{-- Nama Usaha --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">Nama Usaha
+                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Nama Usaha') }}
                             <span class="text-red-500">*</span></label>
                         <x-ui.input type="text" name="shop_name" value="{{ old('shop_name') }}"
-                            placeholder="Warung Kopi Sejahtera"
+                            placeholder="{{ translate('Warung Kopi Sejahtera') }}"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                             <x-slot:icon>
                                 <x-icons.shopping-bag class="w-5 h-5" stroke-width="1.5" />
@@ -49,22 +49,22 @@
 
                     {{-- Izin Usaha (Dynamic) --}}
                     <div x-data="{ licenses: [{ type: '', number: '' }] }">
-                        <label class="block font-medium text-gray-700 text-base mb-2">Izin Usaha
-                            <span>(Opsional)</span></label>
+                        <label class="block font-medium text-gray-700 text-base mb-2">{{ translate('Izin Usaha') }}
+                            <span>{{ translate('(Opsional)') }}</span></label>
 
                         <template x-for="(license, index) in licenses" :key="index">
                             <div class="flex flex-row gap-3 mb-3">
                                 {{-- Tipe Izin --}}
                                 <div class="flex-1">
                                     <x-ui.input type="text" x-model="license.type" name="license_type[]"
-                                        placeholder="NIB, SIUP"
+                                        placeholder="{{ translate('NIB, SIUP') }}"
                                         class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal" />
                                 </div>
 
                                 {{-- Nomor Izin --}}
                                 <div class="flex-1">
                                     <x-ui.input type="text" x-model="license.number" name="license_number[]"
-                                        placeholder="Nomor Izin"
+                                        placeholder="{{ translate('Nomor Izin') }}"
                                         class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal" />
                                 </div>
 
@@ -80,11 +80,11 @@
                         <x-ui.button type="button" @click="licenses.push({ type: '', number: '' })" variant="ghost"
                             class="mt-1 text-sm text-blue-600 font-medium hover:text-blue-700 hover:bg-transparent p-0 h-auto justify-start gap-1 inline-flex items-center rounded-xl transition-all">
                             <x-icons.plus class="w-4 h-4" />
-                            Tambah Izin Lain
+                            {{ translate('Tambah Izin Lain') }}
                         </x-ui.button>
                         @if ($errors->has('license_type.*') || $errors->has('license_number.*'))
                             <div class="mt-2 text-sm text-red-500">
-                                <p>Harap periksa kembali data izin usaha Anda.</p>
+                                <p>{{ translate('Harap periksa kembali data izin usaha Anda.') }}</p>
                                 @foreach ($errors->get('license_type.*') as $messages)
                                     @foreach ($messages as $message)
                                         <p>{{ $message }}</p>
@@ -101,10 +101,10 @@
 
                     {{-- Jenis Produk --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">Jenis Produk
+                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Jenis Produk') }}
                             <span class="text-red-500">*</span></label>
                         <x-ui.input type="text" name="product_type" value="{{ old('product_type') }}"
-                            placeholder="Camilan, Pakaian Pria, Jasa Jahit"
+                            placeholder="{{ translate('Camilan, Pakaian Pria, Jasa Jahit') }}"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                             <x-slot:icon>
                                 <x-icons.shopping-cart class="w-5 h-5" stroke-width="1.5" />
@@ -117,10 +117,10 @@
 
                     {{-- Jenis Usaha (Radio) --}}
                     <div>
-                        <label class="block font-medium text-gray-700 text-base mb-2">Jenis Usaha <span
+                        <label class="block font-medium text-gray-700 text-base mb-2">{{ translate('Jenis Usaha') }} <span
                                 class="text-red-500">*</span></label>
                         <div class="space-y-3 pl-1">
-                            @foreach (['Kuliner', 'Pakaian & Fashion', 'Kelontong', 'Agribisnis', 'Jasa', 'Kerajinan Tangan'] as $item)
+                            @foreach (\App\Models\Shop::BUSINESS_TYPES as $item)
                                 <label class="flex items-center space-x-3 cursor-pointer group">
                                     <input type="radio" name="business_type" value="{{ $item }}"
                                         {{ old('business_type') == $item ? 'checked' : '' }}
@@ -137,33 +137,23 @@
 
                     {{-- 1. PILIH WILAYAH (PENTING UNTUK FILTER) --}}
                     {{-- TAMBAHKAN INI DI ATAS BAGIAN INPUT WILAYAH --}}
-                    @php
-                        // Data dummy sementara agar tidak error "Undefined variable"
-                        $regions = [
-                            (object) ['id' => 1, 'name' => 'Cinangka'],
-                            (object) ['id' => 2, 'name' => 'Kedaung'],
-                            (object) ['id' => 3, 'name' => 'Sawangan'],
-                            (object) ['id' => 4, 'name' => 'Pengasinan'],
-                            (object) ['id' => 5, 'name' => 'Bojongsari'],
-                            (object) ['id' => 6, 'name' => 'Pasir Putih'],
-                            (object) ['id' => 7, 'name' => 'Bedahan'],
-                        ];
-                    @endphp
+
 
                     {{-- KEMUDIAN LANJUT KE INPUT SEPERTI SEBELUMNYA --}}
                     <div class="mb-4">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Wilayah / Kelurahan <span class="text-red-500">*</span>
+                            {{ translate('Wilayah / Kelurahan') }} <span class="text-red-500">*</span>
                         </label>
 
                         <div class="relative" x-data="{
                             open: false,
                             selectedId: '{{ old('region_id') }}',
-                            selectedName: '{{ old('region_id') ? $regions->firstWhere('id', old('region_id'))->name ?? 'Pilih Wilayah' : 'Pilih Wilayah' }}',
+                            selectedName: '{{ old('region_id') ? $regions->firstWhere('id', old('region_id'))->name ?? translate('Pilih Wilayah') : translate('Pilih Wilayah') }}',
                             select(id, name) {
                                 this.selectedId = id;
                                 this.selectedName = name;
                                 this.open = false;
+                                $dispatch('region-changed', { name: name });
                             }
                         }" @click.outside="open = false">
                             <input type="hidden" name="region_id" x-model="selectedId">
@@ -187,9 +177,9 @@
 
                             <div x-show="open" x-transition.origin.top x-cloak
                                 class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl shadow-slate-200/50 border border-slate-100 z-50 overflow-hidden max-h-60 overflow-y-auto">
-                                <div @click="select('', 'Pilih Wilayah')"
+                                <div @click="select('', '{{ translate('Pilih Wilayah') }}')"
                                     class="px-5 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 cursor-pointer flex items-center justify-between transition-colors border-b border-slate-50">
-                                    <span>Pilih Wilayah</span>
+                                    <span>{{ translate('Pilih Wilayah') }}</span>
                                 </div>
 
                                 @foreach ($regions as $region)
@@ -206,60 +196,179 @@
                             </div>
 
                             @error('region_id')
-                                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
                     {{-- ALAMAT LENGKAP --}}
-                    <div class="mt-4">
+                    <div class="mt-4" x-data="addressSearch()">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Alamat Usaha <span class="text-red-500">*</span>
+                            {{ translate('Alamat Usaha') }} <span class="text-red-500">*</span>
                         </label>
 
                         {{-- WRAPPER UTAMA (Memberikan Border & Rounded Luar) --}}
                         <div
-                            class="flex flex-col border border-gray-300 rounded-xl bg-gray-50 overflow-hidden focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all duration-200">
+                            class="flex flex-col border border-gray-300 rounded-xl bg-gray-50 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all duration-200 relative">
+                            
+                            <input type="hidden" name="latitude" x-model="lat">
+                            <input type="hidden" name="longitude" x-model="lng">
 
-                            {{-- BAGIAN ATAS: TEXTAREA ALAMAT --}}
                             <div class="relative w-full">
                                 <div class="absolute top-3 left-4 text-slate-500 pointer-events-none">
                                     <x-icons.location class="w-5 h-5" />
                                 </div>
-                                <textarea name="address" rows="2"
+                                <textarea name="shop_address" rows="2" x-model="address" @input.debounce.500ms="searchAddress()"
                                     class="w-full bg-transparent border-none outline-none pl-11 pr-4 py-3 text-sm text-slate-900 focus:ring-0 resize-none"
-                                    placeholder="Nama Jalan, Blok, No. Rumah">{{ old('address') }}</textarea>
-                            </div>
-
-                            {{-- GARIS PEMBATAS HORIZONTAL --}}
-                            <div class="h-px bg-gray-200 w-full"></div>
-
-                            {{-- BAGIAN BAWAH: RT & RW (Grid Sebelahan) --}}
-                            <div class="flex divide-x divide-gray-200 bg-gray-100/50">
-
-                                {{-- Input RT --}}
-                                <div class="relative w-1/2 group">
-                                    <span
-                                        class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 group-focus-within:text-blue-600">RT</span>
-                                    <input type="number" name="rt" value="{{ old('rt') }}"
-                                        class="w-full bg-transparent border-none outline-none pl-10 pr-2 py-2.5 text-sm text-slate-900 focus:ring-0 placeholder-slate-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                        placeholder="000">
+                                    :class="{'border-red-300 ring-2 ring-red-100': regionError}"
+                                    placeholder="{{ translate('Nama Jalan, Blok, No. Rumah') }}">{{ old('shop_address') }}</textarea>
+                                
+                                {{-- WARNING ICON / TOOLTIP --}}
+                                <div x-show="regionError" class="absolute top-10 left-4 right-0 z-10">
+                                    <span class="text-xs text-red-500 bg-red-50 px-2 py-1 rounded border border-red-200 shadow-sm animate-pulse">
+                                        {{ translate('Silakan pilih Wilayah/Kelurahan terlebih dahulu.') }}
+                                    </span>
                                 </div>
-
-                                {{-- Input RW --}}
-                                <div class="relative w-1/2 group">
-                                    <span
-                                        class="absolute left-2 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 group-focus-within:text-blue-600">RW</span>
-                                    <input type="number" name="rw" value="{{ old('rw') }}"
-                                        class="w-full bg-transparent outline-none border-none pl-10 pr-2 py-2.5 text-sm text-slate-900 focus:ring-0 placeholder-slate-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                        placeholder="000">
+                                
+                                {{-- LOADING INDICATOR --}}
+                                <div x-show="isLoading" class="absolute top-3 right-4 text-blue-600">
+                                    <x-icons.loading class="w-5 h-5 animate-spin" />
                                 </div>
                             </div>
+
+                            {{-- DROPDOWN HASIL PENCARIAN --}}
+                            <div x-show="searchResults.length > 0 && showSuggestions" 
+                                 @click.outside="showSuggestions = false"
+                                 x-transition.opacity
+                                 class="absolute top-full left-0 right-0 z-50 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                                <ul>
+                                    <template x-for="(result, index) in searchResults" :key="index">
+                                        <li @click="selectAddress(result)" 
+                                            class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0 transition-colors">
+                                            <div class="font-bold text-gray-800 text-sm" x-text="result.title"></div>
+                                            <div class="text-xs text-gray-500 mt-0.5" x-text="result.address"></div>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+
                         </div>
 
                         {{-- Error Messages --}}
-                        @if ($errors->has('address') || $errors->has('rt') || $errors->has('rw'))
-                            <p class="mt-1 text-sm text-red-500">Mohon lengkapi alamat, RT, dan RW.</p>
+                        @if ($errors->has('shop_address'))
+                            <p class="mt-1 text-sm text-red-500">{{ translate('Mohon lengkapi alamat usaha.') }}</p>
                         @endif
+                        
+                        <script>
+                            function addressSearch() {
+                                return {
+                                    address: '{{ old('shop_address') }}',
+                                    lat: '{{ old('latitude') }}',
+                                    lng: '{{ old('longitude') }}',
+                                    searchResults: [],
+                                    showSuggestions: false,
+                                    isLoading: false,
+                                    regionName: '{{ old('region_id') ? $regions->firstWhere('id', old('region_id'))->name ?? '' : '' }}',
+
+                                    regionError: false,
+                                    
+                                    init() {
+                                        window.addEventListener('region-changed', (e) => {
+                                            this.regionName = e.detail.name;
+                                            this.regionError = false;
+                                            // Reset address if region changes? Maybe optional, but likely good.
+                                            // this.address = ''; 
+                                        });
+                                    },
+
+                                    async searchAddress() {
+                                        this.regionError = false;
+
+                                        // 1. Cek apakah wilayah sudah dipilih
+                                        if (!this.regionName || this.regionName === '{{ translate('Pilih Wilayah') }}') {
+                                            this.searchResults = [];
+                                            this.showSuggestions = false;
+                                            this.regionError = true;
+                                            return;
+                                        }
+
+                                        if (!this.address || this.address.length < 3) {
+                                            this.searchResults = [];
+                                            this.showSuggestions = false;
+                                            return;
+                                        }
+
+                                        this.isLoading = true;
+                                        
+                                        try {
+                                            // Format query: Nama Jalan, Nama Kelurahan, Depok
+                                            let cleanQuery = this.address.replace(/(?:Kec\.|Kel\.|Kecamatan|Kelurahan|Kota|Depok|Indonesia)/gi, '').trim();
+                                            let query = `${cleanQuery}, ${this.regionName}, Depok`;
+                                            
+                                            let url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&accept-language=id&addressdetails=1`;
+                                            
+                                            let res = await fetch(url);
+                                            let data = await res.json();
+                                            
+                                            if (data && data.length > 0) {
+                                                // Filter data secara Client-Side untuk memastikannya BENAR-BENAR ada di wilayah itu.
+                                                // Nominatim kadang mengembalikan hasil "Near" atau di kecamatan yang sama tapi beda kelurahan.
+                                                let filteredData = data.filter(item => {
+                                                    let addr = item.address;
+                                                    if (!addr) return false;
+                                                    
+                                                    // Field yang mungkin mengandung nama kelurahan
+                                                    let relevantFields = [
+                                                        addr.village, 
+                                                        addr.suburb, 
+                                                        addr.neighbourhood, 
+                                                        addr.residential,
+                                                        addr.city_district // Kadang muncul di sini
+                                                    ];
+                                                    
+                                                    return relevantFields.some(f => f && f.toLowerCase().includes(this.regionName.toLowerCase()));
+                                                });
+
+                                                this.searchResults = filteredData.map(item => {
+                                                    let parts = item.display_name.split(',');
+                                                    let title = parts[0].trim();
+                                                    
+                                                    // Hapus bagian judul dari address agar lebih bersih
+                                                    let addr = item.display_name.replace(parts[0] + ',', '').trim();
+                                                    
+                                                    return {
+                                                        title: title,
+                                                        address: addr,
+                                                        full: item.display_name,
+                                                        lat: item.lat,
+                                                        lon: item.lon
+                                                    };
+                                                });
+                                                
+                                                this.showSuggestions = this.searchResults.length > 0;
+                                            } else {
+                                                this.searchResults = []; // Kosongkan jika tidak ketemu
+                                                this.showSuggestions = false;
+                                                
+                                                // Optional: Bisa set message "Alamat tidak ditemukan di [RegionName]"
+                                            }
+                                        } catch (e) {
+                                            console.error("Address search error:", e);
+                                        } finally {
+                                            this.isLoading = false;
+                                        }
+                                    },
+                                    
+                                    selectAddress(result) {
+                                        // Set address hanya bagian nama tempat/jalan jika ingin singkat, atau full.
+                                        // User request: "sesuai alamat nya dari field wilayah" -> Kita ambil full address dari hasil search yang sudah terfilter region.
+                                        this.address = result.title + ', ' + result.address;
+                                        this.lat = result.lat;
+                                        this.lng = result.lon;
+                                        this.showSuggestions = false;
+                                    }
+                                }
+                            }
+                        </script>
                     </div>
 
                 </div>
@@ -269,14 +378,13 @@
                     <div class="border-b border-gray-200 pb-2 mb-4">
                         <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
                             <x-icons.user class="w-5 h-5" />
-                            Data Pemilik
+                            {{ translate('Data Pemilik') }}
                         </h2>
                     </div>
 
                     {{-- Nama Pemilik --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">Nama
-                            Pemilik
+                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Nama Pemilik') }}
                             <span class="text-red-500">*</span></label>
                         <x-ui.input type="text" name="name" value="{{ old('name') }}"
                             placeholder="John Rizky Hernandes"
@@ -292,8 +400,7 @@
 
                     {{-- Nomor HP --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">Nomor
-                            Handphone <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Nomor Handphone') }} <span class="text-red-500">*</span></label>
                         <x-ui.input type="text" name="phone_number" value="{{ old('phone_number') }}"
                             placeholder="0812XXXXXX"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
@@ -308,8 +415,7 @@
 
                     {{-- Tempat, Tanggal Lahir --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">Tempat,
-                            Tanggal Lahir <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Tempat, Tanggal Lahir') }} <span class="text-red-500">*</span></label>
                         <div class="flex gap-3">
                             <div class="w-1/2">
                                 <x-ui.input type="text" name="place_of_birth" value="{{ old('place_of_birth') }}"
@@ -341,7 +447,7 @@
                     {{-- Alamat Domisili --}}
                     <div class="mt-4">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Alamat Domisili <span class="text-red-500">*</span>
+                            {{ translate('Alamat Domisili') }} <span class="text-red-500">*</span>
                         </label>
 
                         {{-- WRAPPER UTAMA (Memberikan Border & Rounded Luar) --}}
@@ -353,48 +459,20 @@
                                 <div class="absolute top-3 left-4 text-slate-500 pointer-events-none">
                                     <x-icons.location class="w-5 h-5" />
                                 </div>
-                                <textarea name="address" rows="2"
+                                <textarea name="domicile_address" rows="2"
                                     class="w-full bg-transparent border-none outline-none pl-11 pr-4 py-3 text-sm text-slate-900 focus:ring-0 resize-none"
-                                    placeholder="Nama Jalan, Blok, No. Rumah">{{ old('address') }}</textarea>
+                                    placeholder="{{ translate('Nama Jalan, Blok, No. Rumah') }}">{{ old('domicile_address') }}</textarea>
                             </div>
-
-                            {{-- GARIS PEMBATAS HORIZONTAL --}}
-                            <div class="h-px bg-gray-200 w-full"></div>
-
-                            {{-- BAGIAN BAWAH: RT & RW (Grid Sebelahan) --}}
-                            <div class="flex divide-x divide-gray-200 bg-gray-100/50">
-
-                                {{-- Input RT --}}
-                                <div class="relative w-1/2 group">
-                                    <span
-                                        class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 group-focus-within:text-blue-600">RT</span>
-                                    <input type="number" name="rt" value="{{ old('rt') }}"
-                                        class="w-full bg-transparent border-none outline-none pl-10 pr-2 py-2.5 text-sm text-slate-900 focus:ring-0 placeholder-slate-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                        placeholder="000">
-                                </div>
-
-                                {{-- Input RW --}}
-                                <div class="relative w-1/2 group">
-                                    <span
-                                        class="absolute left-2 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 group-focus-within:text-blue-600">RW</span>
-                                    <input type="number" name="rw" value="{{ old('rw') }}"
-                                        class="w-full bg-transparent outline-none border-none pl-10 pr-2 py-2.5 text-sm text-slate-900 focus:ring-0 placeholder-slate-300 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                        placeholder="000">
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Error Messages --}}
-                        @if ($errors->has('address') || $errors->has('rt') || $errors->has('rw'))
-                            <p class="mt-1 text-sm text-red-500">Mohon lengkapi alamat, RT, dan RW.</p>
-                        @endif
                     </div>
-
-                </div>
+                    {{-- Error Messages --}}
+                        @if ($errors->has('domicile_address'))
+                            <p class="mt-1 text-sm text-red-500">{{ translate('Mohon lengkapi alamat domisili.') }}</p>
+                        @endif
 
                 {{-- Email --}}
+                <div class="mt-4">
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">Email <span
+                    <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Email') }} <span
                             class="text-red-500">*</span></label>
                     <x-ui.input type="email" name="email" value="{{ old('email') }}"
                         placeholder="john@email.com"
@@ -407,42 +485,57 @@
                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
+                </div>
 
                 {{-- Kata Sandi --}}
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">Kata Sandi
+                <div class="mt-4">
+                <div x-data="{ show: false }">
+                    <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Kata Sandi') }}
                         <span class="text-red-500">*</span></label>
-                    <x-ui.input type="password" name="password" placeholder="Masukkan kata sandi"
+                    <x-ui.input ::type="show ? 'text' : 'password'" name="password" placeholder="{{ translate('Masukkan kata sandi') }}"
                         class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                         <x-slot:icon>
                             <x-icons.key class="w-5 h-5" stroke-width="1.5" />
                         </x-slot:icon>
+                        <x-slot:suffix>
+                             <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
+                                <x-icons.eye x-show="!show" class="w-5 h-5" />
+                                <x-icons.eye-off x-show="show" class="w-5 h-5" />
+                            </button>
+                        </x-slot:suffix>
                     </x-ui.input>
                     @error('password')
                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
+                </div>
 
                 {{-- Konfirmasi Kata Sandi --}}
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">Konfirmasi
-                        Kata Sandi
+                <div class="mt-4">
+                <div x-data="{ show: false }">
+                    <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Konfirmasi Kata Sandi') }}
                         <span class="text-red-500">*</span></label>
-                    <x-ui.input type="password" name="password_confirmation" placeholder="Ulangi kata sandi"
+                    <x-ui.input ::type="show ? 'text' : 'password'" name="password_confirmation" placeholder="{{ translate('Ulangi kata sandi') }}"
                         class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                         <x-slot:icon>
                             <x-icons.key class="w-5 h-5" stroke-width="1.5" />
                         </x-slot:icon>
+                        <x-slot:suffix>
+                             <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
+                                <x-icons.eye x-show="!show" class="w-5 h-5" />
+                                <x-icons.eye-off x-show="show" class="w-5 h-5" />
+                            </button>
+                        </x-slot:suffix>
                     </x-ui.input>
                     @error('password_confirmation')
                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
+                </div>
 
                 {{-- Sosmed --}}
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">Alamat
-                        Sosial Media atau Platform Digital Usaha <span>(Opsional)</span></label>
+                <div class="mt-4">
+                    <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Alamat Sosial Media atau Platform Digital Usaha') }} <span>{{ translate('(Opsional)') }}</span></label>
                     <div class="grid grid-cols-2 gap-4">
                         <x-ui.input type="url" name="social_instagram" value="{{ old('social_instagram') }}"
                             placeholder="https://instagram.com/@umkm"
@@ -489,7 +582,7 @@
                         @enderror
                     </div>
                 </div>
-
+                </div>
             </div>
     </div>
 
@@ -497,7 +590,7 @@
         <div class="mt-12 mb-8 text-center px-4">
             <x-ui.button type="submit"
                 class="w-full md:w-auto md:min-w-[200px] py-3 md:py-3.5 px-6 font-semibold text-sm md:text-base rounded-xl shadow-lg hover:shadow-blue-500/30 transition-all duration-300 transform hover:-translate-y-0.5">
-                Daftar Sekarang
+                {{ translate('Daftar Sekarang') }}
             </x-ui.button>
         </div>
     </div>

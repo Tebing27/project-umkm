@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Shop;
 use App\Models\User;
+use App\Models\Region;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,7 +22,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $regions = Region::all();
+        return view('auth.register', compact('regions'));
     }
 
     /**
@@ -41,16 +43,15 @@ class RegisteredUserController extends Controller
             'place_of_birth' => ['required', 'string', 'max:100'],
             'date_of_birth' => ['required', 'date'],
             'domicile_address' => ['required', 'string'],
-            'domicile_rt' => ['nullable', 'string', 'max:5'],
-            'domicile_rw' => ['nullable', 'string', 'max:5'],
 
             // Data Toko (Usaha)
             'shop_name' => ['required', 'string', 'max:255'],
             'product_type' => ['required', 'string', 'max:255'],
             'business_type' => ['required', 'string', 'max:255'],
             'shop_address' => ['required', 'string'],
-            'shop_rt' => ['nullable', 'string', 'max:5'],
-            'shop_rw' => ['nullable', 'string', 'max:5'],
+            'latitude' => ['nullable', 'numeric'],
+            'longitude' => ['nullable', 'numeric'],
+            'region_id' => ['required', 'exists:regions,id'],
             
             // Izin Usaha (Array)
             'license_type.*' => ['nullable', 'string'],
@@ -63,27 +64,31 @@ class RegisteredUserController extends Controller
             'social_website' => ['nullable', 'url'],
         ], [
             // Custom Messages (Bahasa Indonesia)
-            'required' => ':attribute wajib diisi.',
-            'string' => ':attribute harus berupa teks.',
-            'email' => ':attribute harus berupa email yang valid.',
-            'max' => ':attribute tidak boleh lebih dari :max karakter.',
-            'unique' => ':attribute sudah terdaftar.',
-            'confirmed' => 'Konfirmasi :attribute tidak cocok.',
-            'date' => ':attribute bukan tanggal yang valid.',
-            'url' => ':attribute harus berupa URL yang valid (awali dengan http:// atau https://).',
+            'required' => translate(':attribute wajib diisi.'),
+            'string' => translate(':attribute harus berupa teks.'),
+            'numeric' => translate(':attribute harus berupa angka.'),
+            'email' => translate(':attribute harus berupa email yang valid.'),
+            'max' => translate(':attribute tidak boleh lebih dari :max karakter.'),
+            'unique' => translate(':attribute sudah terdaftar.'),
+            'confirmed' => translate('Konfirmasi :attribute tidak cocok.'),
+            'date' => translate(':attribute bukan tanggal yang valid.'),
+            'url' => translate(':attribute harus berupa URL yang valid (awali dengan http:// atau https://).'),
         ], [
             // Custom Attribute Names
-            'name' => 'Nama Pemilik',
-            'email' => 'Email',
-            'password' => 'Kata Sandi',
-            'phone_number' => 'Nomor Handphone',
-            'place_of_birth' => 'Tempat Lahir',
-            'date_of_birth' => 'Tanggal Lahir',
-            'domicile_address' => 'Alamat Domisili',
-            'shop_name' => 'Nama Usaha',
-            'product_type' => 'Jenis Produk',
-            'business_type' => 'Jenis Usaha',
-            'shop_address' => 'Alamat Usaha',
+            'name' => translate('Nama Pemilik'),
+            'email' => translate('Email'),
+            'password' => translate('Kata Sandi'),
+            'phone_number' => translate('Nomor Handphone'),
+            'place_of_birth' => translate('Tempat Lahir'),
+            'date_of_birth' => translate('Tanggal Lahir'),
+            'domicile_address' => translate('Alamat Domisili'),
+            'shop_name' => translate('Nama Usaha'),
+            'product_type' => translate('Jenis Produk'),
+            'business_type' => translate('Jenis Usaha'),
+            'shop_address' => translate('Alamat Usaha'),
+            'latitude' => translate('Latitude'),
+            'longitude' => translate('Longitude'),
+            'region_id' => translate('Wilayah'),
         ]);
 
         try {
@@ -99,8 +104,6 @@ class RegisteredUserController extends Controller
                 'place_of_birth' => $request->place_of_birth,
                 'date_of_birth' => $request->date_of_birth,
                 'domicile_address' => $request->domicile_address,
-                'domicile_rt' => $request->domicile_rt,
-                'domicile_rw' => $request->domicile_rw,
             ]);
 
             // 3. Proses Data Izin Usaha (Gabungkan Type & Number)
@@ -123,8 +126,9 @@ class RegisteredUserController extends Controller
                 'product_type' => $request->product_type,
                 'business_type' => $request->business_type,
                 'address' => $request->shop_address,
-                'rt' => $request->shop_rt,
-                'rw' => $request->shop_rw,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'region_id' => $request->region_id,
                 'licenses' => !empty($licenses) ? $licenses : null, // Simpan sebagai JSON
                 'social_instagram' => $request->social_instagram,
                 'social_tiktok' => $request->social_tiktok,
@@ -133,6 +137,9 @@ class RegisteredUserController extends Controller
             ]);
 
             DB::commit();
+
+            // Dispatch Translation Job after transaction commit
+            \App\Jobs\TranslateShopAttributes::dispatch($shop);
 
             event(new Registered($user));
 
@@ -143,7 +150,7 @@ class RegisteredUserController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             // Log error jika perlu: \Log::error($e->getMessage());
-            return back()->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi. ' . $e->getMessage()])->withInput();
+            return back()->withErrors(['error' => translate('Terjadi kesalahan saat menyimpan data. Silakan coba lagi. ') . $e->getMessage()])->withInput();
         }
     }
 }
