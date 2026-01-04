@@ -15,12 +15,12 @@
             
             <div class="relative z-10">
                 <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 text-blue-600 group-hover:scale-110 transition-transform duration-300">
-                    <x-icons.store class="w-6 h-6" />
+                    <x-icons.data-store class="w-6 h-6" />
                 </div>
                 <h3 class="text-slate-500 font-semibold text-sm uppercase tracking-wider mb-1">{{ translate('Total UMKM') }}</h3>
                 <p class="text-4xl font-extrabold text-slate-900">{{ $totalShops }}</p>
                 <x-ui.badge variant="secondary" class="mt-4 flex items-center gap-2 w-fit px-2.5 py-1 rounded-full text-green-600">
-                    <x-icons.trending-up class="w-4 h-4" />
+                    <x-icons.data-trending class="w-4 h-4" />
                     <span>+{{ $newShopsThisWeek }} {{ translate('minggu ini') }}</span>
                 </x-ui.badge>
             </div>
@@ -34,7 +34,7 @@
                 <div class="flex items-start justify-between mb-6">
                     <div>
                         <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center mb-6 text-orange-600 group-hover:scale-110 transition-transform duration-300">
-                            <x-icons.users-group class="w-6 h-6" />
+                            <x-icons.data-users-group class="w-6 h-6" />
                         </div>
                         <h3 class="text-slate-500 font-semibold text-sm uppercase tracking-wider mb-1">{{ translate('Status Pendaftaran') }}</h3>
                         <p class="text-4xl font-extrabold text-slate-900">{{ $totalShops }} <span class="text-lg text-slate-400 font-medium">{{ translate('Total Toko') }}</span></p>
@@ -45,7 +45,7 @@
                     {{-- Terverifikasi --}}
                     <x-ui.card class="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex items-center gap-3 shadow-none">
                         <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0">
-                            <x-icons.check class="w-5 h-5" />
+                            <x-icons.ui-check class="w-5 h-5" />
                         </div>
                         <div>
                             <p class="text-2xl font-bold text-slate-900">{{$verifiedShopsCount}}</p>
@@ -56,7 +56,7 @@
                     {{-- Menunggu --}}
                     <x-ui.card class="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex items-center gap-3 shadow-none">
                         <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 shrink-0">
-                            <x-icons.clock class="w-5 h-5" />
+                            <x-icons.data-clock class="w-5 h-5" />
                         </div>
                         <div>
                             <p class="text-2xl font-bold text-slate-900">{{ $pendingShopsCount }}</p>
@@ -67,7 +67,7 @@
                     {{-- Gagal - Placeholder --}}
                     <x-ui.card class="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex items-center gap-3 shadow-none">
                         <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 shrink-0">
-                            <x-icons.x-mark class="w-5 h-5" />
+                            <x-icons.ui-close class="w-5 h-5" />
                         </div>
                         <div>
                             <p class="text-2xl font-bold text-slate-900">{{ $rejectedShopsCount }}</p>

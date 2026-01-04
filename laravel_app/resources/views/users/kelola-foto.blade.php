@@ -49,7 +49,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
                     <div class="md:col-span-5">
                         <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                            <x-icons.photo class="w-6 h-6 text-[#004a85]" />
+                            <x-icons.data-photo class="w-6 h-6 text-[#004a85]" />
                             {{ translate('Foto Sampul (Cover)') }}
                         </h2>
                         <div class="prose prose-slate prose-sm mt-4 text-slate-500">
@@ -78,7 +78,7 @@
                                 x-show="!photos[0].url" @click="$refs.photo0.click()">
                                 <div
                                     class="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 text-[#004a85] group-hover:scale-110 transition-transform">
-                                    <x-icons.photo class="w-8 h-8" />
+                                    <x-icons.data-photo class="w-8 h-8" />
                                 </div>
                                 <h3 class="font-bold text-slate-700 text-lg">{{ translate('Upload Foto Sampul') }}</h3>
                                 <p class="text-sm text-slate-400 mt-1">{{ translate('Klik untuk memilih foto') }}</p>
@@ -91,11 +91,11 @@
                                         class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-3 backdrop-blur-sm">
                                         <button type="button" @click="removePhoto(0)"
                                             class="p-2.5 bg-red-500 text-white rounded-full hover:scale-110 transition shadow-lg">
-                                            <x-icons.trash class="w-5 h-5" />
+                                            <x-icons.ui-delete class="w-5 h-5" />
                                         </button>
                                         <button type="button" @click="$refs.photo0.click()"
                                             class="p-2.5 bg-white text-slate-900 rounded-full hover:scale-110 transition shadow-lg">
-                                            <x-icons.pencil class="w-5 h-5" />
+                                            <x-icons.ui-edit class="w-5 h-5" />
                                         </button>
                                     </div>
                                     <div
@@ -115,7 +115,7 @@
 <div>
     <div class="mb-6">
         <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <x-icons.photo class="w-5 h-5 text-[#004a85]" />
+            <x-icons.data-photo class="w-5 h-5 text-[#004a85]" />
             {{ translate('Urutan Slider Berikutnya') }}
         </h2>
         <p class="text-sm text-slate-500 mt-1">
@@ -153,7 +153,7 @@
                                     {{-- KONDISI 1: JIKA KOSONG (Visual Saja) --}}
                                     <div class="absolute inset-0 flex flex-col items-center justify-center transition-colors z-10"
                                          x-show="!photos[i].url">
-                                        <x-icons.plus class="w-6 h-6 text-slate-300 group-hover:text-[#004a85] mb-1 transition-colors" />
+                                        <x-icons.ui-plus class="w-6 h-6 text-slate-300 group-hover:text-[#004a85] mb-1 transition-colors" />
                                         <span class="text-sm text-slate-400 group-hover:text-[#004a85]">{{ translate('Tambah') }}</span>
                                     </div>
 
@@ -170,14 +170,14 @@
                                                         @click="document.getElementById('slider-input-' + i).click()"
                                                         class="p-1.5 bg-white text-slate-700 rounded-md shadow-sm hover:bg-slate-50 hover:text-[#004a85] transition border border-slate-200"
                                                         title="{{ translate('Ganti Foto') }}">
-                                                    <x-icons.pencil class="w-3.5 h-3.5" />
+                                                    <x-icons.ui-edit class="w-3.5 h-3.5" />
                                                 </button>
 
                                                 {{-- Tombol Hapus --}}
                                                 <button type="button" @click="removePhoto(i)"
                                                         class="p-1.5 bg-red-500 text-white rounded-md shadow-sm hover:bg-red-600 transition"
                                                         title="{{ translate('Hapus Foto') }}">
-                                                    <x-icons.trash class="w-3.5 h-3.5" />
+                                                    <x-icons.ui-delete class="w-3.5 h-3.5" />
                                                 </button>
                                             </div>
 
@@ -211,7 +211,7 @@
                     {{-- TOMBOL SIMPAN --}}
                     <x-ui.button type="submit"
                         class="px-5 py-2 md:px-6 md:py-2.5 text-slate-900 rounded-full font-medium text-base tracking-wide shadow-lg active:scale-95 flex items-center justify-center gap-2 flex-1 md:flex-none">
-                        <x-icons.check class="w-4 h-4" />
+                        <x-icons.ui-check class="w-4 h-4" />
 
                         {{-- Trik Text Responsif --}}
                         <span x-ref="submitText">

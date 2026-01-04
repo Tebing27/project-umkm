@@ -36,7 +36,7 @@
                             <span class="text-sm font-reguler">EN</span>
                         @endif
 
-                        <x-icons.chevron-down x-bind:class="open ? 'rotate-180' : ''"
+                        <x-icons.ui-chevron-down x-bind:class="open ? 'rotate-180' : ''"
                             class="h-4 w-4 transition-transform duration-200" />
                     </button>
 
@@ -83,8 +83,8 @@
             <div class="md:hidden" x-data="{ open: false }">
                 <x-ui.button @click="open = !open" variant="ghost" size="icon"
                     class="text-slate-800 hover:bg-transparent h-auto">
-                    <x-icons.menu x-show="!open" class="w-6 h-6" />
-                    <x-icons.x-mark x-show="open" style="display: none;" class="w-6 h-6" />
+                    <x-icons.ui-menu x-show="!open" class="w-6 h-6" />
+                    <x-icons.ui-close x-show="open" style="display: none;" class="w-6 h-6" />
                 </x-ui.button>
 
                 <div x-show="open" @click.away="open = false" @scroll.window="open = false"
@@ -127,7 +127,7 @@
                                 alt="EN" class="w-5 h-5 rounded-full object-cover">
                             <span class="text-sm font-reguler">EN</span>
                         @endif
-                                <x-icons.chevron-down x-bind:class="open ? 'rotate-180' : ''"
+                                <x-icons.ui-chevron-down x-bind:class="open ? 'rotate-180' : ''"
                             class="h-4 w-4 transition-transform duration-200" />
                             </x-ui.button>
 

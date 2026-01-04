@@ -5,7 +5,7 @@
     <div class="flex items-center gap-3">
         <x-ui.button @click="sidebarOpen = !sidebarOpen" variant="ghost" size="icon"
             class="text-gray-500 hover:text-[#004a85] h-auto w-auto p-1">
-            <x-icons.menu class="w-6 h-6" />
+            <x-icons.ui-menu class="w-6 h-6" />
         </x-ui.button>
         <div>
             <h1 class="text-lg font-bold text-gray-900 leading-none">{{ $title }}</h1>

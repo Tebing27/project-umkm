@@ -8,7 +8,7 @@
 
             <div x-show="isLaptop"
                 class="bg-[#FFC107] text-black px-4 py-3 rounded-lg text-sm font-medium shadow-sm max-w-md flex items-start gap-2">
-                <x-icons.info-circle class="w-5 h-5 mt-0.5 shrink-0" />
+                <x-icons.status-info class="w-5 h-5 mt-0.5 shrink-0" />
                 <span>{{ translate('Saat ini perangkat Anda menggunakan laptop sehingga masukkan koordinat manual. Peta akan menyesuaikan otomatis.') }}</span>
             </div>
         </div>
@@ -16,7 +16,7 @@
         {{-- 2. ALERTS --}}
         <div x-show="showSuccessAlert"
             class="mb-6 bg-green-50 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 border border-green-200">
-            <x-icons.check class="w-6 h-6 shrink-0" />
+            <x-icons.ui-check class="w-6 h-6 shrink-0" />
             <span x-text="successMessage"></span>
             <button @click="showSuccessAlert = false"
                 class="ml-auto text-green-500 hover:text-green-700">&times;</button>
@@ -26,7 +26,7 @@
         <div x-show="showLockedAlert" x-transition
             class="fixed top-4 left-4 right-4 z-[70] flex items-center gap-2 bg-red-50 text-red-600 px-4 py-3 rounded-lg border border-red-200 shadow-lg md:static md:shadow-none md:mb-6 md:mx-0"
             style="display: none;">
-            <x-icons.lock-closed class="w-5 h-5 shrink-0" />
+            <x-icons.auth-lock class="w-5 h-5 shrink-0" />
             <span class="text-sm font-medium">{{ translate('Mode Desktop Terkunci: Silakan masukkan koordinat manual atau gunakan HP.') }}</span>
             <button type="button" @click="showLockedAlert = false"
                 class="ml-auto text-red-400 hover:text-red-600 focus:outline-none p-1">
@@ -38,14 +38,14 @@
         <div x-show="showInstructionAlert" x-transition
             class="fixed top-4 left-4 right-4 z-[80] flex items-start gap-2 bg-orange-50 text-orange-700 px-4 py-3 rounded-lg border border-orange-200 shadow-lg md:static md:shadow-none md:mb-6 md:mx-0"
             style="display: none;">
-            <x-icons.info-circle class="w-5 h-5 shrink-0 mt-0.5" />
+            <x-icons.status-info class="w-5 h-5 shrink-0 mt-0.5" />
             <span class="text-sm font-medium">{{ translate('Maaf, untuk mencari lokasi silahkan pilih wilayah -> lalu atur lokasi') }}</span>
         </div>
 
         <div x-show="showNoChangeAlert"
             class="fixed top-4 left-4 right-4 z-[60] flex items-start gap-2 bg-blue-50 text-blue-600 px-4 py-3 rounded-lg border border-blue-200 shadow-lg md:static md:shadow-none md:mb-6 md:mx-0"
             style="display: none;" x-transition>
-            <x-icons.info-circle class="w-5 h-5 shrink-0" />
+            <x-icons.status-info class="w-5 h-5 shrink-0" />
             <span class="text-sm">{{ translate('Lokasi belum berubah. Silakan atur koordinat.') }}</span>
         </div>
 
@@ -117,7 +117,7 @@
                                         :class="selectedId ? 'text-gray-900' : 'text-gray-500'"
                                         x-text="selectedName"></span>
                                 </div>
-                                <x-icons.chevron-down
+                                <x-icons.ui-chevron-down
                                     class="w-4 h-4 text-gray-400 transition-transform duration-200 group-focus:text-blue-600"
                                     x-bind:class="open ? 'rotate-180' : ''" />
                             </button>
@@ -133,7 +133,7 @@
                                         :class="selectedId == '{{ $region->id }}' ? 'text-blue-600 bg-blue-50/50' :
                                             'text-slate-600'">
                                         <span class="truncate">{{ $region->name }}</span>
-                                        <x-icons.check x-show="selectedId == '{{ $region->id }}'"
+                                        <x-icons.ui-check x-show="selectedId == '{{ $region->id }}'"
                                             class="w-4 h-4 text-blue-600" />
                                     </div>
                                 @endforeach
@@ -175,7 +175,7 @@
                         </div>
                         <div class="mt-1 flex items-center justify-between text-xs text-gray-500">
                             <span x-show="isLoadingAddress" class="text-blue-600 flex items-center gap-1">
-                                <x-icons.loading class="w-3 h-3 animate-spin" /> {{ translate('Mencari koordinat...') }}
+                                <x-icons.status-loading class="w-3 h-3 animate-spin" /> {{ translate('Mencari koordinat...') }}
                             </span>
                             <span x-show="!isLoadingAddress" class="hidden md:block">{{ translate('Ketik alamat untuk update lokasi otomatis.') }}</span>
                         </div>
@@ -202,7 +202,7 @@
                             <x-ui.input variant="soft" type="text" name="longitude" x-model="lng"
                                 x-bind:readonly="isMobile" @input.debounce.800ms="updateMapFromInput()"
                                 placeholder="106.xxxxx" ::class="isMobile ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'">
-                                <x-slot:icon><x-icons.location class="w-5 h-5" /></x-slot:icon>
+                                <x-slot:icon><x-icons.map-pin class="w-5 h-5" /></x-slot:icon>
                             </x-ui.input>
                         </div>
                     </div>
@@ -216,7 +216,7 @@
                                 'opacity-50 cursor-not-allowed pointer-events-none' : 'hover:scale-105 active:scale-95'" x-bind:disabled="!hasChanged || isLoadingAddress">
                                 <template x-if="isLoadingAddress">
                                     <div class="flex items-center gap-2">
-                                        <x-icons.loading class="w-5 h-5 animate-spin" />
+                                        <x-icons.status-loading class="w-5 h-5 animate-spin" />
                                         <span>{{ translate('Mencari...') }}</span>
                                     </div>
                                 </template>
@@ -249,20 +249,20 @@
                 </div>
                 <button type="button" @click="closeMobileModal()"
                     class="p-2 rounded-full hover:bg-gray-100 text-gray-500">
-                    <x-icons.x-mark class="w-6 h-6" />
+                    <x-icons.ui-close class="w-6 h-6" />
                 </button>
             </div>
 
             <div class="relative flex-1 w-full bg-gray-100">
                 <div
                     class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[500] pointer-events-none pb-8">
-                    <x-icons.location class="w-8 h-8 text-red-600 drop-shadow-md" />
+                    <x-icons.map-pin class="w-8 h-8 text-red-600 drop-shadow-md" />
                 </div>
                 <div class="absolute bottom-24 right-4 z-[400]">
                     <button type="button" @click="locateMeMobile()"
                         class="bg-white p-3 rounded-full shadow-lg border border-gray-200 text-gray-700 hover:text-blue-600 active:bg-gray-50">
-                        <x-icons.loading x-show="geoLoading" class="w-6 h-6 animate-spin text-blue-600" />
-                        <x-icons.location x-show="!geoLoading" class="w-6 h-6" />
+                        <x-icons.status-loading x-show="geoLoading" class="w-6 h-6 animate-spin text-blue-600" />
+                        <x-icons.map-pin x-show="!geoLoading" class="w-6 h-6" />
                     </button>
                 </div>
                 <div id="mobileMap" class="w-full h-full z-0"></div>
@@ -271,7 +271,7 @@
                 <div class="absolute top-4 left-4 right-4 z-[550]">
                      <div class="relative bg-white rounded-xl shadow-lg border border-gray-200">
                          <div class="flex items-center px-4 py-3">
-                             <x-icons.location-search class="w-5 h-5 text-gray-400 shrink-0" />
+                             <x-icons.map-pin-search class="w-5 h-5 text-gray-400 shrink-0" />
                              {{-- Input Search --}}
                             <input type="text"
     x-model="tempAddress"
@@ -281,7 +281,7 @@
                              
                              {{-- Clear Button --}}
                              <button type="button" x-show="tempAddress" @click="tempAddress = ''; updateMobileAddressFromInput()" class="ml-2 text-gray-400 hover:text-gray-600">
-                                 <x-icons.x-mark class="w-5 h-5" />
+                                 <x-icons.ui-close class="w-5 h-5" />
                              </button>
                          </div>
                          
@@ -329,7 +329,7 @@
                 </div>
                 <button type="button" @click="showRegionErrorAlert = false"
                     class="ml-auto text-red-400 hover:text-red-800 font-bold p-1">
-                    <x-icons.x-mark />
+                    <x-icons.ui-close />
                 </button>
             </div>
         </div>

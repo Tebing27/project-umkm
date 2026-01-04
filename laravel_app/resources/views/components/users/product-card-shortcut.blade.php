@@ -2,7 +2,7 @@
     class="group relative bg-slate-50 rounded-2xl border-2 border-dashed border-slate-300 flex flex-col items-center justify-center h-full min-h-[350px] hover:border-[#004a85] hover:bg-blue-50/30 transition-all duration-300 p-6 overflow-hidden">
     <div
         class="w-16 h-16 rounded-2xl bg-white shadow-sm border border-slate-200 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:shadow-md group-hover:border-[#004a85]/20 transition-all duration-300 z-10">
-        <x-icons.plus class="w-8 h-8 text-slate-400 group-hover:text-[#004a85] transition-colors" />
+        <x-icons.ui-plus class="w-8 h-8 text-slate-400 group-hover:text-[#004a85] transition-colors" />
     </div>
     <span
         class="font-bold text-slate-500 group-hover:text-[#004a85] text-lg transition-colors z-10">{{translate('Tambah Produk')}}</span>

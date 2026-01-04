@@ -20,14 +20,14 @@
                 <div class="flex-1">
                     <div class="relative group h-full">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <x-icons.location-search class="h-5 w-5 text-slate-400" />
+                            <x-icons.map-pin-search class="h-5 w-5 text-slate-400" />
                         </div>
 
                         <div class="flex-1 h-full">
                             <x-ui.input variant="transparent" x-model="searchQuery" placeholder="{{translate('Cari nama toko')}}"
                                 class="text-sm font-medium placeholder-slate-400">
                                 <x-slot:icon>
-                                    <x-icons.location-search class="h-5 w-5 text-slate-400" />
+                                    <x-icons.map-pin-search class="h-5 w-5 text-slate-400" />
                                 </x-slot:icon>
                             </x-ui.input>
 
@@ -43,11 +43,11 @@
                     <x-ui.button variant="trigger" size="compact" @click="open = !open" type="button"
                         class="min-w-[160px]">
                         <div class="flex items-center gap-2">
-                            <x-icons.location class="w-4 h-4 text-slate-400" />
+                            <x-icons.map-pin class="w-4 h-4 text-slate-400" />
                             <span class="truncate max-w-[150px] text-sm"
                                 x-text="selectedLocation || '{{translate('Semua Wilayah')}}'"></span>
                         </div>
-                        <x-icons.chevron-down class="w-4 h-4 text-slate-400 transition-transform duration-200"
+                        <x-icons.ui-chevron-down class="w-4 h-4 text-slate-400 transition-transform duration-200"
                             x-bind:class="open ? 'rotate-180' : ''" />
                     </x-ui.button>
 
@@ -57,13 +57,13 @@
                         <div @click="selectedLocation = ''; open = false"
                             class="px-5 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-primary cursor-pointer flex items-center justify-between transition-colors">
                             <span>{{translate('Semua Wilayah')}}</span>
-                            <x-icons.check x-show="selectedLocation === ''" class="w-4 h-4 text-primary" />
+                            <x-icons.ui-check x-show="selectedLocation === ''" class="w-4 h-4 text-primary" />
                         </div>
                         @foreach($regions as $region)
                             <div @click="selectedLocation = '{{ $region }}'; open = false"
                                 class="px-5 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-primary cursor-pointer flex items-center justify-between transition-colors">
                                 <span>{{ $region }}</span>
-                                <x-icons.check x-show="selectedLocation === '{{ $region }}'"
+                                <x-icons.ui-check x-show="selectedLocation === '{{ $region }}'"
                                     class="w-4 h-4 text-primary" />
                             </div>
                         @endforeach
@@ -73,7 +73,7 @@
                 <!-- Search Button -->
                 <x-ui.button type="button" variant="default" size="icon"
                     class="rounded-full w-10 h-10 bg-[#FFC107] text-slate-900 shadow-sm min-w-[2.5rem] border-none outline-none">
-                    <x-icons.location-search class="h-5 w-5 text-slate-900" />
+                    <x-icons.map-pin-search class="h-5 w-5 text-slate-900" />
                 </x-ui.button>
             </div>
 
@@ -85,9 +85,9 @@
                         x-bind:class="selectedLocation !== '' ? 'bg-[#00509D] text-white border-[#00509D]' :
                             'bg-white border-slate-200 text-slate-600'">
 
-                        <x-icons.location class="w-4 h-4" />
+                        <x-icons.map-pin class="w-4 h-4" />
                         <span x-text="selectedLocation || '{{translate('Wilayah')}}'"></span>
-                        <x-icons.chevron-down class="w-3 h-3 transition-transform duration-200"
+                        <x-icons.ui-chevron-down class="w-3 h-3 transition-transform duration-200"
                             x-bind:class="open ? 'rotate-180' : ''" />
                     </x-ui.button>
 
@@ -97,13 +97,13 @@
                         <div @click="selectedLocation = ''; open = false"
                             class="px-4 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-primary cursor-pointer flex items-center justify-between transition-colors">
                             <span>{{translate('Semua Wilayah')}}</span>
-                            <x-icons.check x-show="selectedLocation === ''" class="w-4 h-4 text-primary" />
+                            <x-icons.ui-check x-show="selectedLocation === ''" class="w-4 h-4 text-primary" />
                         </div>
                         @foreach($regions as $region)
                             <div @click="selectedLocation = '{{ $region }}'; open = false"
                                 class="px-4 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-primary cursor-pointer flex items-center justify-between transition-colors">
                                 <span>{{ $region }}</span>
-                                <x-icons.check x-show="selectedLocation === '{{ $region }}'"
+                                <x-icons.ui-check x-show="selectedLocation === '{{ $region }}'"
                                     class="w-4 h-4 text-primary" />
                             </div>
                         @endforeach

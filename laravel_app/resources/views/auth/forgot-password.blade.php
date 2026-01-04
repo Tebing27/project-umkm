@@ -48,7 +48,7 @@
                         class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal"
                         required autofocus>
                         <x-slot:icon>
-                            <x-icons.mail class="w-5 h-5" stroke-width="1.5" />
+                            <x-icons.contact-mail class="w-5 h-5" stroke-width="1.5" />
                         </x-slot:icon>
                     </x-ui.input>
                     @error('email')

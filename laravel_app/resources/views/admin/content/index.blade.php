@@ -58,10 +58,10 @@
                 {{-- Icon --}}
                 <div class="shrink-0">
                     <template x-if="note.type === 'success'">
-                        <x-icons.info-circle class="w-6 h-6 text-green-500" />
+                        <x-icons.status-info class="w-6 h-6 text-green-500" />
                     </template>
                     <template x-if="note.type === 'error'">
-                        <x-icons.info-circle class="w-6 h-6 text-red-500" />
+                        <x-icons.status-info class="w-6 h-6 text-red-500" />
                     </template>
                 </div>
                 
@@ -75,7 +75,7 @@
                         class="shrink-0 p-1 rounded-md hover:bg-black/5 transition-colors"
                         :class="note.type === 'success' ? 'text-green-500' : 'text-red-500'">
                     <span class="sr-only">Close</span>
-                    <x-icons.x-mark class="w-4 h-4" />
+                    <x-icons.ui-close class="w-4 h-4" />
                 </button>
             </div>
         </template>
@@ -110,13 +110,13 @@
                                 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'">
                             <span>
                                 @if ($key === 'home_hero')
-                                    <x-icons.home class="w-4 h-4" />
+                                    <x-icons.nav-home class="w-4 h-4" />
                                 @elseif($key === 'home_wilayah')
-                                    <x-icons.location class="w-4 h-4" />
+                                    <x-icons.map-pin class="w-4 h-4" />
                                 @elseif($key === 'umkm_index')
-                                    <x-icons.shopping-bag class="w-4 h-4" />
+                                    <x-icons.shop-bag class="w-4 h-4" />
                                 @else
-                                    <x-icons.settings class="w-4 h-4" />
+                                    <x-icons.ui-settings class="w-4 h-4" />
                                 @endif
                             </span>
                             {{translate($data['label']) }}
@@ -166,7 +166,7 @@
                                                 {{-- Placeholder --}}
                                                 <div
                                                     class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 gap-3 bg-slate-50">
-                                                    <x-icons.photo class="w-10 h-10 opacity-50" />
+                                                    <x-icons.data-photo class="w-10 h-10 opacity-50" />
                                                     <span class="text-base font-bold uppercase text-slate-400">{{translate('Tidak
                                                         Ada Gambar')}}</span>
                                                 </div>
@@ -187,7 +187,7 @@
                                                 {{-- Optional: Add a small subtitle like "Wilayah" or region count if available --}}
                                                 <div
                                                     class="text-base text-[#004a85] font-medium mt-0.5 flex items-center gap-1 opacity-70">
-                                                    <x-icons.location class="w-3 h-3" /> <span>{{translate('Wilayah')}}</span>
+                                                    <x-icons.map-pin class="w-3 h-3" /> <span>{{translate('Wilayah')}}</span>
                                                 </div>
                                             </div>
 
@@ -205,7 +205,7 @@
                                                                 onsubmit="return confirm('{{ translate('Apakah Anda yakin ingin menghapus gambar ini?') }}');">
                                                                 @csrf @method('DELETE')
                                                                 <button type="submit" class="p-2 bg-red-500 rounded-full text-white hover:bg-red-600 transition-colors shadow-lg" title="{{ translate('Hapus Gambar') }}">
-                                                                    <x-icons.trash class="w-4 h-4" />
+                                                                    <x-icons.ui-delete class="w-4 h-4" />
                                                                 </button>
                                                             </form>
                                                         </div>
@@ -214,7 +214,7 @@
                                                     <button type="button"
                                                         @click="$refs.photo_{{ $region->id }}.click()"
                                                         class="group/btn bg-white text-slate-900 rounded-full p-3 mb-3 hover:bg-[#004a85] hover:text-white transition-all shadow-lg hover:scale-110 hover:rotate-6">
-                                                        <x-icons.photo
+                                                        <x-icons.data-photo
                                                             class="w-6 h-6 transition-transform group-hover/btn:scale-90" />
                                                     </button>
                                                     <p
@@ -234,7 +234,7 @@
                                                         class="w-full font-medium py-3 px-6 rounded-lg shadow-lg active:scale-95 flex items-center justify-center gap-2 relative overflow-hidden group/save">
                                                         <span
                                                             class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/save:animate-shimmer"></span>
-                                                        <x-icons.check class="w-5 h-5 relative z-10" />
+                                                        <x-icons.ui-check class="w-5 h-5 relative z-10" />
                                                         <span class="relative z-10">{{translate('Simpan Foto')}}</span>
                                                     </x-ui.button>
                                                     {{-- Tombol Batal (Optional UX Improvement) --}}
@@ -299,7 +299,7 @@
                                             @if ($item->type !== 'image')
                                                 <div
                                                     class="h-8 w-8 rounded-full bg-blue-50 text-[#004a85] flex items-center justify-center">
-                                                    <x-icons.pencil class="w-4 h-4" />
+                                                    <x-icons.ui-edit class="w-4 h-4" />
                                                 </div>
                                             @endif
                                         </div>
@@ -324,7 +324,7 @@
                                                     @else
                                                         <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 gap-3 bg-slate-50"
                                                             x-show="!photoPreview">
-                                                            <x-icons.photo class="w-10 h-10 opacity-50" />
+                                                            <x-icons.data-photo class="w-10 h-10 opacity-50" />
                                                             <span
                                                                 class="text-base font-bold uppercase tracking-widest text-slate-400">{{translate('Tidak
                                                                 Ada Gambar')}}</span>
@@ -346,7 +346,7 @@
                                                                     onsubmit="return confirm('{{ translate('Apakah Anda yakin ingin menghapus gambar ini?') }}');">
                                                                     @csrf @method('DELETE')
                                                                     <button type="submit" class="bg-red-500/80 hover:bg-red-600 text-white p-2 rounded-full backdrop-blur-md shadow-lg transition-transform hover:scale-110" title="{{ translate('Hapus Gambar') }}">
-                                                                        <x-icons.trash class="w-5 h-5" />
+                                                                        <x-icons.ui-delete class="w-5 h-5" />
                                                                     </button>
                                                                 </form>
                                                             </div>
@@ -493,7 +493,7 @@
                                     class="w-10 h-10 rounded-md object-cover bg-slate-100 shadow-sm border border-slate-100">
                             @else
                                 <div class="w-10 h-10 rounded-md bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400">
-                                    <x-icons.location class="w-5 h-5" />
+                                    <x-icons.map-pin class="w-5 h-5" />
                                 </div>
                             @endif
                             <label class="block text-base font-bold text-slate-700">{{ $region->name }}</label>
@@ -535,7 +535,7 @@
                                     :class="selectedId ? 'text-[#004a85]' : 'text-slate-600'"
                                     x-text="selectedName"></span>
 
-                                <x-icons.arrow-down
+                                <x-icons.ui-arrow-down
                                     class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0"
                                     x-bind:class="open ? 'rotate-180 text-[#004a85]' : ''" />
                             </button>
@@ -575,7 +575,7 @@
                                             'text-slate-600'">
                                         <span>{{ translate('Acak / Tidak Ada') }}</span>
                                         <div x-show="selectedId === ''">
-                                            <x-icons.check class="w-4 h-4 text-[#004a85]" />
+                                            <x-icons.ui-check class="w-4 h-4 text-[#004a85]" />
                                         </div>
                                     </div>
 
@@ -590,7 +590,7 @@
 
                                             {{-- Check Icon if selected --}}
                                             <div x-show="selectedId == '{{ $shop->id }}'">
-                                                <x-icons.check class="w-4 h-4 text-[#004a85]" />
+                                                <x-icons.ui-check class="w-4 h-4 text-[#004a85]" />
                                             </div>
                                         </div>
                                     @endforeach
@@ -611,10 +611,10 @@
                                 title="{{ translate('Simpan') }}">
                             
                             <template x-if="!isLoading">
-                                <x-icons.check class="w-5 h-5" />
+                                <x-icons.ui-check class="w-5 h-5" />
                             </template>
                             <template x-if="isLoading">
-                                <x-icons.loading class="w-5 h-5" />
+                                <x-icons.status-loading class="w-5 h-5" />
                             </template>
                         </button>
                     </div>

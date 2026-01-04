@@ -27,7 +27,7 @@
                         </div>
 
                         <div class="flex items-start gap-2 text-slate-900 text-base">
-                            <x-icons.location class="shrink-0" />
+                            <x-icons.map-pin class="shrink-0" />
                             <span>{{ $shop->address }}</span>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                     @if ($shop->instagram_username)
                         <a href="https://instagram.com/{{ $shop->instagram_username }}" target="_blank"
                             class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                            <x-icons.instagram class="text-red-500" />
+                            <x-icons.social-instagram class="text-red-500" />
                             <span class="font-medium text-base text-slate-900">{{ '@' . $shop->instagram_username }}</span>
                         </a>
                     @endif
@@ -77,7 +77,7 @@
                     @if ($shop->tiktok_username)
                         <a href="{{ 'https://tiktok.com/@' . $shop->tiktok_username }}" target="_blank"
                             class="flex items-center gap-1 hover:opacity-80 transition-opacity">
-                            <x-icons.tiktok class="text-slate-900" />
+                            <x-icons.social-tiktok class="text-slate-900" />
                             <span class="font-medium text-base text-slate-900">{{ '@' . $shop->tiktok_username }}</span>
                         </a>
                     @endif
@@ -86,7 +86,7 @@
                     @if ($shop->facebook_username)
                         <a href="https://facebook.com/{{ $shop->facebook_username }}" target="_blank"
                             class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                            <x-icons.facebook class="text-[#1877F2]" />
+                            <x-icons.social-facebook class="text-[#1877F2]" />
                             <span class="font-medium text-base text-slate-900">{{ $shop->facebook_username }}</span>
                         </a>
                     @endif
@@ -95,7 +95,7 @@
                     @if ($shop->website_url)
                         <a href="{{ $shop->website_url }}"
                             target="_blank" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                            <x-icons.globe class="text-slate-900" />
+                            <x-icons.map-globe class="text-slate-900" />
                             <span class="font-medium text-base text-slate-900">Website</span>
                         </a>
                     @endif
@@ -165,12 +165,12 @@
     {{-- Mobile: Order 2, Desktop: Order 3 --}}
     <div class="relative w-full md:w-72 order-2 md:order-3 shrink-0">
         <div class="absolute left-3 top-1/2 -translate-y-[46%] md:-translate-y-[54%] pointer-events-none text-slate-400">
-            <x-icons.location-search class="w-5 h-5" />
+            <x-icons.map-pin-search class="w-5 h-5" />
         </div>
         
         <x-ui.input variant="search" name="search" x-model="search" placeholder="{{translate('Cari produk...')}}">
             <x-slot:icon>
-                <x-icons.location-search class="w-5 h-5" />
+                <x-icons.map-pin-search class="w-5 h-5" />
             </x-slot:icon>
         </x-ui.input>
     </div>
@@ -232,7 +232,7 @@
                 <x-ui.button @click="loadMore" variant="outline"
                     class="group flex items-center gap-2 mx-auto px-6 py-2.5 rounded-full border-slate-200 text-slate-900 font-bold text-base hover:border-primary hover:text-primary hover:bg-slate-50 transition-all duration-300 shadow-sm hover:shadow-md">
                     <span>{{translate('Lihat Lebih Banyak')}}</span>
-                    <x-icons.chevron-down class="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
+                    <x-icons.ui-chevron-down class="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
                 </x-ui.button>
             </div>
         </div>

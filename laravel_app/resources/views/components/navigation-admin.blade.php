@@ -31,7 +31,7 @@
             class="text-slate-400 hover:text-primary focus:outline-none transition-all p-1.5 rounded-lg active:scale-95"
             x-bind:class="sidebarExpanded ? '' : ''">
 
-            <x-icons.chevron-double-left class="w-5 h-5 transition-transform duration-300"
+            <x-icons.ui-chevron-double-left class="w-5 h-5 transition-transform duration-300"
                 x-bind:class="sidebarExpanded ? 'rotate-0' : 'rotate-180'" />
         </x-ui.button>
     </div>
@@ -120,7 +120,7 @@
                 @csrf
                 <x-ui.button variant="destructive" type="submit" class="w-full rounded-lg"
                     x-bind:class="sidebarExpanded ? 'justify-start px-3 py-2.5' : 'lg:justify-center justify-start px-0 py-2.5'">
-                    <x-icons.logout class="w-5 h-5 shrink-0" x-bindx-bind:class="sidebarExpanded ? 'mr-3' : 'mr-0'" />
+                    <x-icons.auth-logout class="w-5 h-5 shrink-0" x-bindx-bind:class="sidebarExpanded ? 'mr-3' : 'mr-0'" />
                     <span x-show="sidebarExpanded || window.innerWidth < 1024"
                         class="font-semibold text-sm">Logout</span>
                 </x-ui.button>

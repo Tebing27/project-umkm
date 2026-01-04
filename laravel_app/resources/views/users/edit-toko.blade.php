@@ -81,13 +81,13 @@
                     </div>
 
                     <div class="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-md border border-gray-200 text-gray-500 group-hover:text-[#004a85] transition-colors">
-                        <x-icons.pencil class="w-4 h-4" />
+                        <x-icons.ui-edit class="w-4 h-4" />
                     </div>
                     <div x-show="(photoPreview || '{{ $shop->logo }}') && !isDeleted" 
          x-on:click.stop="isDeleted = true; photoPreview = null; $refs.photo.value = null;"
          class="absolute top-0 right-0 -mt-1 -mr-1 bg-white p-2 rounded-full shadow-md border border-gray-200 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors z-20"
          title="{{ translate('Hapus Logo') }}">
-        <x-icons.trash class="w-4 h-4" />
+        <x-icons.ui-delete class="w-4 h-4" />
     </div>
                 </div>
 
@@ -120,7 +120,7 @@
                         value="{{ old('shop_name', $shop->name ?? '') }}" placeholder="{{ translate('Tebing') }}"
                         class="text-sm md:text-base">
                         <x-slot:icon>
-                            <x-icons.store class="w-5 h-5" />
+                            <x-icons.data-store class="w-5 h-5" />
                         </x-slot:icon>
                     </x-ui.input>
                     @error('shop_name')
@@ -136,7 +136,7 @@
                         value="{{ old('product_type', $shop->product_type ?? '') }}"
                         placeholder="{{ translate('Contoh: Makanan Ringan') }}" class="text-sm md:text-base">
                         <x-slot:icon>
-                            <x-icons.shopping-cart class="w-5 h-5" />
+                            <x-icons.shop-cart class="w-5 h-5" />
                         </x-slot:icon>
                     </x-ui.input>
                     @error('product_type')
@@ -151,7 +151,7 @@
                     <x-ui.textarea rows="4" variant="soft" name="description"
                         placeholder="{{ translate('Ceritakan tentang tokomu...') }}" class="text-sm md:text-base">
                         <x-slot:icon>
-                            <x-icons.text-description class="w-5 h-5" />
+                            <x-icons.data-description class="w-5 h-5" />
                         </x-slot:icon>
                         {{ translate(old('description', $shop->description ?? '')) }}
                     </x-ui.textarea>
@@ -176,14 +176,14 @@
                                 variant="ghost"
                                 class="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-colors shrink-0"
                                 title="{{ translate('Hapus Izin') }}">
-                                <x-icons.trash class="w-5 h-5" />
+                                <x-icons.ui-delete class="w-5 h-5" />
                             </x-ui.button>
                         </div>
                     </template>
 
                     <x-ui.button type="button" @click="licenses.push({ type: '', number: '' })" variant="ghost"
                         class="mt-2 text-sm text-[#004a85] rounded-lg font-medium flex items-center gap-1 transition-colors">
-                        <x-icons.plus class="w-4 h-4" />
+                        <x-icons.ui-plus class="w-4 h-4" />
                         {{ translate('Tambah Izin Lain') }}
                     </x-ui.button>
                 </div>
@@ -200,7 +200,7 @@
                     <x-ui.input variant="soft" type="text" value="{{ Auth::user()->name }}" readonly
                         class="bg-gray-100 text-sm md:text-base">
                         <x-slot:icon>
-                            <x-icons.user class="w-5 h-5" />
+                            <x-icons.data-user class="w-5 h-5" />
                         </x-slot:icon>
                     </x-ui.input>
                 </div>
@@ -280,7 +280,7 @@
                             value="{{ old('social_instagram', $shop->social_instagram ?? '') }}"
                             placeholder="{{ translate('Username instagram') }}" class="text-sm md:text-base">
                             <x-slot:icon>
-                                <x-icons.instagram class="w-5 h-5 text-[#E4405F]" />
+                                <x-icons.social-instagram class="w-5 h-5 text-[#E4405F]" />
                             </x-slot:icon>
                         </x-ui.input>
 
@@ -288,7 +288,7 @@
                             value="{{ old('social_tiktok', $shop->social_tiktok ?? '') }}"
                             placeholder="{{ translate('Username Tiktok') }}" class="text-sm md:text-base">
                             <x-slot:icon>
-                                <x-icons.tiktok class="w-5 h-5 text-slate-900" />
+                                <x-icons.social-tiktok class="w-5 h-5 text-slate-900" />
                             </x-slot:icon>
                         </x-ui.input>
 
@@ -296,7 +296,7 @@
                             value="{{ old('social_facebook', $shop->social_facebook ?? '') }}"
                             placeholder="{{ translate('Username Facebook') }}" class="text-sm md:text-base">
                             <x-slot:icon>
-                                <x-icons.facebook class="w-5 h-5 text-[#1877F2]" />
+                                <x-icons.social-facebook class="w-5 h-5 text-[#1877F2]" />
                             </x-slot:icon>
                         </x-ui.input>
 
@@ -304,7 +304,7 @@
                             value="{{ old('social_website', $shop->social_website ?? '') }}" placeholder="Website"
                             class="text-sm md:text-base">
                             <x-slot:icon>
-                                <x-icons.globe class="w-5 h-5 text-slate-900" />
+                                <x-icons.map-globe class="w-5 h-5 text-slate-900" />
                             </x-slot:icon>
                         </x-ui.input>
                     </div>

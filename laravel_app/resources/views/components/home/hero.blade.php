@@ -38,7 +38,7 @@
                         <div class="hidden sm:flex justify-center">
                             <x-ui.button variant="link" size="icon-link" class="p-0 text-sm">
                                 {{ translate('Lihat Lokasi') }}
-                                <x-icons.arrow-right class="w-2 h-2" />
+                                <x-icons.ui-arrow-right class="w-2 h-2" />
                             </x-ui.button>
                         </div>
                     </div>
@@ -50,13 +50,13 @@
                         <x-ui.button x-on:click="currentIndex = (currentIndex - 1 + items.length) % items.length"
                             class="absolute top-1/2 -translate-y-1/2 -left-4 sm:left-0 sm:-translate-x-4 bg-blue-600 text-white p-2 rounded-full opacity-85 hover:opacity-100 hover:bg-blue-700 flex items-center justify-center shadow-md border-none transition-all"
                             size="icon">
-                            <x-icons.arrow-left />
+                            <x-icons.ui-arrow-left />
                         </x-ui.button>
 
                         <x-ui.button x-on:click="currentIndex = (currentIndex - 1 + items.length) % items.length"
                             class="absolute top-1/2 -translate-y-1/2 -right-4 sm:right-0 sm:translate-x-4 bg-blue-600 text-white p-2 rounded-full opacity-85 hover:opacity-100 hover:bg-blue-700 w-8 h-8 flex items-center justify-center shadow-md border-none transition-all"
                             size="icon">
-                            <x-icons.arrow-right />
+                            <x-icons.ui-arrow-right />
                         </x-ui.button>
 
                     </div>
@@ -64,7 +64,7 @@
                         <div class="flex justify-center">
                             <x-ui.button variant="link" size="icon-link" class="p-0 text-sm">
                                 {{ translate('Lihat Lokasi') }}
-                                <x-icons.arrow-right class="w-2 h-2" />
+                                <x-icons.ui-arrow-right class="w-2 h-2" />
                             </x-ui.button>
                         </div>
                     </div>

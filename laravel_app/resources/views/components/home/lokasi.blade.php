@@ -3,10 +3,10 @@
 <x-home.maps.popup />
 
 <div class="hidden">
-    <div id="icon-grid"><x-icons.arrow-down class="w-full h-full" /></div>
-    <div id="icon-food"><x-icons.location-food class="w-full h-full" /></div>
-    <div id="icon-fashion"><x-icons.location-fashion class="w-full h-full" /></div>
-    <div id="icon-work"><x-icons.location-work class="w-full h-full" /></div>
+    <div id="icon-grid"><x-icons.ui-arrow-down class="w-full h-full" /></div>
+    <div id="icon-food"><x-icons.map-pin-food class="w-full h-full" /></div>
+    <div id="icon-fashion"><x-icons.map-pin-fashion class="w-full h-full" /></div>
+    <div id="icon-work"><x-icons.map-pin-work class="w-full h-full" /></div>
 </div>
 
 <section id="lokasi" class="py-0 md:py-12 bg-white overflow-hidden" x-data="umkmMap" x-init="initMap()">
@@ -30,13 +30,13 @@
                     <div class="flex gap-2 relative z-40">
                         <div class="relative flex-1 shadow-sm md:shadow-none rounded-lg">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                                <x-icons.location-search class="w-5 h-5" />
+                                <x-icons.map-pin-search class="w-5 h-5" />
                             </span>
                             <input type="text" x-model.debounce.500ms="search" placeholder="{{ translate('Cari Nama UMKM...') }}"
                                 class="w-full h-[40px] pl-10 pr-10 bg-white rounded-lg text-sm focus:outline-none text-gray-700 font-medium shadow-sm border border-gray-100">
                             <button x-show="search.length > 0" @click="search = ''"
                                 class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-red-500 w-auto">
-                                <x-icons.x-mark />
+                                <x-icons.ui-close />
                             </button>
                         </div>
 
@@ -49,7 +49,7 @@
                                     <span class="truncate text-sm md:text-sm"
                                         x-text="$store.region.selected === '' ? '{{ translate('Wilayah') }}' : $store.region.selected"></span>
                                 </div>
-                                <x-icons.arrow-down
+                                <x-icons.ui-arrow-down
                                     class="w-4 h-4 text-gray-400 group-hover:text-[#003366] transition-transform duration-200 flex-shrink-0"
                                     x-bind:class="showRegionDropdown ? 'rotate-180 text-[#003366]' : ''" />
                             </x-ui.button>
@@ -95,7 +95,7 @@
                                     <span class="truncate text-sm md:text-sm"
                                         x-text="(selectedCategory === 'Semua' || selectedCategory === '') ? '{{ translate('Kategori') }}' : selectedCategory"></span>
                                 </div>
-                                <x-icons.arrow-down
+                                <x-icons.ui-arrow-down
                                     class="w-4 h-4 text-gray-400 group-hover:text-[#003366] transition-transform duration-200 flex-shrink-0"
                                     x-bind:class="showCatDropdown ? 'rotate-180 text-[#003366]' : ''" />
                             </x-ui.button>
@@ -164,7 +164,7 @@
                                             <x-ui.button @click="focusLocation(item)" variant="link" size="icon-link"
                                                 class="p-0 text-[12px]">
                                                 {{ translate('Lihat Lokasi') }}
-                                                <x-icons.area-right class="w-3 h-3" />
+                                                <x-icons.ui-area-right class="w-3 h-3" />
                                             </x-ui.button>
 
                                         </div>
@@ -176,11 +176,11 @@
                         </div>
                         <x-ui.button variant="circle-white" size="icon-lg" @click="prevPage()"
                             x-bind:disabled="currentPage == 1" class="flex-shrink-0">
-                            <x-icons.arrow-left class="w-5 h-5" />
+                            <x-icons.ui-arrow-left class="w-5 h-5" />
                         </x-ui.button>
                         <x-ui.button variant="circle-white" size="icon-lg" @click="nextPage()"
                             x-bind:disabled="currentPage == totalPages" class="flex-shrink-0">
-                            <x-icons.arrow-right class="w-5 h-5" />
+                            <x-icons.ui-arrow-right class="w-5 h-5" />
                         </x-ui.button>
                     </div>
 
@@ -211,7 +211,7 @@
                                             <x-ui.button @click="focusLocation(item)" variant="link" size="icon-link"
                                                 class="p-0 text-sm">
                                                 {{ translate('Lihat Lokasi') }}
-                                                <x-icons.area-right class="w-3 h-3" />
+                                                <x-icons.ui-area-right class="w-3 h-3" />
                                             </x-ui.button>
                                         </div>
                                     </div>
@@ -225,13 +225,13 @@
                     <div class="hidden md:flex justify-center gap-4 items-center pb-0 pt-2 mt-auto">
                         <x-ui.button variant="circle-white" size="icon-lg" @click="prevPage()"
                             x-bind:disabled="currentPage == 1">
-                            <x-icons.arrow-down class="w-6 h-6 -rotate-180" />
+                            <x-icons.ui-arrow-down class="w-6 h-6 -rotate-180" />
                         </x-ui.button>
                         <span class="text-white text-xs font-bold tracking-wider"><span x-text="currentPage"></span> /
                             <span x-text="totalPages"></span></span>
                         <x-ui.button variant="circle-white" size="icon-lg" @click="nextPage()"
                             x-bind:disabled="currentPage === totalPages">
-                            <x-icons.arrow-down class="w-6 h-6 -rotate-180" />
+                            <x-icons.ui-arrow-down class="w-6 h-6 -rotate-180" />
                         </x-ui.button>
 
                     </div>
@@ -240,7 +240,7 @@
                         class="md:hidden absolute -bottom-6.5 left-1/2 transform -translate-x-1/2 z-50 flex gap-2 items-center">
                         <x-ui.button @click="sidebarOpen = false" variant="circle-yellow" size="icon-lg"
                             class="hover:scale-105">
-                            <x-icons.arrow-down class="w-5 h-5 -rotate-180" />
+                            <x-icons.ui-arrow-down class="w-5 h-5 -rotate-180" />
                         </x-ui.button>
                     </div>
                 </div>
@@ -254,7 +254,7 @@
                     x-transition:enter-end="opacity-100 translate-x-0">
                     <x-ui.button size="icon-lg" variant="circle-yellow" @click="sidebarOpen = false"
                         class="hover:scale-110">
-                        <x-icons.arrow-left class="w-4.5 h-4.5" />
+                        <x-icons.ui-arrow-left class="w-4.5 h-4.5" />
                     </x-ui.button>
 
                 </div>
@@ -266,7 +266,7 @@
                         class="gap-2 md:gap-3 pl-2 pr-4 py-1.5 md:pl-4 md:pr-5 md:py-2.5">
                         <div
                             class="w-7 h-7 md:w-8 md:h-8 bg-[#003366] rounded-full flex items-center justify-center text-white">
-                            <x-icons.location-search class="w-3.5 h-3.5 md:w-4 md:h-4" />
+                            <x-icons.map-pin-search class="w-3.5 h-3.5 md:w-4 md:h-4" />
                         </div>
                         <div class="flex flex-col text-left">
                             <span

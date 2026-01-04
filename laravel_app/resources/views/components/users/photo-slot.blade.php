@@ -29,7 +29,7 @@
             x-show="!photoPreview">
             <div
                 class="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-3 group-hover/upload:scale-110 transition-transform">
-                <x-icons.photo class="w-6 h-6" />
+                <x-icons.data-photo class="w-6 h-6" />
             </div>
             <span class="text-sm font-medium text-center">Klik untuk upload</span>
             <span class="text-xs text-gray-300 mt-1">PNG, JPG up to 2MB</span>
@@ -49,14 +49,14 @@
             <button type="button"
                 class="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-gray-600 hover:text-blue-600 hover:scale-105 transition-all w-8 h-8 flex items-center justify-center"
                 @click.stop="openZoom(photoPreview)" title="Lihat Foto">
-                <x-icons.eye class="w-3.5 h-3.5" />
+                <x-icons.ui-eye class="w-3.5 h-3.5" />
             </button>
 
             {{-- Change Button --}}
             <button type="button"
                 class="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-gray-600 hover:text-[#004a85] hover:scale-105 transition-all w-8 h-8 flex items-center justify-center"
                 @click.stop="$refs.photo_{{ $i }}.click()" title="Ganti Foto">
-                <x-icons.pencil class="w-3.5 h-3.5" />
+                <x-icons.ui-edit class="w-3.5 h-3.5" />
             </button>
 
             {{-- Delete Button --}}
@@ -64,7 +64,7 @@
                 class="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-gray-600 hover:text-red-600 hover:scale-105 transition-all w-8 h-8 flex items-center justify-center"
                 @click.stop="photoPreview = null; photoName = null; $refs.photo_{{ $i }}.value = ''"
                 title="Hapus Foto">
-                <x-icons.trash class="w-3.5 h-3.5" />
+                <x-icons.ui-delete class="w-3.5 h-3.5" />
             </button>
         </div>
     </div>

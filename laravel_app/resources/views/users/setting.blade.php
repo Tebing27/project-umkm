@@ -30,7 +30,7 @@
                             <label class="block text-sm font-semibold text-slate-700">{{ translate('Nama Lengkap') }}</label>
                             <x-ui.input variant="soft" type="text" name="name" :value="old('name', $user->name)" placeholder="{{ translate('Nama Lengkap') }}" required>
                                 <x-slot:icon>
-                                    <x-icons.user class="w-5 h-5" />
+                                    <x-icons.data-user class="w-5 h-5" />
                                 </x-slot:icon>
                             </x-ui.input>
                             @error('name')
@@ -43,7 +43,7 @@
                             <label class="block text-sm font-semibold text-slate-700">{{ translate('Email') }}</label>
                             <x-ui.input variant="soft" type="email" name="email" :value="old('email', $user->email)" placeholder="{{ translate('Email Anda') }}" required>
                                 <x-slot:icon>
-                                    <x-icons.mail class="w-5 h-5" />
+                                    <x-icons.contact-mail class="w-5 h-5" />
                                 </x-slot:icon>
                             </x-ui.input>
                             @error('email')
@@ -56,7 +56,7 @@
                             <label class="block text-sm font-semibold text-slate-700">{{ translate('Nomor Handphone') }}</label>
                             <x-ui.input variant="soft" type="text" name="phone_number" :value="old('phone_number', $user->phone_number)" placeholder="{{ translate('Nomor HP') }}" required>
                                 <x-slot:icon>
-                                    <x-icons.phone class="w-5 h-5" />
+                                    <x-icons.contact-phone class="w-5 h-5" />
                                 </x-slot:icon>
                             </x-ui.input>
                             @error('phone_number')
@@ -72,7 +72,7 @@
                                     <x-ui.input variant="soft" type="text" name="place_of_birth" :value="old('place_of_birth', $user->place_of_birth)"
                                         placeholder="{{ translate('Jakarta') }}">
                                         <x-slot:icon>
-                                            <x-icons.cake class="w-5 h-5" stroke-width="1.5" />
+                                            <x-icons.data-cake class="w-5 h-5" stroke-width="1.5" />
                                         </x-slot:icon>
                                     </x-ui.input>
                                     @error('place_of_birth')
@@ -84,7 +84,7 @@
                                     <x-ui.input variant="soft" type="date" name="date_of_birth" :value="old('date_of_birth', $user->date_of_birth)"
                                         placeholder="2001/12/18">
                                         <x-slot:icon>
-                                            <x-icons.calendar class="w-5 h-5" stroke-width="1.5" />
+                                            <x-icons.data-calendar class="w-5 h-5" stroke-width="1.5" />
                                         </x-slot:icon>
                                     </x-ui.input>
                                     @error('date_of_birth')
@@ -101,7 +101,7 @@
                                 placeholder="{{ translate('Tuliskan Alamat Tempat Tinggal Saat Ini') }}">
                                 {{ old('domicile_address', $user->domicile_address) }}
                                 <x-slot:icon>
-                                    <x-icons.location class="w-5 h-5" stroke-width="1.5" />
+                                    <x-icons.map-pin class="w-5 h-5" stroke-width="1.5" />
                                 </x-slot:icon>
                             </x-ui.textarea>
                             @error('domicile_address')
@@ -145,7 +145,7 @@
                             <label class="block text-sm font-semibold text-slate-700">{{ translate('Password Saat Ini') }}</label>
                             <x-ui.input variant="soft" type="password" name="current_password" placeholder="••••••••" required>
                                 <x-slot:icon>
-                                    <x-icons.key class="w-5 h-5" />
+                                    <x-icons.auth-key class="w-5 h-5" />
                                 </x-slot:icon>
                             </x-ui.input>
                             @error('current_password')

@@ -48,7 +48,7 @@
 
             {{-- Alamat (Lokasi) --}}
             <div class="flex items-start gap-1 md:gap-3 text-slate-600 justify-start">
-                <x-icons.location class="w-5 h-5 shrink-0" />
+                <x-icons.map-pin class="w-5 h-5 shrink-0" />
                 <span class="font-medium">{{ $shop->address ?? 'Alamat belum diisi' }}</span>
             </div>
 
@@ -85,7 +85,7 @@
                                 @endphp
                                 <a href="https://instagram.com/{{ $igUsername }}" target="_blank"
                                     class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                                    <x-icons.instagram class="text-red-500" />
+                                    <x-icons.social-instagram class="text-red-500" />
                                     <span class="font-medium text-slate-900">{{ '@' . $igUsername }}</span>
                                 </a>
                             @endif
@@ -101,7 +101,7 @@
                                 @endphp
                                 <a href="{{ 'https://tiktok.com/@' . $tiktokUsername }}" target="_blank"
                                     class="flex items-center gap-1 hover:opacity-80 transition-opacity">
-                                    <x-icons.tiktok class="text-slate-900" />
+                                    <x-icons.social-tiktok class="text-slate-900" />
                                     <span class="font-medium text-slate-900">{{ '@' . $tiktokUsername }}</span>
                                 </a>
                             @endif
@@ -117,7 +117,7 @@
                                 @endphp
                                 <a href="https://facebook.com/{{ $fbUsername }}" target="_blank"
                                     class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                                    <x-icons.facebook class="text-[#1877F2]" />
+                                    <x-icons.social-facebook class="text-[#1877F2]" />
                                     <span class="font-medium text-slate-900">{{ $fbUsername }}</span>
                                 </a>
                             @endif
@@ -126,7 +126,7 @@
                             @if ($shop->social_website)
                                 <a href="{{ Str::startsWith($shop->social_website, ['http://', 'https://']) ? $shop->social_website : 'https://' . $shop->social_website }}"
                                     target="_blank" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                                    <x-icons.globe class="text-slate-900" />
+                                    <x-icons.map-globe class="text-slate-900" />
                                     <span class="font-medium text-slate-900">Website</span>
                                 </a>
                             @endif

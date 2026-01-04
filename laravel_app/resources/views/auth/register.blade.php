@@ -26,7 +26,7 @@
                 <div class="space-y-6">
                     <div class="border-b border-gray-200 pb-2 mb-4">
                         <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-                            <x-icons.store class="w-5 h-5" />
+                            <x-icons.data-store class="w-5 h-5" />
                             {{ translate('Data Usaha') }}
                         </h2>
                     </div>
@@ -39,7 +39,7 @@
                             placeholder="{{ translate('Warung Kopi Sejahtera') }}"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                             <x-slot:icon>
-                                <x-icons.shopping-bag class="w-5 h-5" stroke-width="1.5" />
+                                <x-icons.shop-bag class="w-5 h-5" stroke-width="1.5" />
                             </x-slot:icon>
                         </x-ui.input>
                         @error('shop_name')
@@ -72,14 +72,14 @@
                                 <x-ui.button type="button" @click="licenses.splice(index, 1)"
                                     x-show="licenses.length > 1" variant="ghost"
                                     class="p-3 text-red-500 hover:bg-red-50 hover:text-red-600 border border-transparent hover:border-red-100 h-auto rounded-xl transition-all">
-                                    <x-icons.trash class="w-5 h-5" />
+                                    <x-icons.ui-delete class="w-5 h-5" />
                                 </x-ui.button>
                             </div>
                         </template>
 
                         <x-ui.button type="button" @click="licenses.push({ type: '', number: '' })" variant="ghost"
                             class="mt-1 text-sm text-blue-600 font-medium hover:text-blue-700 hover:bg-transparent p-0 h-auto justify-start gap-1 inline-flex items-center rounded-xl transition-all">
-                            <x-icons.plus class="w-4 h-4" />
+                            <x-icons.ui-plus class="w-4 h-4" />
                             {{ translate('Tambah Izin Lain') }}
                         </x-ui.button>
                         @if ($errors->has('license_type.*') || $errors->has('license_number.*'))
@@ -107,7 +107,7 @@
                             placeholder="{{ translate('Camilan, Pakaian Pria, Jasa Jahit') }}"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                             <x-slot:icon>
-                                <x-icons.shopping-cart class="w-5 h-5" stroke-width="1.5" />
+                                <x-icons.shop-cart class="w-5 h-5" stroke-width="1.5" />
                             </x-slot:icon>
                         </x-ui.input>
                         @error('product_type')
@@ -170,7 +170,7 @@
                                         x-text="selectedName"></span>
                                 </div>
 
-                                <x-icons.chevron-down
+                                <x-icons.ui-chevron-down
                                     class="w-4 h-4 text-gray-400 transition-transform duration-200 group-focus:text-blue-600 "
                                     x-bind:class="open ? 'rotate-180' : ''" />
                             </button>
@@ -189,7 +189,7 @@
                                             'text-slate-600'">
                                         <span class="truncate">{{ $region->name }}</span>
 
-                                        <x-icons.check x-show="selectedId == '{{ $region->id }}'"
+                                        <x-icons.ui-check x-show="selectedId == '{{ $region->id }}'"
                                             class="w-4 h-4 text-blue-600" />
                                     </div>
                                 @endforeach
@@ -215,7 +215,7 @@
 
                             <div class="relative w-full">
                                 <div class="absolute top-3 left-4 text-slate-500 pointer-events-none">
-                                    <x-icons.location class="w-5 h-5" />
+                                    <x-icons.map-pin class="w-5 h-5" />
                                 </div>
                                 <textarea name="shop_address" rows="2" x-model="address" @input.debounce.500ms="searchAddress()"
                                     class="w-full bg-transparent border-none outline-none pl-11 pr-4 py-3 text-sm text-slate-900 focus:ring-0 resize-none"
@@ -231,7 +231,7 @@
                                 
                                 {{-- LOADING INDICATOR --}}
                                 <div x-show="isLoading" class="absolute top-3 right-4 text-blue-600">
-                                    <x-icons.loading class="w-5 h-5 animate-spin" />
+                                    <x-icons.status-loading class="w-5 h-5 animate-spin" />
                                 </div>
                             </div>
 
@@ -377,7 +377,7 @@
                 <div class="space-y-6">
                     <div class="border-b border-gray-200 pb-2 mb-4">
                         <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-                            <x-icons.user class="w-5 h-5" />
+                            <x-icons.data-user class="w-5 h-5" />
                             {{ translate('Data Pemilik') }}
                         </h2>
                     </div>
@@ -390,7 +390,7 @@
                             placeholder="John Rizky Hernandes"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                             <x-slot:icon>
-                                <x-icons.user class="w-5 h-5" stroke-width="1.5" />
+                                <x-icons.data-user class="w-5 h-5" stroke-width="1.5" />
                             </x-slot:icon>
                         </x-ui.input>
                         @error('name')
@@ -405,7 +405,7 @@
                             placeholder="0812XXXXXX"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                             <x-slot:icon>
-                                <x-icons.phone class="w-5 h-5" stroke-width="1.5" />
+                                <x-icons.contact-phone class="w-5 h-5" stroke-width="1.5" />
                             </x-slot:icon>
                         </x-ui.input>
                         @error('phone_number')
@@ -422,7 +422,7 @@
                                     placeholder="Jakarta"
                                     class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                                     <x-slot:icon>
-                                        <x-icons.cake class="w-5 h-5" stroke-width="1.5" />
+                                        <x-icons.data-cake class="w-5 h-5" stroke-width="1.5" />
                                     </x-slot:icon>
                                 </x-ui.input>
                                 @error('place_of_birth')
@@ -434,7 +434,7 @@
                                     onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="2001/12/18"
                                     class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                                     <x-slot:icon>
-                                        <x-icons.calendar class="w-5 h-5" stroke-width="1.5" />
+                                        <x-icons.data-calendar class="w-5 h-5" stroke-width="1.5" />
                                     </x-slot:icon>
                                 </x-ui.input>
                                 @error('date_of_birth')
@@ -457,7 +457,7 @@
                             {{-- BAGIAN ATAS: TEXTAREA ALAMAT --}}
                             <div class="relative w-full">
                                 <div class="absolute top-3 left-4 text-slate-500 pointer-events-none">
-                                    <x-icons.location class="w-5 h-5" />
+                                    <x-icons.map-pin class="w-5 h-5" />
                                 </div>
                                 <textarea name="domicile_address" rows="2"
                                     class="w-full bg-transparent border-none outline-none pl-11 pr-4 py-3 text-sm text-slate-900 focus:ring-0 resize-none"
@@ -478,7 +478,7 @@
                         placeholder="john@email.com"
                         class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                         <x-slot:icon>
-                            <x-icons.mail class="w-5 h-5" stroke-width="1.5" />
+                            <x-icons.contact-mail class="w-5 h-5" stroke-width="1.5" />
                         </x-slot:icon>
                     </x-ui.input>
                     @error('email')
@@ -495,12 +495,12 @@
                     <x-ui.input ::type="show ? 'text' : 'password'" name="password" placeholder="{{ translate('Masukkan kata sandi') }}"
                         class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                         <x-slot:icon>
-                            <x-icons.key class="w-5 h-5" stroke-width="1.5" />
+                            <x-icons.auth-key class="w-5 h-5" stroke-width="1.5" />
                         </x-slot:icon>
                         <x-slot:suffix>
                              <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
-                                <x-icons.eye x-show="!show" class="w-5 h-5" />
-                                <x-icons.eye-off x-show="show" class="w-5 h-5" />
+                                <x-icons.ui-eye x-show="!show" class="w-5 h-5" />
+                                <x-icons.ui-eye-off x-show="show" class="w-5 h-5" />
                             </button>
                         </x-slot:suffix>
                     </x-ui.input>
@@ -518,12 +518,12 @@
                     <x-ui.input ::type="show ? 'text' : 'password'" name="password_confirmation" placeholder="{{ translate('Ulangi kata sandi') }}"
                         class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                         <x-slot:icon>
-                            <x-icons.key class="w-5 h-5" stroke-width="1.5" />
+                            <x-icons.auth-key class="w-5 h-5" stroke-width="1.5" />
                         </x-slot:icon>
                         <x-slot:suffix>
                              <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
-                                <x-icons.eye x-show="!show" class="w-5 h-5" />
-                                <x-icons.eye-off x-show="show" class="w-5 h-5" />
+                                <x-icons.ui-eye x-show="!show" class="w-5 h-5" />
+                                <x-icons.ui-eye-off x-show="show" class="w-5 h-5" />
                             </button>
                         </x-slot:suffix>
                     </x-ui.input>
@@ -541,7 +541,7 @@
                             placeholder="https://instagram.com/@umkm"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                             <x-slot:icon>
-                                <x-icons.instagram class="text-red-500" />
+                                <x-icons.social-instagram class="text-red-500" />
                             </x-slot:icon>
                         </x-ui.input>
                         @error('social_instagram')
@@ -552,7 +552,7 @@
                             placeholder="https://tiktok.com/@umkm"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                             <x-slot:icon>
-                                <x-icons.tiktok class="text-slate-900" />
+                                <x-icons.social-tiktok class="text-slate-900" />
                             </x-slot:icon>
                         </x-ui.input>
                         @error('social_tiktok')
@@ -563,7 +563,7 @@
                             placeholder="https://facebook.com/umkm"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                             <x-slot:icon>
-                                <x-icons.facebook class="text-[#1877F2]" />
+                                <x-icons.social-facebook class="text-[#1877F2]" />
                             </x-slot:icon>
                         </x-ui.input>
                         @error('social_facebook')
@@ -574,7 +574,7 @@
                             placeholder="https://google.com"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                             <x-slot:icon>
-                                <x-icons.globe class="text-slate-900" />
+                                <x-icons.map-globe class="text-slate-900" />
                             </x-slot:icon>
                         </x-ui.input>
                         @error('social_website')

@@ -18,7 +18,7 @@
             </div>
             <button @click="addProductModal = false" type="button"
                 class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-xl transition-colors">
-                <x-icons.x-mark class="w-6 h-6" />
+                <x-icons.ui-close class="w-6 h-6" />
             </button>
         </div>
 
@@ -68,7 +68,7 @@
         {{-- STATE 1: Belum ada gambar (Tampilan Upload Awal) --}}
         <div x-show="!imagePreview" class="space-y-2 text-center relative z-10 pointer-events-none px-6">
             <div class="mx-auto w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:scale-110 group-hover:bg-blue-100 transition-all duration-300">
-                <x-icons.upload class="h-6 w-6 text-slate-400 group-hover:text-[#004a85]" />
+                <x-icons.ui-upload class="h-6 w-6 text-slate-400 group-hover:text-[#004a85]" />
             </div>
             <div class="text-sm text-slate-600">
                 <span class="font-bold text-[#004a85] hover:underline">{{translate('Klik upload')}}</span> atau drag & drop
@@ -83,7 +83,7 @@
                 
                 {{-- Overlay Helper saat hover di gambar --}}
                 <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center text-white">
-                    <x-icons.pencil class="w-8 h-8 mb-2" />
+                    <x-icons.ui-edit class="w-8 h-8 mb-2" />
                     <span class="font-bold text-sm">Klik untuk ganti</span>
                 </div>
             </div>
@@ -144,7 +144,7 @@
             </button>
             <button type="submit" form="add-product-form"
                 class="px-6 py-2.5 bg-[#004a85] text-white rounded-xl font-bold text-sm hover:bg-blue-800 shadow-lg shadow-[#004a85]/30 transition-all transform active:scale-95 flex items-center gap-2">
-                <x-icons.check class="w-4 h-4" />
+                <x-icons.ui-check class="w-4 h-4" />
                 {{translate('Simpan Produk')}}
             </button>
         </div>

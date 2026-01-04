@@ -31,7 +31,7 @@
                     <x-ui.input variant="search" name="search" value="{{ $search ?? '' }}"
                         placeholder="{{ translate('Cari user atau UMKM...') }}">
                         <x-slot:icon>
-                            <x-icons.location-search class="w-5 h-5" />
+                            <x-icons.map-pin-search class="w-5 h-5" />
                         </x-slot:icon>
                     </x-ui.input>
                 </form>
@@ -98,12 +98,12 @@
                     <div class="space-y-3">
                         <div
                             class="flex items-start gap-3 text-sm text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                            <x-icons.mail class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
+                            <x-icons.contact-mail class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
                             <span class="truncate font-medium">{{ $shop->user->email ?? '-' }}</span>
                         </div>
                         <div
                             class="flex items-start gap-3 text-sm text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                            <x-icons.phone class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
+                            <x-icons.contact-phone class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
                             <span class="truncate font-medium">{{ $shop->user->phone_number ?? '-' }}</span>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                     <x-ui.button href="{{ url('/admin/users/detail/' . $shop->id) }}" variant="outline"
                         class="w-full rounded-lg justify-center group/btn">
                         {{ translate('Detail') }}
-                        <x-icons.chevron-right class="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                        <x-icons.ui-chevron-right class="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
                     </x-ui.button>
                 </div>
             </x-ui.card>

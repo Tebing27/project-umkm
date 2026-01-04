@@ -15,7 +15,7 @@
 
             <div class="mb-6 flex justify-center">
                 <div class="bg-green-100 p-3 rounded-full">
-                    <x-icons.check class="w-8 h-8 text-green-600" />
+                    <x-icons.ui-check class="w-8 h-8 text-green-600" />
                 </div>
             </div>
 

@@ -10,7 +10,7 @@
         {{-- Alert Success --}}
         @if(session('success'))
             <div class="mb-6 p-4 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center gap-3">
-                <x-icons.check class="w-5 h-5 shrink-0" />
+                <x-icons.ui-check class="w-5 h-5 shrink-0" />
                 <p>{{ session('success') }}</p>
             </div>
         @endif
@@ -37,7 +37,7 @@
                             <label class="block text-sm font-semibold text-slate-700">{{ translate('Nama Lengkap') }}</label>
                             <x-ui.input variant="soft" type="text" name="name" value="{{ old('name', $user->name) }}" placeholder="{{ translate('Nama Lengkap') }}">
                                 <x-slot:icon>
-                                    <x-icons.user class="w-5 h-5" />
+                                    <x-icons.data-user class="w-5 h-5" />
                                 </x-slot:icon>
                             </x-ui.input>
                             @error('name')
@@ -50,7 +50,7 @@
                             <label class="block text-sm font-semibold text-slate-700">{{ translate('Email') }}</label>
                             <x-ui.input variant="soft" type="email" name="email" value="{{ old('email', $user->email) }}" placeholder="{{ translate('Email Anda') }}">
                                 <x-slot:icon>
-                                    <x-icons.mail class="w-5 h-5" />
+                                    <x-icons.contact-mail class="w-5 h-5" />
                                 </x-slot:icon>
                             </x-ui.input>
                             @error('email')
@@ -94,12 +94,12 @@
                             <label class="block text-sm font-semibold text-slate-700">{{ translate('Password Saat Ini') }}</label>
                             <x-ui.input variant="soft" ::type="show ? 'text' : 'password'" name="current_password" placeholder="••••••••">
                                 <x-slot:icon>
-                                    <x-icons.key class="w-5 h-5" />
+                                    <x-icons.auth-key class="w-5 h-5" />
                                 </x-slot:icon>
                                 <x-slot:suffix>
                                      <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
-                                        <x-icons.eye x-show="!show" class="w-5 h-5" />
-                                        <x-icons.eye-off x-show="show" class="w-5 h-5" />
+                                        <x-icons.ui-eye x-show="!show" class="w-5 h-5" />
+                                        <x-icons.ui-eye-off x-show="show" class="w-5 h-5" />
                                     </button>
                                 </x-slot:suffix>
                             </x-ui.input>
@@ -115,8 +115,8 @@
                                 <x-ui.input variant="soft" ::type="show ? 'text' : 'password'" name="password" placeholder="{{ translate('Minimal 8 karakter') }}">
                                     <x-slot:suffix>
                                         <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
-                                            <x-icons.eye x-show="!show" class="w-5 h-5" />
-                                            <x-icons.eye-off x-show="show" class="w-5 h-5" />
+                                            <x-icons.ui-eye x-show="!show" class="w-5 h-5" />
+                                            <x-icons.ui-eye-off x-show="show" class="w-5 h-5" />
                                         </button>
                                     </x-slot:suffix>
                                 </x-ui.input>
@@ -129,8 +129,8 @@
                                 <x-ui.input variant="soft" ::type="show ? 'text' : 'password'" name="password_confirmation" placeholder="{{ translate('Ulangi password') }}">
                                     <x-slot:suffix>
                                         <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
-                                            <x-icons.eye x-show="!show" class="w-5 h-5" />
-                                            <x-icons.eye-off x-show="show" class="w-5 h-5" />
+                                            <x-icons.ui-eye x-show="!show" class="w-5 h-5" />
+                                            <x-icons.ui-eye-off x-show="show" class="w-5 h-5" />
                                         </button>
                                     </x-slot:suffix>
                                 </x-ui.input>

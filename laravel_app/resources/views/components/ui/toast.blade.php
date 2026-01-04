@@ -18,13 +18,13 @@
     <div class="p-4 flex items-start gap-4">
         <div class="flex-shrink-0">
             <div x-show="toast.type === 'success'" class="p-2 bg-green-50 rounded-full text-green-500">
-                <x-icons.check class="w-5 h-5" />
+                <x-icons.ui-check class="w-5 h-5" />
             </div>
             <div x-show="toast.type === 'info'" class="p-2 bg-blue-50 rounded-full text-blue-500">
-                <x-icons.info-circle class="w-5 h-5" />
+                <x-icons.status-info class="w-5 h-5" />
             </div>
             <div x-show="toast.type === 'error'" class="p-2 bg-red-50 rounded-full text-red-500">
-                <x-icons.exclamation-circle class="w-5 h-5" />
+                <x-icons.status-error-circle class="w-5 h-5" />
             </div>
         </div>
         <div class="flex-1 pt-1">
@@ -33,7 +33,7 @@
         </div>
         <button @click="toast.show = false" type="button"
             class="text-gray-400 hover:text-gray-600 transition-colors">
-            <x-icons.cross class="w-5 h-5" />
+            <x-icons.ui-cross class="w-5 h-5" />
         </button>
     </div>
 </div>

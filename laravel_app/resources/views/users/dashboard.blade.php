@@ -19,7 +19,7 @@
             <div class="flex justify-between items-start mb-6">
                 <div
                     class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                    <x-icons.store class="w-6 h-6" />
+                    <x-icons.data-store class="w-6 h-6" />
                 </div>
                 @if ($shop && $shop->is_verified)
                     <span
@@ -46,10 +46,10 @@
                 <div class="flex justify-between items-start mb-6">
                     <div
                         class="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
-                        <x-icons.eye class="w-6 h-6" />
+                        <x-icons.ui-eye class="w-6 h-6" />
                     </div>
                     {{-- <span class="flex items-center text-green-600 text-xs font-bold bg-green-50 px-2 py-1 rounded-lg">
-                        <x-icons.trending-up class="w-3 h-3 mr-1" />
+                        <x-icons.data-trending class="w-3 h-3 mr-1" />
                         +15%
                     </span> --}}
                 </div>
@@ -65,7 +65,7 @@
                 <div class="flex justify-between items-start mb-6">
                     <div
                         class="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-500 group-hover:scale-110 transition-transform">
-                        <x-icons.cube class="w-6 h-6" />
+                        <x-icons.data-product class="w-6 h-6" />
                     </div>
                 </div>
                 <div>
@@ -81,7 +81,7 @@
                 <div class="flex justify-between items-start mb-4">
                     <div
                         class="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center text-pink-500 group-hover:scale-110 transition-transform">
-                        <x-icons.tag class="w-6 h-6" />
+                        <x-icons.data-tag class="w-6 h-6" />
                     </div>
                 </div>
                 <div>
@@ -110,7 +110,7 @@
                 <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
                     <div class="flex">
                         <div class="flex-shrink-0">
-                            <x-icons.exclamation-circle class="h-5 w-5 text-yellow-400" />
+                            <x-icons.status-error-circle class="h-5 w-5 text-yellow-400" />
                         </div>
                         <div class="ml-3">
                             <p class="text-sm text-yellow-700 font-bold mb-1">

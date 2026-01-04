@@ -83,13 +83,13 @@
             <div class="grid grid-cols-2 gap-2">
                 <button @click='$dispatch("edit-product", {!! json_encode($product, JSON_HEX_APOS) !!})'
                     class="flex items-center justify-center gap-2 px-3 py-2 bg-slate-100 text-slate-600 rounded-lg text-sm font-bold hover:bg-[#004a85] hover:text-white transition-all duration-200 group/btn">
-                    <x-icons.pencil class="w-4 h-4" />
+                    <x-icons.ui-edit class="w-4 h-4" />
 
                     Edit
                 </button>
                 <button @click="$dispatch('delete-product', {{ $product->id }})"
                     class="flex items-center justify-center gap-2 px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-bold hover:bg-red-600 hover:text-white transition-all duration-200 group/btn">
-                    <x-icons.trash class="w-4 h-4" />
+                    <x-icons.ui-delete class="w-4 h-4" />
                     Hapus
                 </button>
             </div>

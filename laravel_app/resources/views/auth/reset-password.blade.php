@@ -40,7 +40,7 @@
                     <x-ui.input type="email" name="email" value="{{ old('email', $request->email) }}"
                         class="bg-gray-50" required autofocus autocomplete="username" readonly>
                         <x-slot:icon>
-                            <x-icons.mail class="w-5 h-5" stroke-width="1.5" />
+                            <x-icons.contact-mail class="w-5 h-5" stroke-width="1.5" />
                         </x-slot:icon>
                     </x-ui.input>
                     @error('email')
@@ -54,7 +54,7 @@
                     <x-ui.input type="password" name="password" placeholder="kata sandi baru"
                         class="bg-gray-50" required autocomplete="new-password">
                         <x-slot:icon>
-                            <x-icons.key class="w-5 h-5" />
+                            <x-icons.auth-key class="w-5 h-5" />
                         </x-slot:icon>
                     </x-ui.input>
                     @error('password')
@@ -68,7 +68,7 @@
                     <x-ui.input type="password" name="password_confirmation" placeholder="Konfirmasi kata sandi"
                         class="bg-gray-50" required autocomplete="new-password">
                         <x-slot:icon>
-                            <x-icons.key class="w-5 h-5" />
+                            <x-icons.auth-key class="w-5 h-5" />
                         </x-slot:icon>
                     </x-ui.input>
                 </div>

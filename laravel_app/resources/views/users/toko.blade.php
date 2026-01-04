@@ -26,7 +26,7 @@
             <x-ui.button href="/users/edit-toko" variant="shiny" size="xl"
                 class="w-full md:w-auto flex items-center justify-center gap-2.5">
                 <div class="bg-white/20 p-1 rounded-md group-hover:rotate-90 transition-transform duration-300">
-                    <x-icons.pencil class="text-slate-900" />
+                    <x-icons.ui-edit class="text-slate-900" />
                 </div>
                 <span class="text-slate-900 font-medium">{{ translate('Edit Data Toko') }}</span>
             </x-ui.button>
@@ -38,7 +38,7 @@
                 class="mb-6 p-4 rounded-xl bg-green-50 border border-green-200 flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div class="bg-green-100 p-2 rounded-full">
-                        <x-icons.check class="w-5 h-5 text-green-600" />
+                        <x-icons.ui-check class="w-5 h-5 text-green-600" />
                     </div>
                     <div>
                         <h4 class="font-bold text-green-800">{{ translate('Berhasil!') }}</h4>
@@ -47,7 +47,7 @@
                 </div>
                 <button @click="show = false"
                     class="text-green-600 hover:bg-green-100 p-2 rounded-lg transition-colors">
-                    <x-icons.x-mark class="w-5 h-5" />
+                    <x-icons.ui-close class="w-5 h-5" />
                 </button>
             </div>
         @endif
@@ -58,7 +58,7 @@
                 class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div class="bg-red-100 p-2 rounded-full">
-                        <x-icons.x-mark class="w-5 h-5 text-red-600" />
+                        <x-icons.ui-close class="w-5 h-5 text-red-600" />
                     </div>
                     <div>
                         <h4 class="font-bold text-red-800">{{ translate('Gagal!') }}</h4>
@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <button @click="show = false" class="text-red-600 hover:bg-red-100 p-2 rounded-lg transition-colors">
-                    <x-icons.x-mark class="w-5 h-5" />
+                    <x-icons.ui-close class="w-5 h-5" />
                 </button>
             </div>
         @endif
@@ -149,7 +149,7 @@
                         <x-ui.input variant="search" x-model.debounce.500ms="search" type="text"
                             placeholder="{{ translate('Cari nama produk...') }}" class="text-sm md:text-base">
                             <x-slot:icon>
-                                <x-icons.location-search class="h-5 w-5 text-slate-400" />
+                                <x-icons.map-pin-search class="h-5 w-5 text-slate-400" />
                             </x-slot:icon>
                         </x-ui.input>
                     </div>
@@ -170,7 +170,7 @@
                     <div x-show="isLoading"
                         class="absolute inset-0 bg-white/80 z-10 flex items-center justify-center rounded-xl backdrop-blur-sm"
                         x-transition>
-                        <x-icons.loading class="animate-spin h-10 w-10 text-[#004a85]" />
+                        <x-icons.status-loading class="animate-spin h-10 w-10 text-[#004a85]" />
                     </div>
                 </div>
 
@@ -182,11 +182,11 @@
 
                         <span x-show="!loadingMore" class="flex items-center gap-2">
                             <span>{{ translate('Lihat Lebih Banyak') }}</span>
-                            <x-icons.chevron-down class="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
+                            <x-icons.ui-chevron-down class="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
                         </span>
 
                         <span x-show="loadingMore" class="flex items-center gap-2" x-cloak>
-                            <x-icons.loading class="animate-spin h-5 w-5 text-[#004a85]" />
+                            <x-icons.status-loading class="animate-spin h-5 w-5 text-[#004a85]" />
                             <span>{{ translate('Sedang Memuat...') }}</span>
                         </span>
                     </button>
@@ -226,7 +226,7 @@
                     class="bg-white rounded-2xl shadow-2xl w-full max-w-sm relative z-10 overflow-hidden flex flex-col p-6 text-center">
 
                     <div class="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                        <x-icons.trash class="w-8 h-8 text-red-600" />
+                        <x-icons.ui-delete class="w-8 h-8 text-red-600" />
                     </div>
 
                     <h3 class="text-xl font-bold text-slate-900 mb-2">{{ translate('Hapus Produk?') }}</h3>
@@ -259,7 +259,7 @@
 
             <x-ui.button href="/users/edit-toko" variant="fab" size="fab"
                 class="shadow-2xl shadow-blue-900/40">
-                <x-icons.pencil class="w-6 h-6" />
+                <x-icons.ui-edit class="w-6 h-6" />
             </x-ui.button>
         </div>
 

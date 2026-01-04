@@ -49,12 +49,12 @@
                     <div class="flex gap-3 shrink-0 md:mt-8 w-full px-4 sm:px-6 justify-end">
                         <x-ui.button @click="prev()" variant="primary"
                             class="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center p-0 transition-all shadow-lg active:scale-95 border-none p-0">
-                            <x-icons.arrow-left class="w-4 h-4 md:w-5 md:h-5 shrink-0" />
+                            <x-icons.ui-arrow-left class="w-4 h-4 md:w-5 md:h-5 shrink-0" />
                         </x-ui.button>
 
                         <x-ui.button @click="next()" variant="primary"
                             class="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center p-0 transition-all shadow-lg active:scale-95 border-none p-0">
-                            <x-icons.arrow-right class="w-4 h-4 md:w-5 md:h-5 shrink-0" />
+                            <x-icons.ui-arrow-right class="w-4 h-4 md:w-5 md:h-5 shrink-0" />
                         </x-ui.button>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                                         @click.prevent="$store.region.set(item.title); document.getElementById('lokasi').scrollIntoView({behavior: 'smooth'})"
                                         variant="link" size="icon-link" class="p-0 text-sm">
                                         {{ translate('Lihat Lokasi') }}
-                                        <x-icons.arrow-right class="w-4 h-4" />
+                                        <x-icons.ui-arrow-right class="w-4 h-4" />
                                     </x-ui.button>
 
                                 </div>

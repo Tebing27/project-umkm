@@ -81,7 +81,7 @@
                             {{-- Tooltip info belum lengkap --}}
                             <div class="absolute top-full right-0 mt-2 w-72 p-4 bg-white border border-red-200 text-slate-600 text-sm rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
                                 <div class="flex items-start gap-3 mb-2 text-red-600">
-                                    <x-icons.exclamation-circle class="w-5 h-5 shrink-0" />
+                                    <x-icons.status-error-circle class="w-5 h-5 shrink-0" />
                                     <p class="font-bold text-md">{{ translate('Data Belum Lengkap') }}</p>
                                 </div>
                                 <p class="mb-2 text-slate-500">{{ translate('User belum melengkapi data berikut:') }}</p>
@@ -111,7 +111,7 @@
                 {{-- Informasi Pemilik --}}
                 <x-ui.card class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
                     <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <x-icons.user class="w-5 h-5 text-primary" />
+                        <x-icons.data-user class="w-5 h-5 text-primary" />
                         {{ translate('Informasi Pemilik') }}
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -138,7 +138,7 @@
                 {{-- Informasi Usaha --}}
                 <x-ui.card class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
                     <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <x-icons.store class="w-5 h-5 text-primary" />
+                        <x-icons.data-store class="w-5 h-5 text-primary" />
                         {{ translate('Informasi Usaha') }}
                     </h3>
                     <div class="space-y-6">
@@ -168,7 +168,7 @@
                 {{-- Izin Usaha Check --}}
                 <x-ui.card class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
                     <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <x-icons.document class="w-5 h-5 text-primary" />
+                        <x-icons.data-document class="w-5 h-5 text-primary" />
                         {{ translate('Izin Usaha') }}
                     </h3>
 
@@ -193,27 +193,27 @@
                 {{-- Social Media --}}
                 <x-ui.card class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
                     <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <x-icons.globe class="w-5 h-5 text-primary" />
+                        <x-icons.map-globe class="w-5 h-5 text-primary" />
                         {{ translate('Sosial Media') }}
                     </h3>
                     <div class="space-y-4">
                         @if ($shop->social_instagram)
                             <div class="flex items-center gap-3">
-                                <x-icons.instagram class="w-5 h-5 text-[#E4405F]" />
+                                <x-icons.social-instagram class="w-5 h-5 text-[#E4405F]" />
                                 <a href="{{ $shop->social_instagram }}" target="_blank"
                                     class="text-blue-600 hover:underline truncate">{{ $shop->social_instagram }}</a>
                             </div>
                         @endif
                         @if ($shop->social_facebook)
                             <div class="flex items-center gap-3">
-                                <x-icons.facebook class="w-5 h-5 text-[#1877F2]" />
+                                <x-icons.social-facebook class="w-5 h-5 text-[#1877F2]" />
                                 <a href="{{ $shop->social_facebook }}" target="_blank"
                                     class="text-blue-600 hover:underline truncate">{{ $shop->social_facebook }}</a>
                             </div>
                         @endif
                         @if ($shop->social_tiktok)
                             <div class="flex items-center gap-3">
-                                <x-icons.tiktok class="w-5 h-5 text-black" />
+                                <x-icons.social-tiktok class="w-5 h-5 text-black" />
                                 <a href="{{ $shop->social_tiktok }}" target="_blank"
                                     class="text-blue-600 hover:underline truncate">{{ $shop->social_tiktok }}</a>
                             </div>
@@ -227,7 +227,7 @@
                 {{-- Visualisasi Toko (SUDAH DIPINDAHKAN KE SINI) --}}
                 <x-ui.card class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
                     <h3 class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
-                        <x-icons.photo class="w-5 h-5 text-primary" />
+                        <x-icons.data-photo class="w-5 h-5 text-primary" />
                         {{ translate('Visualisasi Toko') }}
                     </h3>
 
@@ -257,7 +257,7 @@
                         </div>
                     @else
                         <div class="text-center py-6 bg-slate-50 rounded-xl border border-dashed border-slate-300">
-                            <x-icons.photo class="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                            <x-icons.data-photo class="w-8 h-8 text-slate-300 mx-auto mb-2" />
                             <p class="text-slate-500 text-sm">{{ translate('Belum ada foto visualisasi toko yang diupload.') }}</p>
                         </div>
                     @endif
@@ -281,7 +281,7 @@
                             <div class="sm:flex sm:items-start">
                                 <div
                                     class="mx-auto shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                    <x-icons.exclamation-triangle class="h-6 w-6 text-red-600" />
+                                    <x-icons.status-warning-triangle class="h-6 w-6 text-red-600" />
                                 </div>
                                 <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                                     <h3 class="text-lg leading-6 font-bold text-slate-900">{{ translate('Tolak Verifikasi') }}</h3>
@@ -333,12 +333,12 @@
 
             {{-- Tombol Close (Pojok Kanan Atas) --}}
             <button @click="galleryOpen = false" class="absolute top-6 right-6 text-white/70 hover:text-white z-50 p-2 transition-colors">
-                <x-icons.x-mark class="h-10 w-10" />
+                <x-icons.ui-close class="h-10 w-10" />
             </button>
 
             {{-- Tombol Prev (Kiri) --}}
             <button @click.stop="prevImage()" class="absolute left-4 md:left-8 text-white/70 hover:text-white hover:bg-white/10 p-3 rounded-full transition-all z-50">
-                <x-icons.arrow-left class="h-10 w-10 md:h-12 md:w-12" />
+                <x-icons.ui-arrow-left class="h-10 w-10 md:h-12 md:w-12" />
             </button>
 
             {{-- Area Gambar Utama --}}
@@ -359,7 +359,7 @@
 
             {{-- Tombol Next (Kanan) --}}
             <button @click.stop="nextImage()" class="absolute right-4 md:right-8 text-white/70 hover:text-white hover:bg-white/10 p-3 rounded-full transition-all z-50">
-                <x-icons.arrow-left class="h-10 w-10 md:h-12 md:w-12 rotate-180" />
+                <x-icons.ui-arrow-left class="h-10 w-10 md:h-12 md:w-12 rotate-180" />
             </button>
         </div>
 

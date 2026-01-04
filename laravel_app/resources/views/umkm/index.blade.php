@@ -22,7 +22,7 @@
         <!-- Empty State -->
         <div x-show="paginatedItems.length === 0" class="text-center py-20" x-cloak>
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 mb-4">
-                <x-icons.magnifying-glass class="w-8 h-8 text-slate-400" />
+                <x-icons.ui-search class="w-8 h-8 text-slate-400" />
             </div>
             <h3 class="text-lg font-medium text-slate-900 mb-1">{{translate('Tidak ada toko ditemukan')}}</h3>
             <p class="text-slate-500">{{translate('Coba kata kunci lain atau ubah filter pencarian Anda.')}}</p>

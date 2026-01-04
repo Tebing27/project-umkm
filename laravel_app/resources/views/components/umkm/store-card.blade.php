@@ -14,7 +14,7 @@
             <div class="flex justify-between items-center mb-1 gap-3">
 
     <div class="flex items-center gap-1 text-xs font-medium text-slate-500 flex-1 min-w-0">
-        <x-icons.location class="!w-4.5 !h-4.5 text-primary shrink-0" />
+        <x-icons.map-pin class="!w-4.5 !h-4.5 text-primary shrink-0" />
         
         <span class="truncate" x-text="item.location"></span>
     </div>
@@ -36,7 +36,7 @@
     <div class="flex justify-center">
         <x-ui.button href="#" x-bind:href="item.link" variant="link" size="icon-link">
             {{translate('Lihat Lokasi')}}
-            <x-icons.area-right class="w-3 h-3" />
+            <x-icons.ui-area-right class="w-3 h-3" />
         </x-ui.button>
     </div>
 

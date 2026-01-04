@@ -12,7 +12,7 @@
         <button type="button"
             class="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all backdrop-blur-sm"
             @click="closeZoom()">
-            <x-icons.cross class="w-6 h-6" />
+            <x-icons.ui-cross class="w-6 h-6" />
         </button>
     </div>
 </div>

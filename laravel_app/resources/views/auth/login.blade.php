@@ -31,7 +31,7 @@
                         class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal"
                         required autofocus autocomplete="username">
                         <x-slot:icon>
-                            <x-icons.mail class="w-5 h-5" stroke-width="1.5" />
+                            <x-icons.contact-mail class="w-5 h-5" stroke-width="1.5" />
                         </x-slot:icon>
                     </x-ui.input>
                     @error('email')
@@ -45,12 +45,12 @@
                     <x-ui.input ::type="show ? 'text' : 'password'" name="password" placeholder="{{ translate('Masukkan kata sandi') }}"
                         class="appearance-none bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                         <x-slot:icon>
-                            <x-icons.key class="w-5 h-5" />
+                            <x-icons.auth-key class="w-5 h-5" />
                         </x-slot:icon>
                         <x-slot:suffix>
                              <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
-                                <x-icons.eye x-show="!show" class="w-5 h-5" />
-                                <x-icons.eye-off x-show="show" class="w-5 h-5" />
+                                <x-icons.ui-eye x-show="!show" class="w-5 h-5" />
+                                <x-icons.ui-eye-off x-show="show" class="w-5 h-5" />
                             </button>
                         </x-slot:suffix>
                     </x-ui.input>
