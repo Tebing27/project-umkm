@@ -1,11 +1,3 @@
-@props(['mapShops', 'regionsMap'])
-
-@php
-    // Data passed directly from controller, already transformed.
-    $umkmData = $mapShops;
-    $regionsData = $regionsMap;
-@endphp
-
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
@@ -39,8 +31,8 @@
 
                 // --- DATA UMKM (DITAMBAHKAN FIELD 'REGION') ---
                 // Pastikan ejaan 'region' SAMA PERSIS dengan title di slider wilayah
-                umkms: @json($umkmData),
-                regionList: @json($regionsData),
+                umkms: @json($umkms),
+                regionList: @json($regionList),
 
                 svgIcons: {
                     grid: document.getElementById('icon-grid')?.innerHTML || '',
