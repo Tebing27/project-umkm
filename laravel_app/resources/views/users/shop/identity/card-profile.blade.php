@@ -1,20 +1,5 @@
 @props(['shop'])
 
-@php
-    // 1. Cek License
-    $licenses = is_string($shop->licenses) ? json_decode($shop->licenses, true) : $shop->licenses;
-    $hasLicenses = !empty($licenses);
-
-    // 2. Cek Sosmed (Apakah minimal salah satu ada?)
-    $hasSocials = $shop->social_instagram || $shop->social_tiktok || $shop->social_facebook || $shop->social_website;
-
-    // Gabungan: Apakah bagian "Detail" perlu muncul?
-    $showDetails = $hasLicenses || $hasSocials;
-
-    // 3. Cek Deskripsi (Hanya tampil jika ada isi, saya hapus default text 'belum diisi' agar logic ini jalan)
-    $hasDescription = !empty($shop->description);
-@endphp
-
 <div
     class="bg-white rounded-3xl p-6 md:p-8 shadow-xl shadow-slate-200/60 border border-slate-100 mb-12 relative overflow-hidden group">
     {{-- Decor --}}
@@ -52,18 +37,17 @@
                 <span class="font-medium">{{ $shop->address ?? 'Alamat belum diisi' }}</span>
             </div>
 
-            {{-- LOGIC: Divider & Detail hanya muncul jika ada License ATAU Sosmed --}}
-            @if ($showDetails)
-                {{-- Divider 1 --}}
+            {{-- Divider & Detail --}}
+            @if (!empty($shop->licenses_array) || $shop->has_socials)
+                
                 <div class="w-full h-px bg-slate-100"></div>
 
-                {{-- Detail Lainnya --}}
                 <div class="space-y-2">
                     {{-- Izin Usaha --}}
-                    @if ($hasLicenses)
+                    @if (!empty($shop->licenses_array))
                         <div>
                             <h4 class="text-sm font-bold text-slate-900 mb-1">{{ translate('Izin Usaha') }}</h4>
-                            @foreach ($licenses as $license)
+                            @foreach ($shop->licenses_array as $license)
                                 <p class="text-slate-600 text-sm">{{ $license['type'] ?? 'Izin' }}:
                                     {{ $license['number'] ?? '-' }}</p>
                             @endforeach
@@ -71,60 +55,40 @@
                     @endif
 
                     {{-- Kontak & Sosmed --}}
-                    @if ($hasSocials)
+                    @if ($shop->has_socials)
                         <div
-                            class="{{ $hasLicenses ? 'border-t border-slate-200/60 pt-3' : '' }} grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4">
+                            class="{{ !empty($shop->licenses_array) ? 'border-t border-slate-200/60 pt-3' : '' }} grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4">
+                            
                             {{-- IG --}}
                             @if ($shop->social_instagram)
-                                @php
-                                    $igUsername = str_replace(
-                                        ['https://www.instagram.com/', 'https://instagram.com/', '@', '/'],
-                                        '',
-                                        $shop->social_instagram,
-                                    );
-                                @endphp
-                                <a href="https://instagram.com/{{ $igUsername }}" target="_blank"
+                                <a href="https://instagram.com/{{ $shop->instagram_username }}" target="_blank"
                                     class="flex items-center gap-2 hover:opacity-80 transition-opacity">
                                     <x-icons.social-instagram class="text-red-500" />
-                                    <span class="font-medium text-slate-900">{{ '@' . $igUsername }}</span>
+                                    <span class="font-medium text-slate-900">{{ '@' . $shop->instagram_username }}</span>
                                 </a>
                             @endif
 
                             {{-- Tiktok --}}
                             @if ($shop->social_tiktok)
-                                @php
-                                    $tiktokUsername = str_replace(
-                                        ['https://www.tiktok.com/', 'https://tiktok.com/', '@', '/'],
-                                        '',
-                                        $shop->social_tiktok,
-                                    );
-                                @endphp
-                                <a href="{{ 'https://tiktok.com/@' . $tiktokUsername }}" target="_blank"
+                                <a href="{{ 'https://tiktok.com/@' . $shop->tiktok_username }}" target="_blank"
                                     class="flex items-center gap-1 hover:opacity-80 transition-opacity">
                                     <x-icons.social-tiktok class="text-slate-900" />
-                                    <span class="font-medium text-slate-900">{{ '@' . $tiktokUsername }}</span>
+                                    <span class="font-medium text-slate-900">{{ '@' . $shop->tiktok_username }}</span>
                                 </a>
                             @endif
 
                             {{-- FB --}}
                             @if ($shop->social_facebook)
-                                @php
-                                    $fbUsername = str_replace(
-                                        ['https://www.facebook.com/', 'https://facebook.com/', '/'],
-                                        '',
-                                        $shop->social_facebook,
-                                    );
-                                @endphp
-                                <a href="https://facebook.com/{{ $fbUsername }}" target="_blank"
+                                <a href="https://facebook.com/{{ $shop->facebook_username }}" target="_blank"
                                     class="flex items-center gap-2 hover:opacity-80 transition-opacity">
                                     <x-icons.social-facebook class="text-[#1877F2]" />
-                                    <span class="font-medium text-slate-900">{{ $fbUsername }}</span>
+                                    <span class="font-medium text-slate-900">{{ $shop->facebook_username }}</span>
                                 </a>
                             @endif
 
                             {{-- Website --}}
                             @if ($shop->social_website)
-                                <a href="{{ Str::startsWith($shop->social_website, ['http://', 'https://']) ? $shop->social_website : 'https://' . $shop->social_website }}"
+                                <a href="{{ $shop->website_url }}"
                                     target="_blank" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
                                     <x-icons.map-globe class="text-slate-900" />
                                     <span class="font-medium text-slate-900">Website</span>
@@ -135,12 +99,10 @@
                 </div>
             @endif
 
-            {{-- LOGIC: Divider & Deskripsi hanya muncul jika deskripsi TIDAK kosong --}}
-            @if ($hasDescription)
-                {{-- Divider 2 --}}
+            {{-- Divider & Deskripsi --}}
+            @if (!empty($shop->description))
                 <div class="w-full h-px bg-slate-100"></div>
 
-                {{-- Deskripsi --}}
                 <div>
                     <p class="text-slate-500 leading-relaxed">
                         {{ translate($shop->description) }}

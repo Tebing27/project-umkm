@@ -30,7 +30,10 @@ class UserDashboardController extends Controller
         // Placeholder for views (needs database column)
         $totalViews = $shop->views; 
 
-        return view('users.dashboard', compact('shop', 'totalProducts', 'activeProducts', 'productCategories', 'totalViews'));
+        // Chart Colors for Dashboard
+        $chartColors = ['bg-blue-500', 'bg-orange-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500'];
+
+        return view('users.dashboard.index', compact('shop', 'totalProducts', 'activeProducts', 'productCategories', 'totalViews', 'chartColors'));
     }
 
     public function detailLokasi()
@@ -47,7 +50,7 @@ class UserDashboardController extends Controller
             }
         }
 
-        return view('users.lokasi', compact('shop', 'regions', 'initialId', 'initialName'));
+        return view('users.shop.location.index', compact('shop', 'regions', 'initialId', 'initialName'));
     }
 
 
@@ -101,12 +104,12 @@ class UserDashboardController extends Controller
 
         if ($request->ajax()) {
              return response()->json([
-                 'html' => view('components.users.product-list', compact('products'))->render(),
+                 'html' => view('users.shop.products.list', compact('products'))->render(),
                  'hasMore' => $products->hasMorePages()
              ]);
         }
 
-        return view('users.toko', compact('shop', 'products'));
+        return view('users.shop.index', compact('shop', 'products'));
     }
 
     public function toggleProductStatus($id)
@@ -142,7 +145,7 @@ class UserDashboardController extends Controller
             $licenses = [['type' => '', 'number' => '']];
         }
 
-        return view('users.edit-toko', compact('shop', 'regions', 'licenses'));
+        return view('users.shop.identity.form-profile', compact('shop', 'regions', 'licenses'));
     }
 
     public function updateToko(Request $request)
@@ -219,7 +222,7 @@ class UserDashboardController extends Controller
     {
         $user = Auth::user();
         $shop = $user->shop;
-        return view('users.setting', compact('user', 'shop'));
+        return view('users.settings.index', compact('user', 'shop'));
     }
 
     public function updateProfile(Request $request)
@@ -278,7 +281,7 @@ class UserDashboardController extends Controller
             }
         }
         
-        return view('users.kelola-foto', compact('shop', 'photos', 'photoArray'));
+        return view('users.shop.identity.manage-photos', compact('shop', 'photos', 'photoArray'));
     }
 
     public function storePhoto(Request $request)

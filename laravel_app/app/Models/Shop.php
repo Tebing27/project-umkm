@@ -168,4 +168,8 @@ class Shop extends Model
         }
         return is_array($licenses) ? $licenses : [];
     }
+    public function getHasSocialsAttribute(): bool
+    {
+        return $this->social_instagram || $this->social_tiktok || $this->social_facebook || $this->social_website;
+    }
 }

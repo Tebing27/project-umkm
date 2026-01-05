@@ -231,44 +231,59 @@
                 return {
                     photos: initialPhotos,
                     deletedIds: [],
+                    isDirty: false,
+
+                    init() {
+                        this.$watch('deletedIds', () => { this.isDirty = true });
+                        window.onbeforeunload = (e) => {
+                            if (this.isDirty) {
+                                e.preventDefault();
+                                e.returnValue = '{{ translate("Anda memiliki perubahan yang belum disimpan. Yakin ingin meninggalkan halaman?") }}';
+                            }
+                        };
+                    },
 
                     handleFileSelect(event, index) {
                         const file = event.target.files[0];
                         if (file) {
                             const reader = new FileReader();
                             reader.onload = (e) => {
-                                // Keep ID if we are just replacing file? No, replacing means new file. 
-                                // But if we delete old file by ID in controller, we need to track it?
-                                // Controller deletes by ID if passed in delete_ids. 
-                                // Replacing a photo with ID != null:
-                                // If I replace it, the old logic in controller checks "if existing at order X, delete it".
-                                // So I don't need to add it to deletedIds if I just overwrite the order.
-                                // BUT, for preview purposes, I update the URL.
                                 this.photos[index].url = e.target.result;
+                                this.isDirty = true;
                             };
                             reader.readAsDataURL(file);
                         }
                     },
 
                     removePhoto(index) {
-                        // If it has an ID (existing in DB), add to deletedIds
-                        if (this.photos[index].id) {
-                            this.deletedIds.push(this.photos[index].id);
-                        }
-                        
-                        this.photos[index].url = null;
-                        this.photos[index].id = null; // Clear ID so we don't delete it again or confuse logic
+                        if (confirm('{{ translate("Tandai foto ini untuk dihapus? Perubahan akan diterapkan setelah Anda klik Simpan.") }}')) {
+                            // If it has an ID (existing in DB), add to deletedIds
+                            if (this.photos[index].id) {
+                                this.deletedIds.push(this.photos[index].id);
+                            }
+                            
+                            this.photos[index].url = null;
+                            this.photos[index].id = null;
+                            this.isDirty = true;
 
-                        if (index === 0) {
-                            if (this.$refs.photo0) this.$refs.photo0.value = '';
-                        } else {
-                            const input = document.getElementById('slider-input-' + index);
-                            if (input) input.value = '';
+                            if (index === 0) {
+                                if (this.$refs.photo0) this.$refs.photo0.value = '';
+                            } else {
+                                const input = document.getElementById('slider-input-' + index);
+                                if (input) input.value = '';
+                            }
                         }
                     },
 
                     cancelAction() {
-                        if (confirm('{{ translate("Batalkan perubahan?") }}')) window.location.reload();
+                        if (this.isDirty) {
+                             if (confirm('{{ translate("Batalkan semua perubahan?") }}')) {
+                                 this.isDirty = false; // Prevent alert
+                                 window.location.reload();
+                             }
+                        } else {
+                            window.history.back();
+                        }
                     },
 
                     saveChanges() {
@@ -276,19 +291,16 @@
                         
                         // --- VALIDATION LOGIC START ---
                         let totalSize = 0;
-                        const maxTotalSize = 7.5 * 1024 * 1024; // 7.5MB (Lower than 8MB Limit)
+                        const maxTotalSize = 7.5 * 1024 * 1024; // 7.5MB
                         const maxFileSize = 2 * 1024 * 1024; // 2MB
                         let errorMsg = null;
 
                         // Check Cover Photo (index 0)
                         if (this.$refs.photo0 && this.$refs.photo0.files[0]) {
                             const file = this.$refs.photo0.files[0];
-                            
-                            // Check Type
                             if (!file.type.match(/^image\//)) {
                                 errorMsg = '{{ translate("File Foto Sampul harus berupa gambar!") }}';
                             }
-                            
                             if (file.size > maxFileSize) {
                                 errorMsg = '{{ translate("Foto Sampul terlalu besar! Maksimal 2MB.") }}';
                             }
@@ -300,17 +312,12 @@
                             const input = document.getElementById('slider-input-' + i);
                             if (input && input.files[0]) {
                                 const file = input.files[0];
-                                
-                                // Check Type
                                 if (!file.type.match(/^image\//)) {
                                     errorMsg = '{{ translate("File pada Slide ke-") }}' + i + ' {{ translate("bukan gambar valid!") }}';
                                 }
-
-                                // Check Size
                                 if (file.size > maxFileSize) {
                                     errorMsg = '{{ translate("Foto pada Slide ke-") }}' + i + ' {{ translate("terlalu besar! Maksimal 2MB.") }}';
                                 }
-                                
                                 totalSize += file.size;
                             }
                         }
@@ -321,12 +328,15 @@
                         }
 
                         if (totalSize > maxTotalSize) {
-                            alert('{{ translate("Total ukuran semua foto terlalu besar! Maksimal total upload 7.5MB. Silakan kurangi ukuran foto atau upload secara bertahap.") }}');
+                            alert('{{ translate("Total ukuran semua foto terlalu besar! Maksimal total upload 7.5MB.") }}');
                             return;
                         }
                         // --- VALIDATION LOGIC END ---
 
                         if(btnText) btnText.innerText = '{{ translate("Menyimpan...") }}';
+                        
+                        // Disable dirty check to allow submit
+                        this.isDirty = false;
                         
                         // Submit the form
                         this.$refs.form.submit();

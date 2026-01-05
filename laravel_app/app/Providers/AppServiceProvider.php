@@ -25,22 +25,22 @@ class AppServiceProvider extends ServiceProvider
                 [
                     'name' => 'Dashboard',
                     'url' => '/admin/dashboard',
-                    'icon' => 'dashboard',
+                    'icon' => 'nav-dashboard',
                 ],
                 [
                     'name' => translate('Konten'),
                     'url' => '/admin/contents',
-                    'icon' => 'cube',
+                    'icon' => 'data-product',
                 ],
                 [
                     'name' => translate('Kelola User'),
                     'url' => '/admin/users',
-                    'icon' => 'users',
+                    'icon' => 'data-users',
                 ],
                 [
                     'name' => translate('Pengaturan'),
                     'url' => '/admin/setting',
-                    'icon' => 'settings',
+                    'icon' => 'ui-settings',
                 ],
             ];
             $view->with('menus', $menus);
@@ -52,27 +52,27 @@ class AppServiceProvider extends ServiceProvider
                 [
                     'name' => 'Dashboard',
                     'url' => '/users/dashboard',
-                    'icon' => 'dashboard',
+                    'icon' => 'nav-dashboard',
                 ],
                 [
                     'name' => translate('Kelola Foto'),
                     'url' => '/users/foto',
-                    'icon' => 'photo',
+                    'icon' => 'data-photo',
                 ],
                 [
                     'name' => translate('Kelola Lokasi'),
                     'url' => '/users/lokasi',
-                    'icon' => 'location',
+                    'icon' => 'map-pin',
                 ],
                 [
                     'name' => translate('Kelola Toko'),
                     'url' => '/users/toko',
-                    'icon' => 'store',
+                    'icon' => 'data-store',
                 ],
                 [
                     'name' => translate('Pengaturan'),
                     'url' => '/users/setting',
-                    'icon' => 'settings',
+                    'icon' => 'ui-settings',
                 ],
             ];
             $view->with('menus', $menus);

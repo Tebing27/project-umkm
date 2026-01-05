@@ -1,16 +1,3 @@
-<x-layouts.guest :title="translate('Dashboard User - UMKM Sasuma')" :header-title="translate('Dashboard')" :header-subtitle="translate('Ringkasan Aktivitas')">
-    {{-- Welcome Section --}}
-    <div class="relative overflow-hidden text-slate-900">
-        <div class="relative z-10">
-            <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">Hi, {{ Auth::user()->name }} 👋</h2>
-            <p class="text-slate-900 text-lg font-medium max-w-2xl mb-4">{{translate('Selamat datang kembali! Berikut adalah ringkasan performa toko Anda hari ini.')}}</p>
-        </div>
-
-        {{-- Decorative Circles --}}
-        <div class="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
-    </div>
-
     {{-- Stats Grid --}}
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
@@ -87,13 +74,10 @@
                 <div>
                     <p class="text-slate-500 text-sm font-medium mb-3">{{translate('Kategori Produk')}}</p>
                     <div class="space-y-3">
-                        @php
-                            $colors = ['bg-blue-500', 'bg-orange-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500'];
-                        @endphp
                         @forelse($productCategories as $index => $cat)
                             <div class="flex justify-between items-center text-sm">
                                 <div class="flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full {{ $colors[$index % count($colors)] }}"></span>
+                                    <span class="w-2 h-2 rounded-full {{ $chartColors[$index % count($chartColors)] }}"></span>
                                     <span class="text-slate-600 font-medium">{{ $cat->category }}</span>
                                 </div>
                                 <span class="font-bold text-slate-900">{{ $cat->total }}</span>
@@ -135,4 +119,3 @@
         @endif
 
     </div>
-</x-layouts.guest>
