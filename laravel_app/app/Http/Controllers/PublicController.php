@@ -57,7 +57,9 @@ class PublicController extends Controller
         // Fetch Admin Content for this page
         $contents = Content::where('group', 'umkm_index')->get()->keyBy('key');
 
-        return view('umkm.index', compact('shops', 'regions', 'shopsData', 'contents'));
+        $businessTypes = Shop::BUSINESS_TYPES;
+
+        return view('umkm.index', compact('shops', 'regions', 'shopsData', 'contents', 'businessTypes'));
     }
 
     public function show($id)
@@ -102,6 +104,27 @@ class PublicController extends Controller
         // Extract unique categories from loaded products
         $productCategories = $shop->products->pluck('category')->unique()->values()->all();
 
-        return view('umkm.detail', compact('shop', 'relatedShops', 'productsData', 'productCategories'));
+        // Prepare License Data (Zero PHP in View)
+        $licenses = [];
+        if ($shop->licenses) {
+            $licenses = json_decode($shop->licenses);
+        }
+
+        // Prepare Omset Data (Zero PHP in View)
+        $formattedOmset = '';
+        if ($shop->omset_min || $shop->omset_max) {
+             $min = $shop->omset_min ? 'Rp. ' . number_format((float) preg_replace('/[^0-9]/', '', $shop->omset_min), 0, ',', '.') : '';
+             $max = $shop->omset_max ? 'Rp. ' . number_format((float) preg_replace('/[^0-9]/', '', $shop->omset_max), 0, ',', '.') : '';
+             
+             if ($min && $max) {
+                 $formattedOmset = "$min - $max";
+             } elseif ($min) {
+                 $formattedOmset = $min;
+             } elseif ($max) {
+                 $formattedOmset = $max;
+             }
+        }
+
+        return view('umkm.detail.index', compact('shop', 'relatedShops', 'productsData', 'productCategories', 'licenses', 'formattedOmset'));
     }
 }
