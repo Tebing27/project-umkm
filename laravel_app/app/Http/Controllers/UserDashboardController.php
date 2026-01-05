@@ -50,7 +50,7 @@ class UserDashboardController extends Controller
             }
         }
 
-        return view('users.shop.location.index', compact('shop', 'regions', 'initialId', 'initialName'));
+        return view('users.location.index', compact('shop', 'regions', 'initialId', 'initialName'));
     }
 
 
@@ -104,12 +104,12 @@ class UserDashboardController extends Controller
 
         if ($request->ajax()) {
              return response()->json([
-                 'html' => view('users.shop.products.list', compact('products'))->render(),
+                 'html' => view('users.products.sections.product-list', compact('products'))->render(),
                  'hasMore' => $products->hasMorePages()
              ]);
         }
 
-        return view('users.shop.index', compact('shop', 'products'));
+        return view('users.products.index', compact('shop', 'products'));
     }
 
     public function toggleProductStatus($id)
@@ -145,7 +145,7 @@ class UserDashboardController extends Controller
             $licenses = [['type' => '', 'number' => '']];
         }
 
-        return view('users.shop.identity.form-profile', compact('shop', 'regions', 'licenses'));
+        return view('users.shop-profile.index', compact('shop', 'regions', 'licenses'));
     }
 
     public function updateToko(Request $request)
@@ -281,7 +281,7 @@ class UserDashboardController extends Controller
             }
         }
         
-        return view('users.shop.identity.manage-photos', compact('shop', 'photos', 'photoArray'));
+        return view('users.shop-profile.manage-photos', compact('shop', 'photos', 'photoArray'));
     }
 
     public function storePhoto(Request $request)

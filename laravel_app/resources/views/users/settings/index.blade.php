@@ -2,13 +2,11 @@
 
     <div class="max-w-5xl mx-auto">
         @include('users.settings.sections.header')
+        @include('users.settings.sections.profile-form')
+        
+        <div class="my-8 border-t border-slate-200"></div>
 
-        @include('users.settings.sections.form-profile')
-
-        {{-- DIVIDER --}}
-        <div class="border-t border-slate-200 my-12"></div>
-
-        @include('users.settings.sections.form-password')
+        @include('users.settings.sections.password-form')
     </div>
 
 </x-layouts.guest>

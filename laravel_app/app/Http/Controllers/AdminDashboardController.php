@@ -18,7 +18,7 @@ class AdminDashboardController extends Controller
         $pendingShopsCount = $shops->where('is_verified', false)->whereNull('rejection_reason')->count();
         $newShopsThisWeek = $shops->where('created_at', '>=', now()->subWeek())->count();
         
-        return view('admin.dashboard', compact(
+        return view('admin.dashboard.index', compact(
             'shops', 
             'totalShops', 
             'verifiedShopsCount', 
@@ -63,19 +63,19 @@ class AdminDashboardController extends Controller
 
         $currentStatus = $request->status ?? 'all';
 
-        return view('admin.users', compact('shops', 'search', 'tabs', 'currentStatus'));
+        return view('admin.users.index', compact('shops', 'search', 'tabs', 'currentStatus'));
     }
 
     public function userDetail($id)
     {
         $shop = Shop::with('user')->findOrFail($id);
-        return view('admin.users.detail', compact('shop'));
+        return view('admin.users.detail.index', compact('shop'));
     }
 
     public function setting()
     {
         $user = auth()->user();
-        return view('admin.setting', compact('user'));
+        return view('admin.settings.index', compact('user'));
     }
 
     public function verifyShop($id)
