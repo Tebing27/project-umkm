@@ -113,16 +113,26 @@
             <div class="space-y-6">
 
                 {{-- Nama Usaha --}}
-                <div class="space-y-2">
+                <div class="space-y-2" x-data="{ shopName: {{ json_encode(old('shop_name', $shop->name ?? '')) }} }">
                     <label class="block mb-2 font-medium text-gray-700">{{ translate('Nama Usaha') }} <span
                             class="text-red-500">*</span></label>
-                    <x-ui.input variant="soft" type="text" name="shop_name"
-                        value="{{ old('shop_name', $shop->name ?? '') }}" placeholder="{{ translate('Tebing') }}"
+                    <x-ui.input variant="soft" type="text" name="shop_name" x-model="shopName" maxlength="30"
+                        placeholder="{{ translate('Tebing') }}"
                         class="text-sm md:text-base">
                         <x-slot:icon>
                             <x-icons.data-store class="w-5 h-5" />
                         </x-slot:icon>
                     </x-ui.input>
+                    
+                    {{-- Character Counter Status --}}
+                    <div class="flex justify-between mt-1 text-xs px-1">
+                            <span x-show="shopName.length >= 25" x-transition class="text-amber-600 font-medium">
+                            {{ translate('Mendekati batas (30 karakter)') }}
+                            </span>
+                            <span class="text-gray-500 ml-auto" x-text="shopName.length + '/30'"
+                            :class="{'text-red-600 font-bold': shopName.length >= 30, 'text-amber-600': shopName.length >= 25}"></span>
+                    </div>
+
                     @error('shop_name')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror

@@ -7,6 +7,15 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PublicController;
 
+Route::get('/test-pusher', function () {
+    try {
+        \App\Events\ShopUpdated::dispatch();
+        return 'Event dispatched! Check Pusher Debug Console.';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+});
+
 Route::get('/lang/{locale}', function ($locale) {
     if (in_array($locale, ['id', 'en'])) {
         session(['locale' => $locale]);

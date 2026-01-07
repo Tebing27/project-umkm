@@ -14,16 +14,17 @@
     }" @edit-product.window="openEditModal($event.detail)"
         @scroll.window="showFab = (window.scrollY > 200)">
 
-        @include('users.products.sections.header')
-        @include('users.products.sections.alerts')
+        @include('users.products.partials.header')
+        @include('users.products.partials.alerts')
 
         {{-- === SHOP PROFILE CARD === --}}
-        @include('users.shop-profile.sections.shop-info-card', ['shop' => $shop])
+        @include('users.shop-profile.partials.shop-info-card', ['shop' => $shop])
 
-        @include('users.products.sections.product-manager')
+        @include('users.products.partials.product-manager')
 
-        @include('users.products.sections.fab')
-        @include('users.products.sections.modals')
+        @include('users.products.partials.fab')
+        @include('users.products.partials.modals')
     </div>
 
 </x-layouts.guest>
+

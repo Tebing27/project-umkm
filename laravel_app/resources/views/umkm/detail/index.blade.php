@@ -2,10 +2,11 @@
     <x-navigation />
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
-        @include('umkm.detail.sections.card')
-        @include('umkm.detail.sections.products')
+        @include('umkm.detail.partials.card')
+        @include('umkm.detail.partials.products')
     </main>
 
     @push('scripts')
     @endpush
 </x-layouts.app>
+

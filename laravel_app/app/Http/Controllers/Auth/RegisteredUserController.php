@@ -38,7 +38,7 @@ class RegisteredUserController extends Controller
             // Data User (Pemilik)
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', Rules\Password::min(8)->mixedCase()->numbers()],
             'phone_number' => ['required', 'string', 'max:20'],
             'place_of_birth' => ['required', 'string', 'max:100'],
             'date_of_birth' => ['required', 'date'],

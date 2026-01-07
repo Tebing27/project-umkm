@@ -59,6 +59,10 @@ class PublicController extends Controller
 
         $businessTypes = Shop::BUSINESS_TYPES;
 
+        if ($request->wantsJson()) {
+             return response()->json($shopsData);
+        }
+
         return view('umkm.index', compact('shops', 'regions', 'shopsData', 'contents', 'businessTypes'));
     }
 

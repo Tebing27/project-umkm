@@ -90,6 +90,8 @@ class AdminDashboardController extends Controller
             'is_verified' => true,
             'rejection_reason' => null
         ]);
+
+        \App\Events\ShopUpdated::dispatch();
         
         return redirect()->back()->with('success', 'UMKM telah berhasil diverifikasi.');
     }
@@ -105,6 +107,8 @@ class AdminDashboardController extends Controller
             'is_verified' => false,
             'rejection_reason' => $request->reason
         ]);
+
+        \App\Events\ShopUpdated::dispatch();
 
         return redirect()->back()->with('success', 'UMKM telah ditolak dengan alasan yang diberikan.');
     }

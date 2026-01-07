@@ -2,13 +2,13 @@
     <x-navigation />
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20" x-data='storeApp(@json($shopsData))'>
-        @include('umkm.sections.hero')
+        @include('umkm.partials.hero')
 
-        @include('umkm.sections.store-list-header')
+        @include('umkm.partials.store-list-header')
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" id="store-list">
             <template x-for="item in paginatedItems" :key="item.id">
-                @include('umkm.sections.store-card')
+                @include('umkm.partials.store-card')
             </template>
         </div>
 
@@ -25,3 +25,4 @@
     @push('scripts')
     @endpush
 </x-layouts.app>
+

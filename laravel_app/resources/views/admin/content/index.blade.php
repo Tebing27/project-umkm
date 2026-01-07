@@ -17,8 +17,8 @@
         }
     }" class="w-full min-h-screen pb-24 bg-slate-50/50">
 
-    @include('admin.content.sections.notifications')
-    @include('admin.content.sections.tabs-nav')
+    @include('admin.content.partials.notifications')
+    @include('admin.content.partials.tabs-nav')
 
     <div class="w-full max-w-7xl mx-auto mt-6">
         @foreach ($contents as $group => $items)
@@ -32,11 +32,12 @@
                     <p class="text-slate-500 text-base mt-1">{{translate('Kelola konten untuk bagian ini.')}}</p>
                 </div>
 
-                @include('admin.content.sections.tab-regions')
-                @include('admin.content.sections.tab-standard')
-                @include('admin.content.sections.tab-featured')
+                @include('admin.content.partials.tab-regions')
+                @include('admin.content.partials.tab-standard')
+                @include('admin.content.partials.tab-featured')
             </div>
         @endforeach
     </div>
     </div>
 </x-layouts.admin>
+

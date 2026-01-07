@@ -104,7 +104,7 @@ class UserDashboardController extends Controller
 
         if ($request->ajax()) {
              return response()->json([
-                 'html' => view('users.products.sections.product-list', compact('products'))->render(),
+                 'html' => view('users.products.partials.product-list', compact('products'))->render(),
                  'hasMore' => $products->hasMorePages()
              ]);
         }
@@ -210,6 +210,8 @@ class UserDashboardController extends Controller
             'logo' => $logoPath,
         ]);
 
+        \App\Events\ShopUpdated::dispatch();
+
         \Illuminate\Support\Facades\Log::info('DEBUG: Shop Update Result', $shop->fresh()->toArray());
 
         // Dispatch Translation Job
@@ -254,7 +256,7 @@ class UserDashboardController extends Controller
     {
         $request->validate([
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', Rules\Password::min(8)->mixedCase()->numbers()],
         ]);
 
         $user = Auth::user();

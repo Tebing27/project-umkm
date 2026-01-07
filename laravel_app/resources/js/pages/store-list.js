@@ -1,4 +1,4 @@
-window.storeApp = function(initialData) {
+window.storeApp = function (initialData) {
     return {
         // --- STATE ---
         searchQuery: '',
@@ -6,6 +6,7 @@ window.storeApp = function(initialData) {
         itemsPerPage: 6,
         selectedCategory: '',
         selectedLocation: '',
+        allLabel: 'Semua',
 
         // --- DATA ---
         items: initialData,
@@ -106,6 +107,28 @@ window.storeApp = function(initialData) {
             this.$watch('selectedLocation', () => {
                 this.currentPage = 1;
             });
+
+            // Listen for Pusher events
+            if (window.Echo) {
+                window.Echo.channel('shops')
+                    .listen('ShopUpdated', (e) => {
+                        console.log('ShopUpdated event received', e);
+                        this.refreshData();
+                    });
+            }
+        },
+
+        refreshData() {
+            console.log('Refreshing data...');
+            window.axios.get('/umkm')
+                .then(response => {
+                    if (Array.isArray(response.data)) {
+                        this.items = response.data;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error refreshing data:', error);
+                });
         }
     }
 }

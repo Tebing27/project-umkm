@@ -15,10 +15,10 @@
         'destructive' => 'bg-red-600 text-white hover:bg-red-700 shadow-sm focus:ring-red-500',
         'outline' =>
             'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 hover:border-primary shadow-sm',
-        'outline-destructive' =>
-            'bg-white border border-red-200 text-red-600 hover:bg-red-50 focus:ring-red-500 shadow-sm',
-        'secondary' => 'bg-green-600 text-white hover:bg-green-700 shadow-lg shadow-green-200',
+
+
         'ghost' => 'hover:bg-slate-100 text-slate-700 hover:text-slate-900',
+
         'link' =>
             'text-blue-600 hover:text-blue-700 font-medium border-b border-transparent hover:border-blue-600 hover:no-underline',
         'shiny' => 'bg-[#FFC107] text-white hover:-translate-y-0.5 active:translate-y-0 relative overflow-hidden group',

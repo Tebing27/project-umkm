@@ -70,6 +70,7 @@ class HomeController extends Controller
                 'id' => $shop->id,
                 'title' => $shop->name,
                 'category' => $shop->business_type,
+                'product_type' => $shop->product_type,
                 'description' => \Illuminate\Support\Str::limit($shop->description, 80),
                 'sales' => $shop->omset_max ? 'Rp. ' . number_format((float) preg_replace('/[^0-9]/', '', $shop->omset_max), 0, ',', '.') : 'Rp. -',
                 'region' => $shop->region ? $shop->region->name : 'Sasuma',
@@ -83,6 +84,7 @@ class HomeController extends Controller
                     'id' => 1,
                     'title' => 'Sasuma UMKM',
                     'category' => 'Kuliner',
+                    'product_type' => 'Pecel lele, daun singkong, dan lontong sayur',
                     'description' => 'Pecel lele, daun singkong, dan lontong sayur',
                     'sales' => 'Rp. 10.000.000',
                     'region' => 'Sasuma',
@@ -178,7 +180,7 @@ class HomeController extends Controller
             ];
         });
 
-        return view('home', compact(
+        return view('home.index', compact(
             'regions', 'heroShops', 'mapShops', 'contents', // mapShops is now transformed
             'regionItems', 'wilayahTitle', 'wilayahSubtitle', 'wilayahDesc',
             'heroItems', 'heroTitle', 'heroDesc', 'heroImage',

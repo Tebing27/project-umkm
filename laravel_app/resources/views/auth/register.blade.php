@@ -32,16 +32,26 @@
                     </div>
 
                     {{-- Nama Usaha --}}
-                    <div>
+                    <div x-data="{ shopName: {{ json_encode(old('shop_name', '')) }} }">
                         <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Nama Usaha') }}
                             <span class="text-red-500">*</span></label>
-                        <x-ui.input type="text" name="shop_name" value="{{ old('shop_name') }}"
+                        <x-ui.input type="text" name="shop_name" x-model="shopName" maxlength="30"
                             placeholder="{{ translate('Warung Kopi Sejahtera') }}"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                             <x-slot:icon>
                                 <x-icons.shop-bag class="w-5 h-5" stroke-width="1.5" />
                             </x-slot:icon>
                         </x-ui.input>
+                        
+                        {{-- Character Counter Status --}}
+                        <div class="flex justify-between mt-1 text-xs px-1">
+                             <span x-show="shopName.length >= 25" x-transition class="text-amber-600 font-medium">
+                                {{ translate('Mendekati batas (30 karakter)') }}
+                             </span>
+                             <span class="text-gray-500 ml-auto" x-text="shopName.length + '/30'"
+                                :class="{'text-red-600 font-bold': shopName.length >= 30, 'text-amber-600': shopName.length >= 25}"></span>
+                        </div>
+
                         @error('shop_name')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
@@ -487,50 +497,128 @@
                 </div>
                 </div>
 
-                {{-- Kata Sandi --}}
-                <div class="mt-4">
-                <div x-data="{ show: false }">
-                    <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Kata Sandi') }}
-                        <span class="text-red-500">*</span></label>
-                    <x-ui.input ::type="show ? 'text' : 'password'" name="password" placeholder="{{ translate('Masukkan kata sandi') }}"
-                        class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
-                        <x-slot:icon>
-                            <x-icons.auth-key class="w-5 h-5" stroke-width="1.5" />
-                        </x-slot:icon>
-                        <x-slot:suffix>
-                             <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
-                                <x-icons.ui-eye x-show="!show" class="w-5 h-5" />
-                                <x-icons.ui-eye-off x-show="show" class="w-5 h-5" />
-                            </button>
-                        </x-slot:suffix>
-                    </x-ui.input>
-                    @error('password')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
-                </div>
-                </div>
+                {{-- Kata Sandi with Strength Meter --}}
+                <div class="mt-4" x-data="{
+                    password: '',
+                    confirmation: '',
+                    show: false,
+                    showConfirm: false,
+                    strength: 0,
+                    checks: {
+                        length: false,
+                        lower: false,
+                        upper: false,
+                        number: false
+                    },
+                    checkStrength() {
+                        this.checks.length = this.password.length >= 8;
+                        this.checks.lower = /[a-z]/.test(this.password);
+                        this.checks.upper = /[A-Z]/.test(this.password);
+                        this.checks.number = /[0-9]/.test(this.password);
+                        
+                        this.strength = Object.values(this.checks).filter(Boolean).length;
+                    },
+                    get strengthLabel() {
+                        if(this.strength <= 2) return '{{ translate('Lemah') }}';
+                        if(this.strength <= 4) return '{{ translate('Sedang') }}';
+                        return '{{ translate('Kuat') }}';
+                    },
+                    get strengthColor() {
+                        if(this.strength <= 2) return 'bg-red-500';
+                        if(this.strength <= 4) return 'bg-amber-500';
+                        return 'bg-green-500';
+                    },
+                    get strengthText() {
+                         if(this.strength <= 2) return 'text-red-600';
+                        if(this.strength <= 4) return 'text-amber-600';
+                        return 'text-green-600';
+                    },
+                    get confirmClass() {
+                        if(this.confirmation && this.password !== this.confirmation) return 'border-red-500 focus:border-red-500';
+                        if(this.confirmation && this.password === this.confirmation) return 'border-green-500 focus:border-green-500';
+                        return '';
+                    }
+                }">
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Kata Sandi') }}
+                            <span class="text-red-500">*</span></label>
+                        <x-ui.input ::type="show ? 'text' : 'password'" name="password" x-model="password" @input="checkStrength()" placeholder="{{ translate('Masukkan kata sandi') }}"
+                            class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
+                            <x-slot:icon>
+                                <x-icons.auth-key class="w-5 h-5" stroke-width="1.5" />
+                            </x-slot:icon>
+                            <x-slot:suffix>
+                                <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
+                                    <x-icons.ui-eye x-show="!show" class="w-5 h-5" />
+                                    <x-icons.ui-eye-off x-show="show" class="w-5 h-5" />
+                                </button>
+                            </x-slot:suffix>
+                        </x-ui.input>
+                        @error('password')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
 
-                {{-- Konfirmasi Kata Sandi --}}
-                <div class="mt-4">
-                <div x-data="{ show: false }">
-                    <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Konfirmasi Kata Sandi') }}
-                        <span class="text-red-500">*</span></label>
-                    <x-ui.input ::type="show ? 'text' : 'password'" name="password_confirmation" placeholder="{{ translate('Ulangi kata sandi') }}"
-                        class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
-                        <x-slot:icon>
-                            <x-icons.auth-key class="w-5 h-5" stroke-width="1.5" />
-                        </x-slot:icon>
-                        <x-slot:suffix>
-                             <button type="button" @click="show = !show" class="text-slate-400 hover:text-slate-600 focus:outline-none">
-                                <x-icons.ui-eye x-show="!show" class="w-5 h-5" />
-                                <x-icons.ui-eye-off x-show="show" class="w-5 h-5" />
-                            </button>
-                        </x-slot:suffix>
-                    </x-ui.input>
-                    @error('password_confirmation')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
-                </div>
+                        {{-- Strength Meter --}}
+                        <div class="mt-2 text-sm transition-all duration-300" x-show="password.length > 0" x-transition>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium" :class="strengthText">{{ translate('Kekuatan Password:') }} <span x-text="strengthLabel"></span></span>
+                            </div>
+                            <div class="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                                <div class="h-full transition-all duration-500" :class="strengthColor" :style="'width: ' + (strength * 20) + '%'"></div>
+                            </div>
+                            
+                            {{-- Recommendations --}}
+                            <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-y-1 gap-x-2">
+                                <div class="flex items-center gap-1.5" :class="checks.length ? 'text-green-600' : 'text-gray-500'">
+                                    <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.length" />
+                                    <div class="w-3.5 h-3.5 rounded-full border border-gray-400" x-show="!checks.length"></div>
+                                    <span>{{ translate('Minimal 8 karakter') }}</span>
+                                </div>
+                                <div class="flex items-center gap-1.5" :class="checks.mixed ? 'text-green-600' : 'text-gray-500'">
+                                     {{-- Mixed logic for simplicity in checklist --}}
+                                </div>
+                                 <div class="flex items-center gap-1.5" :class="checks.lower ? 'text-green-600' : 'text-gray-500'">
+                                    <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.lower" />
+                                    <div class="w-3.5 h-3.5 rounded-full border border-gray-400" x-show="!checks.lower"></div>
+                                    <span>{{ translate('Huruf kecil (a-z)') }}</span>
+                                </div>
+                                <div class="flex items-center gap-1.5" :class="checks.upper ? 'text-green-600' : 'text-gray-500'">
+                                    <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.upper" />
+                                    <div class="w-3.5 h-3.5 rounded-full border border-gray-400" x-show="!checks.upper"></div>
+                                    <span>{{ translate('Huruf besar (A-Z)') }}</span>
+                                </div>
+                                <div class="flex items-center gap-1.5" :class="checks.number ? 'text-green-600' : 'text-gray-500'">
+                                    <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.number" />
+                                    <div class="w-3.5 h-3.5 rounded-full border border-gray-400" x-show="!checks.number"></div>
+                                    <span>{{ translate('Angka (0-9)') }}</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Konfirmasi Kata Sandi --}}
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Konfirmasi Kata Sandi') }}
+                            <span class="text-red-500">*</span></label>
+                        <x-ui.input ::type="showConfirm ? 'text' : 'password'" name="password_confirmation" x-model="confirmation" placeholder="{{ translate('Ulangi kata sandi') }}"
+                            class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal"
+                            x-bind:class="confirmClass">
+                            <x-slot:icon>
+                                <x-icons.auth-key class="w-5 h-5" stroke-width="1.5" />
+                            </x-slot:icon>
+                             <x-slot:suffix>
+                                <button type="button" @click="showConfirm = !showConfirm" class="text-slate-400 hover:text-slate-600 focus:outline-none">
+                                    <x-icons.ui-eye x-show="!showConfirm" class="w-5 h-5" />
+                                    <x-icons.ui-eye-off x-show="showConfirm" class="w-5 h-5" />
+                                </button>
+                            </x-slot:suffix>
+                        </x-ui.input>
+                        <p x-show="confirmation && password !== confirmation" class="text-red-500 text-xs mt-1">{{ translate('Kata sandi tidak cocok') }}</p>
+                        @error('password_confirmation')
+                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 {{-- Sosmed --}}
