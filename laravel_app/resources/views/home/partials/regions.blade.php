@@ -1,6 +1,4 @@
-
-
-<section class="py-12 bg-white overflow-hidden">
+<section id="wilayah-section" class="py-12 bg-white overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" x-data="{
         items: {{ json_encode($items) }},
         getScrollAmount() {

@@ -1,12 +1,12 @@
 <div class="relative group border border-slate-100 bg-slate-50 overflow-hidden mx-auto
-    @if ($item->is_hero_image) rounded-lg w-full max-w-md object-cover aspect-[3/4] md:aspect-auto md:h-[550px]
-    @elseif($item->is_umkm_image) object-cover h-[400px] lg:h-[500px] w-full 
-    @else w-full aspect-video rounded-2xl shadow-inner @endif">
+    @if ($item->is_hero_image) rounded-lg w-full max-w-md object-cover h-[188px] sm:h-80 md:h-[550px]
+    @elseif($item->is_umkm_image) rounded-3xl w-full h-[400px] lg:h-[500px]
+    @else w-full aspect-video rounded-2xl @endif">
 
     @if ($item->value)
         <img src="{{ asset('storage/' . str_replace('\\', '/', $item->value)) }}"
             x-show="!photoPreview"
-            class="w-full h-full object-cover {{ $item->is_umkm_image ? 'object-center' : '' }}">
+            class="w-full h-full object-cover {{ $item->is_umkm_image ? 'object-center transform group-hover:scale-105 transition-transform duration-700' : '' }}">
     @else
         <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 gap-3 bg-slate-50"
             x-show="!photoPreview">
@@ -19,6 +19,18 @@
         class="absolute inset-0 bg-cover bg-center"
         :style="'background-image: url(\'' + photoPreview + '\');'"
         style="display: none;"></div>
+    
+    {{-- UMKM Banner Overlay --}}
+    @if ($item->is_umkm_image)
+        <div class="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent pointer-events-none"></div>
+
+        <div class="absolute bottom-0 left-0 p-8 pointer-events-none">
+            <div class="bg-white/90 backdrop-blur-sm p-4 rounded-2xl inline-block shadow-lg">
+                <p class="text-primary font-bold text-lg">{{ \App\Models\Content::get('umkm_banner_stat_number', '100+ UMKM') }}</p>
+                <p class="text-slate-600 text-sm">{{ translate(\App\Models\Content::get('umkm_banner_stat_text', 'Terdaftar di Sasuma')) }}</p>
+            </div>
+        </div>
+    @endif
 
     @include('admin.content.partials.cards.partials.content-item-image-overlay')
 </div>

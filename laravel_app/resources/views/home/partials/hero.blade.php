@@ -1,4 +1,4 @@
-<section class="w-full min-h-screen bg-[#0a3c78] pt-34 pb-24">
+<section id="hero-section" class="w-full min-h-screen bg-[#0a3c78] pt-34 pb-24">
     <div class="max-w-7xl mx-auto px-6 lg:px-10">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12">
             <div class="text-white flex flex-col justify-center space-y-2 lg:pt-24">

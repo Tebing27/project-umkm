@@ -16,7 +16,6 @@ class Shop extends Model
         'business_type',
         'omset_min',
         'omset_max',
-        'is_verified',
         'address',
         'rt',
         'rw',
@@ -27,10 +26,8 @@ class Shop extends Model
         'social_tiktok',
         'social_facebook',
         'social_website',
-        'rejection_reason',
         'region_id', // Add region_id
         'logo',
-        'views',
     ];
 
     protected $casts = [
@@ -57,27 +54,74 @@ class Shop extends Model
         return $this->hasMany(ShopPhoto::class);
     }
 
-    public const BUSINESS_TYPES = [
-        'Kuliner',
-        'Pakaian & Aksesoris',
-        'Kelontong',
-        'Agribisnis',
-        'Jasa',
-        'Kerajinan Tangan',
-    ];
+    public static function getBusinessTypes()
+    {
+        $customTypes = \App\Models\Content::where('group', 'business_types')->pluck('value')->toArray();
+        
+        if (!empty($customTypes)) {
+            return $customTypes;
+        }
+
+        return [
+            'Kuliner',
+            'Pakaian & Aksesoris',
+            'Kelontong',
+            'Agribisnis',
+            'Jasa',
+            'Kerajinan Tangan',
+        ];
+    }
 
     public function getLogoUrlAttribute()
     {
+        // 1. Return custom shop logo if exists
         if ($this->logo) {
             return asset('storage/' . $this->logo);
         }
 
-        $businessType = strtolower($this->business_type);
+        // 2. Try dynamic logo from database (admin-managed fallback)
+        $dynamicLogo = $this->getDynamicFallbackLogo();
+        if ($dynamicLogo) {
+            return asset('storage/' . $dynamicLogo);
+        }
+
+        // 3. Hardcoded fallback based on business type
+        return $this->getHardcodedFallbackLogo();
+    }
+
+    /**
+     * Get dynamic fallback logo from database based on business type.
+     */
+    protected function getDynamicFallbackLogo(): ?string
+    {
+        $businessType = strtolower($this->business_type ?? 'kuliner');
+        
+        // Find the business type content record
+        $content = Content::where('group', 'business_types')
+            ->whereRaw('LOWER(value) = ?', [$businessType])
+            ->first();
+        
+        if (!$content) {
+            return null;
+        }
+        
+        // Find the associated logo fallback
+        $logoContent = Content::where('key', 'logo_fallback_for_' . $content->id)->first();
+        
+        return $logoContent?->value;
+    }
+
+    /**
+     * Get hardcoded default logo based on business type.
+     */
+    protected function getHardcodedFallbackLogo(): string
+    {
+        $businessType = strtolower($this->business_type ?? 'kuliner');
         
         $map = [
             'kuliner' => 'kuliner.svg',
-            'pakaian & aksesoris' => 'pakaian.svg', // Updated key
-            'pakaian & fashion' => 'pakaian.svg', // Fallback for old data
+            'pakaian & aksesoris' => 'pakaian.svg',
+            'pakaian & fashion' => 'pakaian.svg',
             'kerajinan tangan' => 'kerajinan.svg',
             'kelontong' => 'kelontong.svg',
             'jasa' => 'jasa.svg',

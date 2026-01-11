@@ -90,7 +90,7 @@
             <div class="flex items-start">
                 <div>
                     <p class="font-bold text-red-800">{{ translate('Perhatian') }}</p>
-                    <p class="text-sm mt-1 text-red-700 leading-snug" x-html="regionErrorMessage"></p>
+                    <p class="text-sm mt-1 text-red-700 leading-snug" x-text="regionErrorMessage"></p>
                 </div>
                 <button type="button" @click="showRegionErrorAlert = false"
                     class="ml-auto text-red-400 hover:text-red-800 font-bold p-1">

@@ -17,7 +17,7 @@
 
                         {{-- Password Lama --}}
                         <div class="space-y-1.5">
-                            <label class="block text-sm font-semibold text-slate-700">{{ translate('Password Saat Ini') }}</label>
+                            <label class="block text-sm md:text-base font-semibold text-slate-700">{{ translate('Password Saat Ini') }}</label>
                             <x-ui.input variant="soft" type="password" name="current_password" placeholder="••••••••" required>
                                 <x-slot:icon>
                                     <x-icons.auth-key class="w-5 h-5" />
@@ -70,7 +70,7 @@
                             }
                         }">
                             <div class="space-y-1.5">
-                                <label class="block text-sm font-semibold text-slate-700">{{ translate('Password Baru') }}</label>
+                                <label class="block text-sm md:text-base font-semibold text-slate-700">{{ translate('Password Baru') }}</label>
                                 <div class="relative">
                                      <x-ui.input variant="soft" ::type="show ? 'text' : 'password'" name="password" x-model="password" @input="checkStrength()" placeholder="{{ translate('Minimal 8 karakter') }}">
                                          <x-slot:suffix>
@@ -117,7 +117,7 @@
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-sm font-semibold text-slate-700">{{ translate('Konfirmasi') }}</label>
+                                <label class="block text-sm md:text-base font-semibold text-slate-700">{{ translate('Konfirmasi') }}</label>
                                 <x-ui.input variant="soft" ::type="showConfirm ? 'text' : 'password'" name="password_confirmation" x-model="confirmation" placeholder="{{ translate('Ulangi password') }}" 
                                     x-bind:class="confirmClass">
                                      <x-slot:suffix>

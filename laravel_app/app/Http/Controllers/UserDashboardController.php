@@ -33,6 +33,16 @@ class UserDashboardController extends Controller
         // Chart Colors for Dashboard
         $chartColors = ['bg-blue-500', 'bg-orange-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500'];
 
+        if (request()->wantsJson()) {
+            return response()->json([
+                'totalProducts' => $totalProducts,
+                'activeProducts' => $activeProducts,
+                'totalViews' => $totalViews,
+                'productCategories' => $productCategories,
+                'shop' => $shop,
+            ]);
+        }
+
         return view('users.dashboard.index', compact('shop', 'totalProducts', 'activeProducts', 'productCategories', 'totalViews', 'chartColors'));
     }
 
@@ -74,6 +84,10 @@ class UserDashboardController extends Controller
             'region_id' => $request->region_id, // Simpan region_id
         ]);
 
+        $this->checkVerificationStatus($shop);
+
+        \App\Events\ShopUpdated::dispatch($shop->id);
+
         return redirect()->back()->with('success', 'Titik lokasi dan alamat berhasil disimpan.');
     }
 
@@ -114,7 +128,6 @@ class UserDashboardController extends Controller
 
     public function toggleProductStatus($id)
     {
-        \Illuminate\Support\Facades\Log::info("Toggling product $id");
         $user = Auth::user();
         $shop = $user->shop;
         $product = $shop->products()->findOrFail($id);
@@ -123,7 +136,9 @@ class UserDashboardController extends Controller
             'is_active' => !$product->is_active
         ]);
         
-        \Illuminate\Support\Facades\Log::info("Product $id new status: " . ($product->is_active ? 'Active' : 'Inactive'));
+
+        \App\Events\ProductUpdated::dispatch($user->id, 'update');
+        \App\Events\ShopUpdated::dispatch($shop->id); // Updates public shop view
 
         return response()->json([
             'success' => true,
@@ -145,13 +160,25 @@ class UserDashboardController extends Controller
             $licenses = [['type' => '', 'number' => '']];
         }
 
-        return view('users.shop-profile.index', compact('shop', 'regions', 'licenses'));
+        // Fetch Dynamic Business Type Logos (Fallback for Shop Profile)
+        $businessTypes = \App\Models\Content::where('group', 'business_types')->get();
+        $logoContents = \App\Models\Content::where('group', 'business_type_logos')->get();
+        
+        $businessTypeLogos = [];
+        foreach ($businessTypes as $bt) {
+            $logoKey = 'logo_fallback_for_' . $bt->id;
+            $logo = $logoContents->where('key', $logoKey)->first();
+            if ($logo && $logo->value) {
+                // Map lowercase type name to logo URL
+                $businessTypeLogos[strtolower($bt->value)] = asset('storage/' . $logo->value);
+            }
+        }
+
+        return view('users.shop-profile.index', compact('shop', 'regions', 'licenses', 'businessTypeLogos'));
     }
 
     public function updateToko(Request $request)
     {
-        \Illuminate\Support\Facades\Log::info('DEBUG: updateToko Request', $request->all());
-
         $request->validate([
             'shop_name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -159,7 +186,7 @@ class UserDashboardController extends Controller
             'business_type' => ['required', 'string', \Illuminate\Validation\Rule::in(\App\Models\Shop::BUSINESS_TYPES)],
             'omset_min' => 'nullable|string',
             'omset_max' => 'nullable|string',
-            'logo' => 'nullable|image|max:2048',
+            'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'delete_logo' => 'nullable|boolean', 
         ]);
 
@@ -210,9 +237,9 @@ class UserDashboardController extends Controller
             'logo' => $logoPath,
         ]);
 
-        \App\Events\ShopUpdated::dispatch();
+        $this->checkVerificationStatus($shop);
 
-        \Illuminate\Support\Facades\Log::info('DEBUG: Shop Update Result', $shop->fresh()->toArray());
+        \App\Events\ShopUpdated::dispatch($shop->id);
 
         // Dispatch Translation Job
         \App\Jobs\TranslateShopAttributes::dispatch($shop);
@@ -231,16 +258,18 @@ class UserDashboardController extends Controller
     {
         $user = Auth::user();
 
+        // Security: Validate string length to prevent DoS (Memory Exhaustion)
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($user->id)],
             'phone_number' => ['required', 'string', 'max:20'],
-            'place_of_birth' => ['nullable', 'string', 'max:255'],
+            'place_of_birth' => ['nullable', 'string', 'max:100'],
             'date_of_birth' => ['nullable', 'date'],
-            'domicile_address' => ['nullable', 'string'],
+            'domicile_address' => ['nullable', 'string', 'max:500'], // Limit address length
+            'current_password' => ['required', 'current_password'], // Security: Confirm ownership
         ]);
 
-        $user->update([
+        $user->fill([
             'name' => $request->name,
             'email' => $request->email,
             'phone_number' => $request->phone_number,
@@ -249,7 +278,20 @@ class UserDashboardController extends Controller
             'domicile_address' => $request->domicile_address,
         ]);
 
-        return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
+        // Security: Reset email verification if email changed
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        \App\Events\UserUpdated::dispatch($user->id, 'profile_update');
+        
+        if ($user->shop) {
+             \App\Events\ShopUpdated::dispatch($user->shop->id);
+        }
+
+        return redirect()->back()->with('success', 'Profil berhasil diperbarui. Jika email berubah, silakan verifikasi ulang.');
     }
 
     public function updatePassword(Request $request)
@@ -329,6 +371,10 @@ class UserDashboardController extends Controller
                 }
             }
 
+            $this->checkVerificationStatus($shop);
+
+            \App\Events\ShopUpdated::dispatch($shop->id); // Trigger Real-time Update
+
             DB::commit();
             return redirect()->back()->with('success', 'Foto berhasil diperbarui.');
 
@@ -349,6 +395,8 @@ class UserDashboardController extends Controller
         \Illuminate\Support\Facades\Storage::disk('public')->delete($photo->path);
         
         $photo->delete();
+        
+        $this->checkVerificationStatus($shop);
         
         return redirect()->back()->with('success', 'Foto berhasil dihapus.');
     }
@@ -396,6 +444,9 @@ class UserDashboardController extends Controller
                 'variant' => $request->variant,
                 'description' => $request->description,
             ]);
+
+            \App\Events\ProductUpdated::dispatch($user->id, 'create');
+            \App\Events\ShopUpdated::dispatch($shop->id);
 
             DB::commit();
             return redirect()->back()->with('success', 'Produk berhasil ditambahkan.');
@@ -453,6 +504,9 @@ class UserDashboardController extends Controller
 
         $product->update($data);
 
+        \App\Events\ProductUpdated::dispatch($user->id, 'update');
+        \App\Events\ShopUpdated::dispatch($shop->id);
+
         return redirect()->back()->with('success', 'Produk berhasil diperbarui.');
     }
 
@@ -467,6 +521,15 @@ class UserDashboardController extends Controller
         }
 
         $product->delete();
+
+        $product->delete();
+
+        \App\Events\ProductUpdated::dispatch($user->id, 'delete');
+        
+        // Check verification after deletion (in case products count becomes 0)
+        $this->checkVerificationStatus($shop);
+        
+        \App\Events\ShopUpdated::dispatch($shop->id);
 
         return redirect()->back()->with('success', 'Produk berhasil dihapus.');
     }
@@ -484,7 +547,23 @@ class UserDashboardController extends Controller
     {
         // 1. Get original image info
         $imagePath = $file->getRealPath();
-        list($origWidth, $origHeight, $type) = getimagesize($imagePath);
+        $imageInfo = getimagesize($imagePath);
+        
+        if (!$imageInfo) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'image' => 'File gambar tidak valid.'
+            ]);
+        }
+
+        list($origWidth, $origHeight, $type) = $imageInfo;
+
+        // PREVENTION: Image Bomb / DoS Check
+        // Limit Max Resolution (e.g., 3000x3000px) regardless of file size
+        if ($origWidth > 3000 || $origHeight > 3000) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'image' => 'Resolusi gambar terlalu besar. Maksimal 3000x3000px.'
+            ]);
+        }
 
         // 2. Load image based on type
         switch ($type) {
@@ -498,12 +577,17 @@ class UserDashboardController extends Controller
                 $source = imagecreatefromwebp($imagePath);
                 break;
             default:
-                // Fallback for unsupported types: just store as is
-                return $file->store($directory, 'public');
+                // SECURITY: STRICTLY UNSUPPORTED TYPES
+                // Do NOT fallback to store(). This prevents SVG/HTML upload bypass.
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'image' => 'Format file tidak didukung. Gunakan JPG, PNG, atau WebP.'
+                ]);
         }
-
+        
         if (!$source) {
-            return $file->store($directory, 'public');
+              throw \Illuminate\Validation\ValidationException::withMessages([
+                    'image' => 'Gagal memproses gambar.'
+              ]);
         }
 
         // 3. Calculate new dimensions
@@ -555,5 +639,20 @@ class UserDashboardController extends Controller
         \Illuminate\Support\Facades\Storage::disk('public')->put($path, $imageData);
 
         return $path;
+    }
+
+    /**
+     * Check if the shop is still complete. If not, revoke verification.
+     */
+    private function checkVerificationStatus($shop)
+    {
+        if ($shop->is_verified && !$shop->isComplete()) {
+            $shop->is_verified = false;
+            $shop->save();
+
+            // Notify Admin and User
+            \App\Events\ShopUpdated::dispatch($shop->id);
+            \App\Events\UserUpdated::dispatch($shop->user_id, 'refresh');
+        }
     }
 }

@@ -14,13 +14,21 @@ class PublicController extends Controller
     {
         $query = Shop::where('is_verified', true);
 
-        // Search by name or description
-        if ($request->has('search') && $request->search) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
-            });
+        $search = $request->input('search');
+
+        // Search Prevention: Minimum 3 characters to prevent CPU Spike
+        if ($search) {
+             if (strlen($search) < 3) {
+                 // Or just return empty or ignore
+                 // For UX, maybe just ignore or search exact if very short? 
+                 // Safeguard: Only perform DB search if reasonable length.
+                 // We will filter by name using standard LIKE for short words if absolutely needed, but for DoS prevention, we strictly limit.
+             } else {
+                 // Full Text Search (MySQL MATCH AGAINST)
+                 // Mode: Boolean Mode allows * wildcard for prefix matching (e.g. "kop*" matches "kopi")
+                 // This avoids Full Table Scan.
+                 $query->whereFullText(['name', 'description'], $search . '*', ['mode' => 'boolean']);
+             }
         }
 
         // Filter by Region
@@ -36,19 +44,38 @@ class PublicController extends Controller
              $query->where('business_type', $request->category);
         }
 
-        $shops = $query->with('region')->orderByDesc('created_at')->get();
+        // PAGINATION: Essential for DoS Prevention (Memory)
+        // Never use get() on potentially large datasets.
+        $shops = $query->with('region')->orderByDesc('created_at')->paginate(12)->withQueryString();
 
         // Get all regions for filter dropdown
         $regions = Region::pluck('name');
 
         // Prepare Shops Data for Frontend (AlpineJS)
-        $shopsData = $shops->map(function($shop) {
+        // Only return the *current page* data to Alpine.
+        // This breaks "Client-Side Filtering" for all data, but enables scalability for 1000s of shops.
+        $shopsData = collect($shops->items())->map(function($shop) {
+            $formattedOmset = 'Rp. -';
+            if ($shop->omset_min || $shop->omset_max) {
+                 $min = $shop->omset_min ? 'Rp. ' . number_format((float) preg_replace('/[^0-9]/', '', $shop->omset_min), 0, ',', '.') : '';
+                 $max = $shop->omset_max ? 'Rp. ' . number_format((float) preg_replace('/[^0-9]/', '', $shop->omset_max), 0, ',', '.') : '';
+                 
+                 if ($min && $max) {
+                     $formattedOmset = "$min - $max";
+                 } elseif ($min) {
+                     $formattedOmset = $min;
+                 } elseif ($max) {
+                     $formattedOmset = $max;
+                 }
+            }
+
             return [
                 'id' => $shop->id,
                 'name' => $shop->name,
                 'location' => optional($shop->region)->name ?? '',
                 'category' => $shop->business_type,
                 'desc' => \Illuminate\Support\Str::limit($shop->description, 100),
+                'omset' => $formattedOmset,
                 'image' => $shop->logo_url,
                 'link' => route('umkm.comment', $shop->id)
             ];
@@ -57,9 +84,9 @@ class PublicController extends Controller
         // Fetch Admin Content for this page
         $contents = Content::where('group', 'umkm_index')->get()->keyBy('key');
 
-        $businessTypes = Shop::BUSINESS_TYPES;
+        $businessTypes = Shop::getBusinessTypes();
 
-        if ($request->wantsJson()) {
+        if ($request->wantsJson() || $request->has('json')) {
              return response()->json($shopsData);
         }
 
@@ -68,7 +95,7 @@ class PublicController extends Controller
 
     public function show($id)
     {
-        $shop = Shop::with(['region', 'photos', 'products' => function($q) {
+        $shop = Shop::with(['user', 'region', 'photos', 'products' => function($q) {
             $q->where('is_active', true);
         }])->where('is_verified', true)->findOrFail($id);
 
@@ -83,13 +110,23 @@ class PublicController extends Controller
             ->take(3)
             ->get();
 
-        // View Increment Logic (Cache based: IP + ShopID)
-        $ip = request()->ip();
-        $cacheKey = 'shop_view_' . $shop->id . '_' . $ip;
+        // View Increment Logic (Device ID Cookie + Cache)
+        // Solusi Hemat Storage: Gunakan Cache Key (ShopID + DeviceID + Tanggal)
+        // Data akan hilang otomatis besoknya, tapi count di table shops tetap bertambah permanen.
         
+        $deviceId = request()->cookie('umkm_device_id');
+        if (!$deviceId) {
+            $deviceId = \Illuminate\Support\Str::uuid()->toString();
+             \Illuminate\Support\Facades\Cookie::queue('umkm_device_id', $deviceId, 2628000); // 5 Tahun
+        }
+
+        $todayStr = now()->toDateString();
+        $cacheKey = "shop_view_daily:{$shop->id}:{$deviceId}:{$todayStr}";
+
         if (!Cache::has($cacheKey)) {
             $shop->increment('views');
-            Cache::put($cacheKey, true, 60 * 60);
+            // Cache valid sampai akhir hari ini saja (besok bisa view lagi)
+            Cache::put($cacheKey, true, now()->endOfDay());
         }
 
         // Prepare Products Data for Frontend (AlpineJS)
@@ -127,6 +164,19 @@ class PublicController extends Controller
              } elseif ($max) {
                  $formattedOmset = $max;
              }
+        }
+
+        // Append accessors for both View (Initial Load) and JSON (Real-time)
+        $shop->append(['logo_url', 'instagram_username', 'tiktok_username', 'facebook_username', 'website_url']);
+
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json([
+                'shop' => $shop,
+                'products' => $productsData,
+                'categories' => $productCategories, // Add categories to JSON response
+                'licenses' => $licenses,
+                'formattedOmset' => $formattedOmset
+            ]);
         }
 
         return view('umkm.detail.index', compact('shop', 'relatedShops', 'productsData', 'productCategories', 'licenses', 'formattedOmset'));

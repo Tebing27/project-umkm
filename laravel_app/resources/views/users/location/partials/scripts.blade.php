@@ -3,6 +3,7 @@
                 Alpine.data('locationHybrid', () => window.locationHybrid({
                     lat: '{{ $shop->latitude ?? -6.4025 }}',
                     lng: '{{ $shop->longitude ?? 106.7720 }}',
+                    shopId: '{{ $shop->id }}',
                     address: {!! json_encode($shop->address ?? '') !!},
                     initialId: '{{ $initialId }}',
                     initialName: '{{ $initialName }}',

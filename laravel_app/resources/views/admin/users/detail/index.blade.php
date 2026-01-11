@@ -41,5 +41,42 @@
         @include('admin.users.detail.partials.modal-gallery')
 
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Admin User Detail: Initializing Echo listener...");
+            const currentShopId = {{ $shop->id }};
+            const currentUserId = {{ $shop->user_id }};
+            
+            let attempts = 0;
+            const maxAttempts = 60; // 30 seconds
+            
+            const checkEcho = setInterval(() => {
+                attempts++;
+                if (window.Echo) {
+                    clearInterval(checkEcho);
+                    console.log(`Admin User Detail: Echo found after ${attempts} attempts. Subscribing to admin-global...`);
+                    
+                    window.Echo.channel('admin-global')
+                        .listen('ShopUpdated', (e) => {
+                            console.log('Admin User Detail: ShopUpdated', e);
+                            if (e.shop_id && parseInt(e.shop_id) === currentShopId) {
+                                console.log('Current shop updated. Reloading...');
+                                window.location.reload();
+                            }
+                        })
+                        .listen('UserUpdated', (e) => {
+                            console.log('Admin User Detail: UserUpdated', e);
+                             window.location.reload();
+                        });
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(checkEcho);
+                    console.error('Admin User Detail: Timed out waiting for Echo.');
+                }
+            }, 500);
+        });
+    </script>
+    @endpush
 </x-layouts.admin>
 

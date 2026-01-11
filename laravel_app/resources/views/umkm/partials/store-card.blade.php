@@ -22,8 +22,7 @@
     </div>
 
     <div class="flex-1 mb-6 border-t border-slate-50">
-        <p class="text-md text-slate-500 line-clamp-4 leading-relaxed" x-text="item.desc">
-        </p>
+        <p class="text-md text-slate-500 line-clamp-4 leading-relaxed" x-text="item.desc"></p>
     </div>
 
     <div class="flex justify-center text-base items-center">

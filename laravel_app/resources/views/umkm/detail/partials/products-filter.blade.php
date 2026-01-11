@@ -10,7 +10,7 @@
     {{-- Filter Categories --}}
     <div class="w-full order-3 md:order-2 md:flex-1 md:mx-6 overflow-hidden">
         <div class="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 md:justify-center items-center pb-2 md:pb-0">
-                <template x-for="cat in ['{{ translate('Semua') }}', ...{{ json_encode($productCategories) }}]" :key="cat">
+            <template x-for="cat in categories" :key="cat">
                 <button @click="setCategory(cat)" 
                     class="px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border whitespace-nowrap"
                     x-bind:class="category === cat 

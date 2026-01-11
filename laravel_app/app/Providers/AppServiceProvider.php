@@ -46,6 +46,12 @@ class AppServiceProvider extends ServiceProvider
             $view->with('menus', $menus);
         });
 
+        // View Composer for Public Navigation (Logo data)
+        \Illuminate\Support\Facades\View::composer(
+            'components.navigation',
+            \App\View\Composers\NavigationComposer::class
+        );
+
         // View Composer for User Navigation
         \Illuminate\Support\Facades\View::composer('components.navigation-users', function ($view) {
             $menus = [

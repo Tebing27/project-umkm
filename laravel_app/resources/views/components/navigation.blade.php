@@ -6,8 +6,15 @@
             'bg-white border-none'"
             class="relative flex w-full items-center justify-between rounded-lg p-3 md:p-4 md:rounded-2xl transition-colors duration-300 border-none">
 
-            <a href="#" class="shrink-0 inline-flex items-center gap-4">
-                <span class="text-4xl md:text-3xl font-bold items-center text-slate-900">Logo</span>
+            {{-- Logo data provided by NavigationComposer --}}
+            <a href="#" class="shrink-0 inline-flex items-center gap-3">
+                @if($logoShowImage == '1' && $logoImage)
+                     <img src="{{ asset('storage/' . $logoImage) }}" alt="Logo" class="h-10 w-auto object-contain">
+                @endif
+                
+                @if($logoShowText == '1')
+                    <span class="text-2xl md:text-3xl font-bold items-center text-slate-900 tracking-tight">{{ $logoText }}</span>
+                @endif
             </a>
 
             <div class="hidden md:flex flex-1 justify-center items-center space-x-4 md:space-x-5 lg:space-x-8">

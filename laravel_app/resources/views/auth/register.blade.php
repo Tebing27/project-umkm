@@ -130,7 +130,7 @@
                         <label class="block font-medium text-gray-700 text-base mb-2">{{ translate('Jenis Usaha') }} <span
                                 class="text-red-500">*</span></label>
                         <div class="space-y-3 pl-1">
-                            @foreach (\App\Models\Shop::BUSINESS_TYPES as $item)
+                            @foreach (\App\Models\Shop::getBusinessTypes() as $item)
                                 <label class="flex items-center space-x-3 cursor-pointer group">
                                     <input type="radio" name="business_type" value="{{ $item }}"
                                         {{ old('business_type') == $item ? 'checked' : '' }}

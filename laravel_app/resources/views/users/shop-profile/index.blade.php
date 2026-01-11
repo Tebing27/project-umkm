@@ -12,35 +12,81 @@
     <form action="{{ route('users.update-toko') }}" method="POST" enctype="multipart/form-data">
         @csrf
         {{-- SECTION UPLOAD LOGO --}}
-        <div class="mb-12" x-data="{ 
-            photoName: null, 
-            photoPreview: '{{ $shop->logo ? asset('storage/' . $shop->logo) : null }}', 
-            fallbackPreview: '{{ $shop->logo_url }}',
-            isDeleted: false,
-            businessType: '{{ strtolower($shop->business_type ?? 'kuliner') }}',
-            
-            getFallbackUrl() {
-                const map = {
-                    'kuliner': 'kuliner.svg',
-                    'pakaian & aksesoris': 'pakaian.svg',
-                    'pakaian & fashion': 'pakaian.svg', // Fallback
-                    'kerajinan tangan': 'kerajinan.svg',
-                    'kelontong': 'kelontong.svg',
-                    'jasa': 'jasa.svg',
-                    'agribisnis': 'agribisnis.svg',
-                };
-                return '/images/' + (map[this.businessType] || 'kuliner.svg');
-            },
+        <script>
+            // Global function definition moved here to ensure availability
+            window.initShopProfile = function(data) {
+                return {
+                    photoName: data.photoName,
+                    photoPreview: data.photoPreview,
+                    fallbackPreview: data.fallbackPreview,
+                    isDeleted: data.isDeleted,
+                    businessType: data.businessType,
+                    dynamicLogos: data.dynamicLogos,
 
-            updateBusinessType(type) {
-                this.businessType = type.toLowerCase();
-                if (!this.photoPreview && !this.isDeleted) {
-                    this.fallbackPreview = this.getFallbackUrl();
-                } else if (this.isDeleted) {
-                    this.fallbackPreview = this.getFallbackUrl();
+                    init() {
+                         if (!this.photoPreview && !this.fallbackPreview) {
+                            this.fallbackPreview = this.getFallbackUrl();
+                        }
+                    },
+
+                    getFallbackUrl() {
+                        let rawKey = this.businessType ? this.businessType.toLowerCase().replace(/&amp;/g, "&") : "kuliner";
+                        
+                        // 1. Try Exact Match
+                        if (this.dynamicLogos && this.dynamicLogos[rawKey]) {
+                            return this.dynamicLogos[rawKey];
+                        }
+
+                        // 2. Try Fuzzy Match (strip non-alphanumeric)
+                        if (this.dynamicLogos) {
+                            let normalizedKey = rawKey.replace(/[^a-z0-9]/g, "");
+                            console.log('Debug Logo:', {
+                                raw: rawKey,
+                                norm: normalizedKey,
+                                available: Object.keys(this.dynamicLogos)
+                            });
+
+                            for (let k in this.dynamicLogos) {
+                                if (k.toLowerCase().replace(/[^a-z0-9]/g, "") === normalizedKey) {
+                                    console.log('Match Found:', k);
+                                    return this.dynamicLogos[k];
+                                }
+                            }
+                        }
+                        
+                        // 3. Hardcoded Fallback (when no admin logo exists)
+                        const map = {
+                            "kuliner": "kuliner.svg",
+                            "pakaian & aksesoris": "pakaian.svg",
+                            "kerajinan tangan": "kerajinan.svg",
+                            "kelontong": "kelontong.svg",
+                            "jasa": "jasa.svg",
+                            "agribisnis": "agribisnis.svg",
+                        };
+                        return "/images/" + (map[rawKey] || "kuliner.svg");
+                    },
+
+                    updateBusinessType(type) {
+                        this.businessType = type.toLowerCase();
+                        if (!this.photoPreview && !this.isDeleted) {
+                            this.fallbackPreview = this.getFallbackUrl();
+                        } else if (this.isDeleted) {
+                            this.fallbackPreview = this.getFallbackUrl();
+                        }
+                    }
                 }
-            }
-        }">
+            };
+
+            window.shopProfileData = {
+                photoName: null,
+                photoPreview: @json($shop->logo ? asset('storage/' . $shop->logo) : null),
+                fallbackPreview: @json($shop->logo_url),
+                isDeleted: false,
+                businessType: @json(strtolower($shop->business_type ?? 'kuliner')),
+                dynamicLogos: @json($businessTypeLogos ?? [])
+            };
+        </script>
+        <div class="mb-12" x-data="initShopProfile(window.shopProfileData)">
             <label class="block font-bold text-lg text-gray-900 mb-4">{{ translate('Logo Toko') }}</label>
             <div class="flex items-center gap-6">
                 <!-- Hidden Input for File -->
@@ -219,7 +265,7 @@
                 <div class="space-y-2">
                     <label class="font-medium text-gray-700">{{ translate('Jenis Usaha') }} <span class="text-red-500">*</span></label>
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-y-2 gap-x-4 text-sm md:text-base text-gray-600 mt-1">
-                        @foreach (\App\Models\Shop::BUSINESS_TYPES as $item)
+                        @foreach (\App\Models\Shop::getBusinessTypes() as $item)
                             <label
                                 class="flex items-center space-x-2 cursor-pointer group hover:text-gray-900 transition-colors">
                                 <input type="radio" name="business_type" value="{{ $item }}"
@@ -332,3 +378,5 @@
 
     </form>
 </x-layouts.guest>
+
+

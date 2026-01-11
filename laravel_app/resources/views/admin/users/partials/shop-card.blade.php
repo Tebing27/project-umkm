@@ -1,7 +1,8 @@
 <x-ui.card
+    id="shop-card-{{ $shop->id }}"
     class="bg-white rounded-3xl border border-slate-100 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 group flex flex-col overflow-hidden relative">
     
-    <div class="absolute top-0 left-0 w-full h-1.5 {{ $shop->is_verified ? 'bg-green-500' : ($shop->rejection_reason ? 'bg-red-500' : 'bg-yellow-500') }}">
+    <div id="shop-card-bar-{{ $shop->id }}" class="absolute top-0 left-0 w-full h-1.5 {{ $shop->is_verified ? 'bg-green-500' : ($shop->rejection_reason ? 'bg-red-500' : 'bg-yellow-500') }}">
     </div>
 
     <div class="p-6 pb-4 border-b border-slate-50 flex justify-between items-start gap-4 pt-8">
@@ -12,19 +13,21 @@
             <p class="text-xs font-semibold text-slate-500 mt-1">{{ translate('Dibuat pada') }}
                 {{ $shop->created_at->format('d F Y') }}</p>
         </div>
-        @if ($shop->is_verified)
-            <span class="shrink-0 px-2.5 py-1 rounded-full bg-green-50 text-green-700 text-[10px] font-bold uppercase border border-green-100 tracking-wide ring-1 ring-green-500/20">
-                {{ translate('Terverifikasi') }}
-            </span>
-        @elseif($shop->rejection_reason)
-            <span class="shrink-0 px-2.5 py-1 rounded-full bg-red-50 text-red-700 text-[10px] font-bold uppercase border border-red-100 tracking-wide ring-1 ring-red-500/20">
-                {{ translate('Ditolak') }}
-            </span>
-        @else
-            <span class="shrink-0 px-2.5 py-1 rounded-full bg-yellow-50 text-yellow-700 text-[10px] font-bold uppercase border border-yellow-100 tracking-wide ring-1 ring-yellow-500/20">
-                {{ translate('Menunggu') }}
-            </span>
-        @endif
+        <div id="shop-card-badge-{{ $shop->id }}">
+            @if ($shop->is_verified)
+                <span class="shrink-0 px-2.5 py-1 rounded-full bg-green-50 text-green-700 text-[10px] font-bold uppercase border border-green-100 tracking-wide ring-1 ring-green-500/20">
+                    {{ translate('Terverifikasi') }}
+                </span>
+            @elseif($shop->rejection_reason)
+                <span class="shrink-0 px-2.5 py-1 rounded-full bg-red-50 text-red-700 text-[10px] font-bold uppercase border border-red-100 tracking-wide ring-1 ring-red-500/20">
+                    {{ translate('Ditolak') }}
+                </span>
+            @else
+                <span class="shrink-0 px-2.5 py-1 rounded-full bg-yellow-50 text-yellow-700 text-[10px] font-bold uppercase border border-yellow-100 tracking-wide ring-1 ring-yellow-500/20">
+                    {{ translate('Menunggu') }}
+                </span>
+            @endif
+        </div>
     </div>
 
     <div class="p-6 flex-1 space-y-5">

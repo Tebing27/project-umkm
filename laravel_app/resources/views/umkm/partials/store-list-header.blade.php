@@ -1,12 +1,12 @@
 <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-slate-100 pb-6">
     <h2 class="text-2xl font-bold text-slate-900 shrink-0">{{translate('Daftar Toko')}}</h2>
 
-    <div class="hidden md:flex flex-1 justify-center px-6 overflow-x-auto no-scrollbar">
-        <div class="flex items-center gap-2">
+    <div class="flex-1 w-full md:w-auto min-w-0 overflow-x-auto no-scrollbar mx-0 md:mx-6">
+        <div class="flex items-center gap-2 pb-2 md:pb-0">
             <template x-for="cat in [allLabel, ...{{ json_encode($businessTypes) }}]">
                 <button 
                     @click="selectedCategory = (cat === allLabel ? '' : cat)"
-                    class="px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border whitespace-nowrap"
+                    class="px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-200 border whitespace-nowrap shrink-0"
                     x-bind:class="(selectedCategory === (cat === allLabel ? '' : cat) || (cat === allLabel && selectedCategory === '')) ?
                         'bg-[#004a85] text-white border-[#004a85] shadow-md' :
                         'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'">

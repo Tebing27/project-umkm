@@ -8,16 +8,26 @@
 
         {{-- Scroll Container --}}
         <div class="overflow-x-auto no-scrollbar snap-x scroll-smooth flex gap-3 pb-1" x-ref="tabContainer"
-            @scroll.debounce.10ms="checkScroll()">
+            @scroll.debounce.10ms="checkScroll()"
+            style="scrollbar-width: none; -ms-overflow-style: none;">
+            <style>
+                .no-scrollbar::-webkit-scrollbar {
+                    display: none;
+                }
+            </style>
 
             @foreach ($tabs as $key => $data)
-                <button
-                    @click="activeTab = '{{ $key }}'; window.scrollTo({top: 0, behavior: 'smooth'})"
-                    class="shrink-0 snap-start flex items-center gap-2 px-4 py-2 rounded-full border text-base font-semibold whitespace-nowrap"
+                <a
+                    href="?tab={{ $key }}"
+                    class="shrink-0 snap-start flex items-center gap-2 px-4 py-2 rounded-full border text-base font-semibold whitespace-nowrap scroll-mt-4"
                     :class="activeTab === '{{ $key }}'
                         ?
                         'bg-[#004a85] text-white border-[#004a85] shadow-md' :
-                        'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'">
+                        'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'"
+                    @if(request()->query('tab') === $key || (!request()->has('tab') && $key === 'home_hero'))
+                        x-init="$el.scrollIntoView({ block: 'nearest', inline: 'center' })"
+                    @endif
+                    >
                     <span>
                         @if ($key === 'home_hero')
                             <x-icons.nav-home class="w-4 h-4" />
@@ -30,7 +40,7 @@
                         @endif
                     </span>
                     {{translate($data['label']) }}
-                </button>
+                </a>
             @endforeach
         </div>
     </div>

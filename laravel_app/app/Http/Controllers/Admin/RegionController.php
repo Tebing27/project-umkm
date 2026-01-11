@@ -87,7 +87,17 @@ class RegionController extends Controller
         }
 
         try {
-            list($width, $height, $type) = \getimagesize($file->getRealPath());
+            $imageInfo = \getimagesize($file->getRealPath());
+            if (!$imageInfo) return; 
+
+            list($width, $height, $type) = $imageInfo;
+
+            // DoS Protection
+            if ($width > 3000 || $height > 3000) {
+                 throw \Illuminate\Validation\ValidationException::withMessages([
+                    'image' => 'Resolusi gambar wilayah terlalu besar. Maksimal 3000x3000px.'
+                ]);
+            }
             
             $newWidth = $width;
             $newHeight = $height;
@@ -164,5 +174,59 @@ class RegionController extends Controller
         }
 
         return redirect()->route('admin.contents.index', ['tab' => 'home_wilayah'])->with('success', translate('Gambar wilayah berhasil dihapus.'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'image' => 'required|image|max:2048', // Required for new regions
+        ]);
+
+        $region = new Region();
+        $region->name = $request->name;
+        $region->latitude = $request->latitude;
+        $region->longitude = $request->longitude;
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = 'regions/' . Str::random(20) . '.jpg';
+            $this->resizeAndSaveImage($file, $filename, 800);
+            $region->image = $filename;
+        }
+
+        $region->save();
+
+        return redirect()->route('admin.contents.index', ['tab' => 'home_wilayah'])->with('success', translate('Wilayah baru berhasil ditambahkan.'));
+    }
+
+    public function updateDetails(Request $request, $id)
+    {
+        $region = Region::findOrFail($id);
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+        ]);
+
+        $region->update($request->only(['name', 'latitude', 'longitude']));
+
+        return redirect()->back()->with('success', translate('Detail wilayah berhasil diperbarui.'));
+    }
+
+    public function destroy($id)
+    {
+        $region = Region::findOrFail($id);
+
+        if ($region->image && Storage::disk('public')->exists($region->image)) {
+            Storage::disk('public')->delete($region->image);
+        }
+
+        $region->delete();
+
+        return redirect()->route('admin.contents.index', ['tab' => 'home_wilayah'])->with('success', translate('Wilayah berhasil dihapus.'));
     }
 }

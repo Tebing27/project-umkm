@@ -86,12 +86,11 @@ class AdminDashboardController extends Controller
             return redirect()->back()->with('error', 'Data UMKM belum lengkap. Mohon lengkapi nama, deskripsi, alamat, lokasi (peta), wilayah, jenis usaha, omset, upload minimal 1 produk, dan upload visualisasi foto sebelum verifikasi.');
         }
 
-        $shop->update([
-            'is_verified' => true,
-            'rejection_reason' => null
-        ]);
+        $shop->is_verified = true;
+        $shop->rejection_reason = null;
+        $shop->save();
 
-        \App\Events\ShopUpdated::dispatch();
+        \App\Events\ShopUpdated::dispatch($shop->id);
         
         return redirect()->back()->with('success', 'UMKM telah berhasil diverifikasi.');
     }
@@ -103,12 +102,11 @@ class AdminDashboardController extends Controller
         ]);
 
         $shop = Shop::findOrFail($id);
-        $shop->update([
-            'is_verified' => false,
-            'rejection_reason' => $request->reason
-        ]);
+        $shop->is_verified = false;
+        $shop->rejection_reason = $request->reason;
+        $shop->save();
 
-        \App\Events\ShopUpdated::dispatch();
+        \App\Events\ShopUpdated::dispatch($shop->id);
 
         return redirect()->back()->with('success', 'UMKM telah ditolak dengan alasan yang diberikan.');
     }
@@ -127,6 +125,8 @@ class AdminDashboardController extends Controller
             'email' => $request->email,
         ]);
 
+        \App\Events\UserUpdated::dispatch($user->id, 'profile_update');
+
         return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
     }
 
@@ -142,6 +142,8 @@ class AdminDashboardController extends Controller
         $user->update([
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
         ]);
+
+        \App\Events\SettingsUpdated::dispatch('password');
 
         return redirect()->back()->with('success', 'Password berhasil diperbarui.');
     }

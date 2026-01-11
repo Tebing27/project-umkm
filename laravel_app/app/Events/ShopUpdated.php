@@ -17,9 +17,16 @@ class ShopUpdated implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public $shopId;
+
+    /**
+     * Create a new event instance.
+     *
+     * @param int|null $shopId
+     */
+    public function __construct($shopId = null)
     {
-        //
+        $this->shopId = $shopId;
     }
 
     /**
@@ -31,6 +38,20 @@ class ShopUpdated implements ShouldBroadcast
     {
         return [
             new Channel('shops'),
+            new Channel('admin-global'),
+        ];
+    }
+
+    /**
+     * SECURITY: Only broadcast a 'refresh' signal, NOT sensitive data.
+     * The frontend will fetch updated data via authenticated API.
+     */
+    public function broadcastWith(): array
+    {
+        return [
+            'action' => 'refresh',
+            'shop_id' => $this->shopId,
+            'timestamp' => now()->toIso8601String(),
         ];
     }
 }

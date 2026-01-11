@@ -7,14 +7,9 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PublicController;
 
-Route::get('/test-pusher', function () {
-    try {
-        \App\Events\ShopUpdated::dispatch();
-        return 'Event dispatched! Check Pusher Debug Console.';
-    } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage();
-    }
-});
+// NOTE: /test-pusher route removed for security reasons.
+// To test Pusher in development, use: php artisan tinker -> App\Events\ShopUpdated::dispatch()
+
 
 Route::get('/lang/{locale}', function ($locale) {
     if (in_array($locale, ['id', 'en'])) {
@@ -39,7 +34,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Users Routes
-Route::middleware(['auth', \App\Http\Middleware\CheckRole::class . ':users'])->group(function () {
+Route::middleware(['auth', 'verified', \App\Http\Middleware\CheckRole::class . ':users'])->group(function () {
     Route::get('/users/dashboard', [UserDashboardController::class, 'index'])->name('users.dashboard');
     Route::get('/users/lokasi', [UserDashboardController::class, 'detailLokasi']);
     Route::post('/users/lokasi/store', [UserDashboardController::class, 'storeLokasi']);
@@ -48,7 +43,9 @@ Route::middleware(['auth', \App\Http\Middleware\CheckRole::class . ':users'])->g
     
     // Autofill Routes
     Route::get('/users/edit-toko', [UserDashboardController::class, 'editToko']);
-    Route::post('/users/edit-toko', [UserDashboardController::class, 'updateToko'])->name('users.update-toko');
+    Route::post('/users/edit-toko', [UserDashboardController::class, 'updateToko'])
+        ->middleware('throttle:6,1') // Rate Limit: 6 req/min
+        ->name('users.update-toko');
     
     Route::get('/users/setting', [UserDashboardController::class, 'setting']);
     Route::post('/users/setting/profile', [UserDashboardController::class, 'updateProfile'])->name('users.setting.profile');
@@ -63,7 +60,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckRole::class . ':users'])->g
 });
 
 // Admin Routes
-Route::middleware(['auth', \App\Http\Middleware\CheckRole::class . ':admin'])->group(function () {
+Route::middleware(['auth', 'verified', \App\Http\Middleware\CheckRole::class . ':admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     
     // Custom Verification Route
@@ -79,7 +76,10 @@ Route::middleware(['auth', \App\Http\Middleware\CheckRole::class . ':admin'])->g
     Route::put('/admin/regions/{id}/image', [\App\Http\Controllers\Admin\RegionController::class, 'updateImage'])->name('admin.regions.update_image');
     Route::put('/admin/regions/{id}/featured-shop', [\App\Http\Controllers\Admin\RegionController::class, 'updateFeaturedShop'])->name('admin.regions.update_featured_shop');
     Route::delete('/admin/contents/{id}/image', [\App\Http\Controllers\Admin\ContentController::class, 'deleteImage'])->name('admin.contents.delete_image');
+    Route::put('/admin/regions/{id}/details', [\App\Http\Controllers\Admin\RegionController::class, 'updateDetails'])->name('admin.regions.update_details');
     Route::delete('/admin/regions/{id}/image', [\App\Http\Controllers\Admin\RegionController::class, 'deleteImage'])->name('admin.regions.delete_image');
+    Route::post('/admin/regions', [\App\Http\Controllers\Admin\RegionController::class, 'store'])->name('admin.regions.store');
+    Route::delete('/admin/regions/{id}', [\App\Http\Controllers\Admin\RegionController::class, 'destroy'])->name('admin.regions.destroy');
 });
 
 Route::middleware('auth')->group(function () {

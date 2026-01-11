@@ -5,5 +5,26 @@
         @include('admin.dashboard.partials.total-shops-card')
         @include('admin.dashboard.partials.registration-status-card')
     </div>
-</x-layouts.admin>
 
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.Echo) {
+                window.Echo.channel('admin-global')
+                    .listen('UserUpdated', (e) => {
+                        console.log('Admin Dashboard: UserUpdated', e);
+                        window.location.reload();
+                    })
+                    .listen('ShopUpdated', (e) => {
+                        console.log('Admin Dashboard: ShopUpdated', e);
+                        window.location.reload();
+                    })
+                    .listen('SettingsUpdated', (e) => {
+                        console.log('Admin Dashboard: SettingsUpdated', e);
+                        window.location.reload();
+                    });
+            }
+        });
+    </script>
+    @endpush
+</x-layouts.admin>

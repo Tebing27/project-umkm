@@ -5,6 +5,12 @@
 @include('home.partials.location.icons')
 
 <section id="location" class="py-0 md:py-12 bg-white overflow-hidden" x-data="umkmMap" x-init="initMap()">
+    <script type="application/json" id="map-data">
+        {
+            "umkms": @json($mapShops),
+            "regionList": @json($regionsMap)
+        }
+    </script>
     <div class="container mx-auto max-w-7xl">
         @include('home.partials.location.header')
 
@@ -17,4 +23,4 @@
         </div>
     </div>
 </section>
-@include('home.partials.location.maps.script', ['umkms' => $mapShops, 'regionList' => $regionsMap])
+@include('home.partials.location.maps.script', ['umkms' => $mapShops, 'regionList' => $regionsMap, 'categories' => $categories])

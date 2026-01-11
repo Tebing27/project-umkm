@@ -30,10 +30,31 @@
                 geoJsonLayer: null,
 
                 // --- DATA UMKM (DITAMBAHKAN FIELD 'REGION') ---
-                // Pastikan ejaan 'region' SAMA PERSIS dengan title di slider wilayah
-                umkms: @json($umkms),
-                regionList: @json($regionList),
+                // MODIFIED: Read from DOM for Real-time Updates support
+                umkms: [],
+                regionList: [],
 
+                initData() {
+                    const dataEl = document.getElementById('map-data');
+                    if (dataEl) {
+                        try {
+                            const data = JSON.parse(dataEl.textContent);
+                            this.umkms = data.umkms || [];
+                            this.regionList = data.regionList || [];
+                        } catch (e) {
+                            console.error('Failed to parse map data', e);
+                            this.umkms = [];
+                            this.regionList = [];
+                        }
+                    }
+                },
+
+                /**
+                 * SECURITY NOTE: These SVG icons are safe for x-html usage because:
+                 * 1. They are sourced from server-rendered Blade templates (trusted content)
+                 * 2. The DOM elements are hardcoded, not user-generated
+                 * 3. Categories are from a fixed whitelist, not user input
+                 */
                 svgIcons: {
                     grid: document.getElementById('icon-grid')?.innerHTML || '',
                     food: document.getElementById('icon-food')?.innerHTML || '',
@@ -50,7 +71,8 @@
                     return Math.ceil(this.filteredList.length / this.itemsPerPage);
                 },
                 get categories() {
-                    return ['Semua', 'Kuliner', 'Pakaian & Aksesoris', 'Kelontong', 'Agribisnis', 'Jasa', 'Kerajinan Tangan'];
+                    // Use Dynamic Categories from Backend
+                    return ['Semua', ...@json($categories)];
                 },
                 get regions() {
                     return [...new Set(this.umkms.map(item => item.region))];
@@ -84,6 +106,8 @@
 
                 // --- INIT ---
                 init() {
+                    this.initData();
+                    
                     // WATCHER UNTUK STORE WILAYAH
                     this.$watch('$store.region.selected', (val) => {
                         this.currentPage = 1;
@@ -295,7 +319,7 @@
                         
                         const customIcon = L.divIcon({
                             className: 'custom-leaflet-icon',
-                            html: this.getIconHtml(item.iconType),
+                            html: this.getIconHtml(item.iconType, item.customIcon),
                             iconSize: [36, 36],
                             iconAnchor: [18, 18],
                             popupAnchor: [0, -20]
@@ -345,7 +369,11 @@
                         .replaceAll('[[OMSET]]', item.omset)
                         .replaceAll('[[SURAT]]', item.surat || '-');
                 },
-                getIconHtml(type) {
+                getIconHtml(type, customIconUrl = null) {
+                    if (customIconUrl) {
+                        return `<div style='background-color: white; width: 44px; height: 44px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; overflow: hidden;'><img src="${customIconUrl}" style="width: 24px; height: 24px; object-fit: contain;"></div>`;
+                    }
+                    
                     let color = '#FFC107';
                     let svgContent = this.svgIcons.grid;
                     if (type === 'food') {

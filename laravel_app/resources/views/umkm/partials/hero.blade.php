@@ -1,11 +1,11 @@
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-16 lg:mb-24 mt-8">
+<div id="umkm-hero" class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-16 lg:mb-24 mt-8">
 
     <div class="flex flex-col justify-center pt-4">
         <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight">
-            {{ $content['umkm_index_title']->value ?? 'UMKM SASUMA.' }}
+            {{ $contents['umkm_index_title']->value ?? 'UMKM SASUMA.' }}
         </h1>
         <p class="text-slate-500 mb-10 max-w-md md:max-w-lg">
-            {{ translate($content['umkm_index_subtitle']->value ?? 'Temukan umkm sasuma yang ingin kamu kunjungi disetiap wilayah') }}
+            {{ translate($contents['umkm_index_subtitle']->value ?? 'Temukan umkm sasuma yang ingin kamu kunjungi disetiap wilayah') }}
         </p>
 
         <div class="w-full lg:max-w-xl space-y-6">

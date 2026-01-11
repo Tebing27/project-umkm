@@ -15,6 +15,31 @@
                     // Watchers for search and status to trigger fetch
                     this.$watch('search', () => this.fetchProducts(true));
                     this.$watch('status', () => this.fetchProducts(true));
+
+                    // Real-time Listeners
+                    // Real-time Listeners with Retry
+                    const subscribeProducts = () => {
+                        let attempt = 0;
+                        const waitForEcho = setInterval(() => {
+                            attempt++;
+                            if (window.Echo) {
+                                clearInterval(waitForEcho);
+                                // Private User Channel
+                                const userId = {{ auth()->id() }};
+                                window.Echo.private(`private-user.${userId}`)
+                                    .listen('ProductUpdated', (e) => {
+                                        console.log('Product updated:', e);
+                                        setTimeout(() => {
+                                            this.fetchProducts(false); // Refresh list
+                                        }, 1000);
+                                    });
+                            } else if (attempt > 20) {
+                                clearInterval(waitForEcho);
+                                console.error('Critical: Pusher Echo failed to load in Product Manager.');
+                            }
+                        }, 500);
+                    };
+                    subscribeProducts();
                 },
             
                 fetchProducts(reset = false) {

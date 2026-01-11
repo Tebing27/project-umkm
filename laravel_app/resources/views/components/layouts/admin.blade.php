@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Dashboard Admin - UMKM Sasuma' }}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -27,7 +28,7 @@
 
         {{-- MAIN CONTENT WRAPPER --}}
         {{-- Added: overflow-x-hidden & w-full fix --}}
-        <div class="flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out bg-slate-50 relative overflow-x-hidden"
+        <div class="flex-1 flex flex-col min-h-screen duration-300 ease-in-out bg-slate-50 relative overflow-x-hidden"
             :class="sidebarExpanded ? 'lg:ml-72' : 'lg:ml-20'">
 
             {{-- MOBILE HEADER --}}

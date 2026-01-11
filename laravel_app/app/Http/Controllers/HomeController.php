@@ -15,7 +15,9 @@ class HomeController extends Controller
         $contents = Content::all()->groupBy('group'); // Keep for other parts if needed, or extract specifics
 
         // --- Wilayah Section Data ---
-        $regions = Region::withCount('shops')->get();
+        $regions = Region::withCount(['shops' => function ($query) {
+            $query->where('is_verified', true);
+        }])->get();
         $colors = ['bg-[#c3daff]', 'bg-[#cbf3e3]'];
         
         $regionItems = $regions->map(function($region, $index) use ($colors) {
@@ -35,35 +37,39 @@ class HomeController extends Controller
 
 
         // --- Hero Section Data ---
+        // --- Hero Section Data ---
+        // OPTIMIZATION: Do NOT load 'shops' relationship for all regions. It causes N+1 Memory bloat.
+        // Instead, we only need the Region and its Featured Shop (if any).
         $allRegions = Region::whereHas('shops', fn($q) => $q->where('is_verified', true))
-            ->with(['featuredShop' => fn($q) => $q->where('is_verified', true)->with(['photos', 'region']),
-                    'shops' => fn($q) => $q->where('is_verified', true)->with(['photos', 'region'])])
+            ->with(['featuredShop' => fn($q) => $q->where('is_verified', true)->with(['photos', 'region'])])
             ->get();
 
-        $featuredRegions = $allRegions->filter(fn($r) => $r->featuredShop !== null);
-        $otherRegions = $allRegions->filter(fn($r) => $r->featuredShop === null)->shuffle();
-        
-        $heroRegions = $featuredRegions->merge($otherRegions)
-            ->sortBy(function($region) {
-                // If order is explicitly set (>0), use it. Null or 0 goes to the end (99999).
-                return ($region->hero_order && $region->hero_order > 0) ? $region->hero_order : 99999;
-            })
-            ->take(5);
-
+        // Separate logic for filling the slider
         $heroShops = collect();
 
-        foreach ($heroRegions as $region) {
+        foreach ($allRegions as $region) {
             if ($region->featuredShop) {
-                $shop = $region->featuredShop;
+                // Priority 1: Admin Selected Featured Shop
+                $heroShops->push($region->featuredShop);
             } else {
-                $shop = $region->shops->isNotEmpty() ? $region->shops->random() : null;
-            }
-
-            if ($shop) {
-                $heroShops->push($shop);
+                // Priority 2: Random Shop from this region (Efficient Single Query)
+                // This prevents loading 1000 shops just to pick 1.
+                $randomShop = Shop::where('region_id', $region->id)
+                    ->where('is_verified', true)
+                    ->with(['photos', 'region'])
+                    ->inRandomOrder()
+                    ->first();
+                
+                if ($randomShop) {
+                    $heroShops->push($randomShop);
+                }
             }
         }
+        
+        // Take top 5 unique shops
+        $heroShops = $heroShops->unique('id')->take(5);
 
+        // Transformation for View (unchanged logic, just ensuring variables match)
         $heroItems = $heroShops->map(function($shop) {
             $photo = $shop->photos->sortBy('order')->first();
             return [
@@ -102,14 +108,32 @@ class HomeController extends Controller
 
 
         // --- Map Section Data ---
-        // --- Map Section Data ---
-        $mapShopsRaw = Shop::with(['region', 'photos'])
+        
+        // Fetch Business Type Icons
+        // Map: Business Type Value (lowercase) -> Icon URL
+        $businessTypes = $contents->get('business_types', collect());
+        $businessTypeIcons = $contents->get('business_type_icons', collect())->keyBy('key');
+        
+        $iconMap = [];
+        foreach ($businessTypes as $bt) {
+            $iconKey = 'icon_for_' . $bt->id;
+            if (isset($businessTypeIcons[$iconKey])) {
+                $iconMap[strtolower($bt->value)] = asset('storage/' . $businessTypeIcons[$iconKey]->value);
+            }
+        }
+
+        // Fetch Categories for Filter (Unique Values)
+        $categories = $businessTypes->pluck('value')->unique()->sort()->values();
+
+        // Optimize: Select ONLY needed columns to reduce payload size
+        $mapShopsRaw = Shop::select('id', 'name', 'description', 'business_type', 'latitude', 'longitude', 'omset_min', 'omset_max', 'licenses', 'region_id')
+            ->with(['region:id,name', 'photos']) // Eager load minimal data
             ->where('is_verified', true)
             ->whereNotNull('latitude')
             ->whereNotNull('longitude')
             ->get();
 
-        $mapShops = $mapShopsRaw->map(function ($shop) {
+        $mapShops = $mapShopsRaw->map(function ($shop) use ($iconMap) {
             $photo = $shop->photos->sortBy('order')->first();
             $minOmset = $shop->omset_min ? (float) preg_replace('/[^0-9]/', '', $shop->omset_min) : 0;
             $maxOmset = $shop->omset_max ? (float) preg_replace('/[^0-9]/', '', $shop->omset_max) : 0;
@@ -122,9 +146,27 @@ class HomeController extends Controller
                 number_format($maxOmset / 1000000, 0, ',', '.') .
                 ' Jt';
 
-            // Icon type mapping
+            // Icon type mapping (Legacy Fallback)
             $iconType = 'grid';
             $typeLower = strtolower($shop->business_type);
+            
+            // Primary: Check if custom icon exists for this business type
+            $customIconUrl = null;
+            // Iterate map keys to find match (since typeLower might be loosely matched or exact)
+            // Assuming exact or inclusion match for custom icons might be tricky. 
+            // Better: use the exact business type from shop if stored exactly.
+            if (isset($iconMap[$typeLower])) {
+                $customIconUrl = $iconMap[$typeLower];
+            } else {
+                 // Try loose matching just in case keys are "kuliner enak" vs "kuliner"
+                 foreach ($iconMap as $k => $v) {
+                     if (str_contains($typeLower, $k) || str_contains($k, $typeLower)) {
+                         $customIconUrl = $v;
+                         break;
+                     }
+                 }
+            }
+
             if (str_contains($typeLower, 'kuliner')) {
                 $iconType = 'food';
             } elseif (str_contains($typeLower, 'fashion') || str_contains($typeLower, 'pakaian')) {
@@ -146,6 +188,7 @@ class HomeController extends Controller
                 'badge' => $shop->business_type,
                 'category' => $shop->business_type,
                 'iconType' => $iconType,
+                'customIcon' => $customIconUrl, // New Field
                 'omset' => $omsetStr,
                 'omsetVal' => $maxOmset / 1000000,
                 'description' => \Illuminate\Support\Str::limit($shop->description, 100),
@@ -184,7 +227,8 @@ class HomeController extends Controller
             'regions', 'heroShops', 'mapShops', 'contents', // mapShops is now transformed
             'regionItems', 'wilayahTitle', 'wilayahSubtitle', 'wilayahDesc',
             'heroItems', 'heroTitle', 'heroDesc', 'heroImage',
-            'regionsMap' // Pass regions data for map specifically if needed, or use 'regions' if it has lat/lng
+            'regionsMap', // Pass regions data for map specifically if needed, or use 'regions' if it has lat/lng
+            'categories' // Pass dynamic categories
         ));
     }
 }

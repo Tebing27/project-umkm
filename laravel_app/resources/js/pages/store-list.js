@@ -108,23 +108,61 @@ window.storeApp = function (initialData) {
                 this.currentPage = 1;
             });
 
-            // Listen for Pusher events
-            if (window.Echo) {
-                window.Echo.channel('shops')
-                    .listen('ShopUpdated', (e) => {
-                        console.log('ShopUpdated event received', e);
-                        this.refreshData();
-                    });
-            }
+            // WaitForEcho Pattern
+            let attempt = 0;
+            const waitForEcho = setInterval(() => {
+                attempt++;
+                if (window.Echo) {
+                    clearInterval(waitForEcho);
+                    console.log("Echo found! Subscribing to [shops]...");
+
+                    window.Echo.channel('shops')
+                        .listen('ShopUpdated', (e) => {
+                            console.log('ShopUpdated event received', e);
+                            setTimeout(() => {
+                                this.refreshData();
+                            }, 1000); // 1s delay for race condition
+                        });
+
+                } else if (attempt > 20) { // Timeout after 10s
+                    clearInterval(waitForEcho);
+                    console.error("Critical: Pusher Echo failed to load in store-list.js");
+                }
+            }, 500);
         },
 
         refreshData() {
             console.log('Refreshing data...');
-            window.axios.get('/umkm')
+
+            // Build current URL params
+            const params = new URLSearchParams(window.location.search);
+
+            // Convert URLSearchParams to object to merge with extra params
+            const currentParams = {};
+            for (const [key, value] of params.entries()) {
+                currentParams[key] = value;
+            }
+
+            window.axios.get('/umkm', {
+                params: { ...currentParams, json: true },
+                headers: { 'Accept': 'application/json' }
+            })
                 .then(response => {
+                    console.log('Refresh response:', response);
+
+                    let newItems = [];
+                    // PublicController returns JSON array of items on `wantsJson()` or `json=true`
                     if (Array.isArray(response.data)) {
-                        this.items = response.data;
+                        newItems = response.data;
+                    } else if (response.data.data && Array.isArray(response.data.data)) {
+                        newItems = response.data.data;
+                    } else {
+                        console.warn('Unexpected response format:', response.data);
+                        return;
                     }
+
+                    this.items = newItems;
+                    console.log('Items updated:', this.items.length);
                 })
                 .catch(error => {
                     console.error('Error refreshing data:', error);

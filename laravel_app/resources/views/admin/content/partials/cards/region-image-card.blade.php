@@ -8,5 +8,7 @@
         @include('admin.content.partials.cards.partials.region-image-display')
         @include('admin.content.partials.cards.partials.region-input-file')
     </form>
+    
+    {{-- Edit/Delete Buttons Removed as per request to disable CRUD --}}
 </div>
 

@@ -461,6 +461,60 @@ window.locationHybrid = function (config) {
             window.addEventListener('resize', () => {
                 this.detectDeviceType();
             });
+
+            // Real-time Location Sync (WaitForEcho Pattern)
+            if (config.shopId) {
+                let attempt = 0;
+                const waitForEcho = setInterval(() => {
+                    attempt++;
+                    if (window.Echo) {
+                        clearInterval(waitForEcho);
+                        console.log("Echo found! Subscribing to location sync...");
+
+                        window.Echo.channel('shops')
+                            .listen('ShopUpdated', (e) => {
+                                console.log('Location Hybrid: Shop Updated', e);
+                                if (e.shop_id == config.shopId) {
+                                    setTimeout(() => {
+                                        // Fetch fresh data
+                                        fetch(`/umkm/${config.shopId}`, {
+                                            headers: { 'Accept': 'application/json' }
+                                        })
+                                            .then(res => res.json())
+                                            .then(data => {
+                                                if (data.shop) {
+                                                    const newLat = parseFloat(data.shop.latitude).toFixed(6);
+                                                    const newLng = parseFloat(data.shop.longitude).toFixed(6);
+
+                                                    // Update if changed
+                                                    if (newLat !== this.lat || newLng !== this.lng) {
+                                                        console.log('Location changed remotely, updating map...');
+                                                        this.lat = newLat;
+                                                        this.lng = newLng;
+                                                        this.address = data.shop.address;
+                                                        // Update Desktop
+                                                        this.updateDesktopMapView(this.lat, this.lng);
+                                                        // Update Mobile if open
+                                                        if (this.mobileMap) {
+                                                            this.tempLat = this.lat;
+                                                            this.tempLng = this.lng;
+                                                            this.updateMobileMap(this.lat, this.lng);
+                                                        }
+                                                        this.showSuccessAlert = true;
+                                                        setTimeout(() => this.showSuccessAlert = false, 3000);
+                                                    }
+                                                }
+                                            })
+                                            .catch(err => console.error('Failed to sync location', err));
+                                    }, 1000);
+                                }
+                            });
+                    } else if (attempt > 20) {
+                        clearInterval(waitForEcho);
+                        console.error("Critical: Pusher Echo failed to load in Location Hybrid.");
+                    }
+                }, 500);
+            }
         },
 
         detectDeviceType() {

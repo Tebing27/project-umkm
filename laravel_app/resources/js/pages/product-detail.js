@@ -1,4 +1,4 @@
-window.productLogic = function (initialProducts, defaultLabel = 'Semua') {
+window.productLogic = function (initialProducts, initialCategories = [], defaultLabel = 'Semua') {
     return {
         search: '',
         category: defaultLabel,
@@ -7,6 +7,7 @@ window.productLogic = function (initialProducts, defaultLabel = 'Semua') {
         limit: 4,
         itemsPerLoad: 4,
         products: initialProducts,
+        categories: [defaultLabel, ...initialCategories],
 
         setCategory(cat) {
             this.category = cat;
@@ -46,6 +47,19 @@ window.productLogic = function (initialProducts, defaultLabel = 'Semua') {
         init() {
             this.$watch('search', () => {
                 this.limit = this.itemsPerLoad;
+            });
+
+            // Listen for global shop updates
+            window.addEventListener('shop-data-updated', (e) => {
+                if (e.detail) {
+                    if (e.detail.products) {
+                        this.products = e.detail.products;
+                        // Reset limit if products change? Maybe not needed for UX stability
+                    }
+                    if (e.detail.categories) {
+                        this.categories = [this.allLabel, ...e.detail.categories];
+                    }
+                }
             });
         }
     }
