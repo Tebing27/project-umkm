@@ -1,4 +1,7 @@
-<x-layouts.guest>
+<x-layouts.auth>
+    <x-slot:title>
+        {{ translate('Konfirmasi Kata Sandi - UMKM Sasuma') }}
+    </x-slot:title>
     <div class="mb-4 text-sm text-gray-600">
         {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
     </div>
@@ -24,4 +27,4 @@
             </x-primary-button>
         </div>
     </form>
-</x-layouts.guest>
+</x-layouts.auth>

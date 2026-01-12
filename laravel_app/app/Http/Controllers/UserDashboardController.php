@@ -380,7 +380,8 @@ class UserDashboardController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal menyimpan perubahan: ' . $e->getMessage());
+            Log::error('Photo update failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menyimpan perubahan. Silakan coba lagi.');
         }
     }
 
@@ -454,7 +455,7 @@ class UserDashboardController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error adding product: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Gagal menambahkan produk: ' . $e->getMessage())->withInput();
+            return redirect()->back()->with('error', 'Gagal menambahkan produk. Silakan coba lagi.')->withInput();
         }
     }
 

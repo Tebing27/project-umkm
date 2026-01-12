@@ -16,12 +16,18 @@
                     <div class="space-y-5 max-w-xl">
 
                         {{-- Password Lama --}}
-                        <div class="space-y-1.5">
+                        <div class="space-y-1.5" x-data="{ showCurrent: false }">
                             <label class="block text-sm md:text-base font-semibold text-slate-700">{{ translate('Password Saat Ini') }}</label>
-                            <x-ui.input variant="soft" type="password" name="current_password" placeholder="••••••••" required>
+                            <x-ui.input variant="soft" ::type="showCurrent ? 'text' : 'password'" name="current_password" placeholder="••••••••" required>
                                 <x-slot:icon>
                                     <x-icons.auth-key class="w-5 h-5" />
                                 </x-slot:icon>
+                                <x-slot:suffix>
+                                    <button type="button" @click="showCurrent = !showCurrent" class="text-slate-400 hover:text-slate-600 focus:outline-none">
+                                        <x-icons.ui-eye x-show="!showCurrent" class="w-5 h-5" />
+                                        <x-icons.ui-eye-off x-show="showCurrent" class="w-5 h-5" />
+                                    </button>
+                                </x-slot:suffix>
                             </x-ui.input>
                             @error('current_password')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -50,17 +56,17 @@
                             },
                             get strengthLabel() {
                                 if(this.strength <= 2) return '{{ translate('Lemah') }}';
-                                if(this.strength <= 4) return '{{ translate('Sedang') }}';
+                                if(this.strength < 4) return '{{ translate('Sedang') }}';
                                 return '{{ translate('Kuat') }}';
                             },
                             get strengthColor() {
                                 if(this.strength <= 2) return 'bg-red-500';
-                                if(this.strength <= 4) return 'bg-amber-500';
+                                if(this.strength < 4) return 'bg-amber-500';
                                 return 'bg-green-500';
                             },
                             get strengthText() {
                                  if(this.strength <= 2) return 'text-red-600';
-                                if(this.strength <= 4) return 'text-amber-600';
+                                if(this.strength < 4) return 'text-amber-600';
                                 return 'text-green-600';
                             },
                             get confirmClass() {
@@ -91,27 +97,31 @@
                                         <span class="font-medium" :class="strengthText">{{ translate('Kekuatan:') }} <span x-text="strengthLabel"></span></span>
                                     </div>
                                     <div class="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden mb-3">
-                                        <div class="h-full transition-all duration-500" :class="strengthColor" :style="'width: ' + (strength * 20) + '%'"></div>
+                                        <div class="h-full transition-all duration-500" :class="strengthColor" :style="'width: ' + (strength * 25) + '%'"></div>
                                     </div>
                                     
                                     {{-- Recommendations Checklist --}}
-                                    <div class="space-y-1.5">
-                                        <div class="flex items-center gap-2" :class="checks.length ? 'text-green-600' : 'text-slate-500'">
+                                    <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-y-1 gap-x-2">
+                                        <div class="flex items-center gap-1.5" :class="checks.length ? 'text-green-600' : 'text-slate-500'">
                                             <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.length" />
                                             <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.length"></div>
                                             <span>{{ translate('Min 8 karakter') }}</span>
                                         </div>
-                                         <div class="flex items-center gap-2" :class="checks.upper && checks.lower ? 'text-green-600' : 'text-slate-500'">
-                                            <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.upper && checks.lower" />
-                                            <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!(checks.upper && checks.lower)"></div>
-                                            <span>{{ translate('Huruf Besar & Kecil') }}</span>
+                                         <div class="flex items-center gap-1.5" :class="checks.lower ? 'text-green-600' : 'text-slate-500'">
+                                            <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.lower" />
+                                            <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.lower"></div>
+                                            <span>{{ translate('Huruf kecil (a-z)') }}</span>
                                         </div>
-                                        <div class="flex items-center gap-2" :class="checks.number ? 'text-green-600' : 'text-slate-500'">
+                                        <div class="flex items-center gap-1.5" :class="checks.upper ? 'text-green-600' : 'text-slate-500'">
+                                            <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.upper" />
+                                            <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.upper"></div>
+                                            <span>{{ translate('Huruf besar (A-Z)') }}</span>
+                                        </div>
+                                        <div class="flex items-center gap-1.5" :class="checks.number ? 'text-green-600' : 'text-slate-500'">
                                             <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.number" />
                                             <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.number"></div>
-                                            <span>{{ translate('Angka') }}</span>
+                                            <span>{{ translate('Angka (0-9)') }}</span>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

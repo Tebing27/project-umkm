@@ -83,5 +83,23 @@ class AppServiceProvider extends ServiceProvider
             ];
             $view->with('menus', $menus);
         });
+        // Custom Verify Email Notification
+        \Illuminate\Auth\Notifications\VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
+            return (new \Illuminate\Notifications\Messages\MailMessage)
+                ->subject('Verifikasi Alamat Email Anda - UMKM Sasuma')
+                ->view('emails.verify-email', ['url' => $url, 'user' => $notifiable]);
+        });
+
+        // Custom Reset Password Notification
+        \Illuminate\Auth\Notifications\ResetPassword::toMailUsing(function (object $notifiable, string $token) {
+            $url = route('password.reset', [
+                'token' => $token,
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ]);
+
+            return (new \Illuminate\Notifications\Messages\MailMessage)
+                ->subject('Reset Password - UMKM Sasuma')
+                ->view('emails.reset-password', ['url' => $url, 'user' => $notifiable]);
+        });
     }
 }

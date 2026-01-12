@@ -112,11 +112,19 @@
                             </div>
                             
                             <label class="block text-sm pt-2 md:text-base font-semibold text-slate-700">{{ translate('Password Saat Ini') }}</label>
-                            <x-ui.input variant="soft" type="password" name="current_password" required placeholder="{{ translate('Masukkan password untuk konfirmasi') }}">
-                                <x-slot:icon>
-                                    <x-icons.auth-lock class="w-5 h-5" stroke-width="1.5" />
-                                </x-slot:icon>
-                            </x-ui.input>
+                            <div x-data="{ showCurrent: false }">
+                                <x-ui.input variant="soft" ::type="showCurrent ? 'text' : 'password'" name="current_password" required placeholder="{{ translate('Masukkan password untuk konfirmasi') }}">
+                                    <x-slot:icon>
+                                        <x-icons.auth-lock class="w-5 h-5" stroke-width="1.5" />
+                                    </x-slot:icon>
+                                    <x-slot:suffix>
+                                        <button type="button" @click="showCurrent = !showCurrent" class="text-slate-400 hover:text-slate-600 focus:outline-none">
+                                            <x-icons.ui-eye x-show="!showCurrent" class="w-5 h-5" />
+                                            <x-icons.ui-eye-off x-show="showCurrent" class="w-5 h-5" />
+                                        </button>
+                                    </x-slot:suffix>
+                                </x-ui.input>
+                            </div>
                              @error('current_password')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror

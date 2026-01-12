@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Usaha - UMKM Sasuma</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-</head>
-
-<body>
+<x-layouts.auth>
+    <x-slot:title>
+        {{ translate('Daftar Usaha - UMKM Sasuma') }}
+    </x-slot:title>
 
     <div class="container mx-auto max-w-7xl px-4 md:px-8 lg:px-16 pt-12">
 
@@ -520,17 +512,17 @@
                     },
                     get strengthLabel() {
                         if(this.strength <= 2) return '{{ translate('Lemah') }}';
-                        if(this.strength <= 4) return '{{ translate('Sedang') }}';
+                        if(this.strength < 4) return '{{ translate('Sedang') }}';
                         return '{{ translate('Kuat') }}';
                     },
                     get strengthColor() {
                         if(this.strength <= 2) return 'bg-red-500';
-                        if(this.strength <= 4) return 'bg-amber-500';
+                        if(this.strength < 4) return 'bg-amber-500';
                         return 'bg-green-500';
                     },
                     get strengthText() {
                          if(this.strength <= 2) return 'text-red-600';
-                        if(this.strength <= 4) return 'text-amber-600';
+                        if(this.strength < 4) return 'text-amber-600';
                         return 'text-green-600';
                     },
                     get confirmClass() {
@@ -564,35 +556,31 @@
                                 <span class="font-medium" :class="strengthText">{{ translate('Kekuatan Password:') }} <span x-text="strengthLabel"></span></span>
                             </div>
                             <div class="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
-                                <div class="h-full transition-all duration-500" :class="strengthColor" :style="'width: ' + (strength * 20) + '%'"></div>
+                                <div class="h-full transition-all duration-500" :class="strengthColor" :style="'width: ' + (strength * 25) + '%'"></div>
                             </div>
                             
                             {{-- Recommendations --}}
                             <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-y-1 gap-x-2">
-                                <div class="flex items-center gap-1.5" :class="checks.length ? 'text-green-600' : 'text-gray-500'">
+                                <div class="flex items-center gap-1.5" :class="checks.length ? 'text-green-600' : 'text-slate-500'">
                                     <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.length" />
-                                    <div class="w-3.5 h-3.5 rounded-full border border-gray-400" x-show="!checks.length"></div>
-                                    <span>{{ translate('Minimal 8 karakter') }}</span>
+                                    <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.length"></div>
+                                    <span>{{ translate('Min 8 karakter') }}</span>
                                 </div>
-                                <div class="flex items-center gap-1.5" :class="checks.mixed ? 'text-green-600' : 'text-gray-500'">
-                                     {{-- Mixed logic for simplicity in checklist --}}
-                                </div>
-                                 <div class="flex items-center gap-1.5" :class="checks.lower ? 'text-green-600' : 'text-gray-500'">
+                                 <div class="flex items-center gap-1.5" :class="checks.lower ? 'text-green-600' : 'text-slate-500'">
                                     <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.lower" />
-                                    <div class="w-3.5 h-3.5 rounded-full border border-gray-400" x-show="!checks.lower"></div>
+                                    <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.lower"></div>
                                     <span>{{ translate('Huruf kecil (a-z)') }}</span>
                                 </div>
-                                <div class="flex items-center gap-1.5" :class="checks.upper ? 'text-green-600' : 'text-gray-500'">
+                                <div class="flex items-center gap-1.5" :class="checks.upper ? 'text-green-600' : 'text-slate-500'">
                                     <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.upper" />
-                                    <div class="w-3.5 h-3.5 rounded-full border border-gray-400" x-show="!checks.upper"></div>
+                                    <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.upper"></div>
                                     <span>{{ translate('Huruf besar (A-Z)') }}</span>
                                 </div>
-                                <div class="flex items-center gap-1.5" :class="checks.number ? 'text-green-600' : 'text-gray-500'">
+                                <div class="flex items-center gap-1.5" :class="checks.number ? 'text-green-600' : 'text-slate-500'">
                                     <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.number" />
-                                    <div class="w-3.5 h-3.5 rounded-full border border-gray-400" x-show="!checks.number"></div>
+                                    <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.number"></div>
                                     <span>{{ translate('Angka (0-9)') }}</span>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -685,6 +673,4 @@
     </form>
     </div>
 
-</body>
-
-</html>
+</x-layouts.auth>

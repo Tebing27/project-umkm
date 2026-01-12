@@ -95,16 +95,18 @@ class RegisteredUserController extends Controller
             DB::beginTransaction();
 
             // 2. Simpan Data User
-            $user = User::create([
+            $user = new User();
+            $user->fill([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
-
                 'phone_number' => $request->phone_number,
                 'place_of_birth' => $request->place_of_birth,
                 'date_of_birth' => $request->date_of_birth,
                 'domicile_address' => $request->domicile_address,
             ]);
+            $user->password = Hash::make($request->password);
+            $user->role = 'users'; // Explicitly assign role
+            $user->save();
 
             // 3. Proses Data Izin Usaha (Gabungkan Type & Number)
             $licenses = [];
@@ -120,7 +122,7 @@ class RegisteredUserController extends Controller
             }
 
             // 4. Simpan Data Toko
-            Shop::create([
+            $shop = Shop::create([
                 'user_id' => $user->id,
                 'name' => $request->shop_name,
                 'product_type' => $request->product_type,
@@ -149,8 +151,8 @@ class RegisteredUserController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            // Log error jika perlu: \Log::error($e->getMessage());
-            return back()->withErrors(['error' => translate('Terjadi kesalahan saat menyimpan data. Silakan coba lagi. ') . $e->getMessage()])->withInput();
+            \Illuminate\Support\Facades\Log::error('Registration failed: ' . $e->getMessage());
+            return back()->withErrors(['error' => translate('Terjadi kesalahan saat menyimpan data. Silakan coba lagi.')])->withInput();
         }
     }
 }

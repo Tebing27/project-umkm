@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lupa Kata Sandi - UMKM Sasuma</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-
-<body>
+<x-layouts.auth>
+    <x-slot:title>
+        {{ translate('Lupa Kata Sandi - UMKM Sasuma') }}
+    </x-slot:title>
 
     <div class="min-h-screen flex flex-col justify-center items-center p-4">
         <x-ui.card class="w-full max-w-[420px] p-6 md:p-10 shadow-xl border-gray-100">
@@ -51,9 +44,6 @@
                             <x-icons.contact-mail class="w-5 h-5" stroke-width="1.5" />
                         </x-slot:icon>
                     </x-ui.input>
-                    @error('email')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
                 </div>
 
                 <!-- Tombol Kirim -->
@@ -75,6 +65,4 @@
         </x-ui.card>
     </div>
 
-</body>
-
-</html>
+</x-layouts.auth>

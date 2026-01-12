@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verifikasi Email - UMKM Sasuma</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-
-<body>
+<x-layouts.auth>
+    <x-slot:title>
+        {{ translate('Verifikasi Email - UMKM Sasuma') }}
+    </x-slot:title>
 
     <div class="min-h-screen flex flex-col justify-center items-center p-4">
         <x-ui.card class="w-full max-w-[420px] p-6 md:p-10 shadow-xl border-gray-100">
@@ -49,6 +42,4 @@
         </x-ui.card>
     </div>
 
-</body>
-
-</html>
+</x-layouts.auth>
