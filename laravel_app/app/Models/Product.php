@@ -10,6 +10,11 @@ class Product extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'shop_id',
         'name',
@@ -18,15 +23,25 @@ class Product extends Model
         'image',
         'variant',
         'description',
-        'is_active'
+        'is_active',
+        'is_best_seller'
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_best_seller' => 'boolean',
     ];
 
     public function shop(): BelongsTo
     {
         return $this->belongsTo(Shop::class);
+    }
+
+    /**
+     * Get the images for the product.
+     */
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order');
     }
 }

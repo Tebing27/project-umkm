@@ -8,6 +8,15 @@ window.productLogic = function (initialProducts, initialCategories = [], default
         itemsPerLoad: 4,
         products: initialProducts,
         categories: [defaultLabel, ...initialCategories],
+        isLoading: false,
+        loadingMore: false,
+        selectedProduct: null,
+        detailModalOpen: false,
+
+        openDetailModal(product) {
+            this.selectedProduct = product;
+            this.detailModalOpen = true;
+        },
 
         setCategory(cat) {
             this.category = cat;
@@ -40,8 +49,20 @@ window.productLogic = function (initialProducts, initialCategories = [], default
             return this.limit < this.filteredProducts.length;
         },
 
-        loadMore() {
+        get page() {
+            return this.limit / this.itemsPerLoad;
+        },
+
+        async fetchProducts() {
+            if (this.loadingMore || !this.hasMore) return;
+
+            this.loadingMore = true;
+
+            // Simulate network delay for better UX (so spinner shows)
+            await new Promise(resolve => setTimeout(resolve, 800));
+
             this.limit += this.itemsPerLoad;
+            this.loadingMore = false;
         },
 
         init() {

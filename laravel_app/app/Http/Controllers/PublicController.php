@@ -10,27 +10,32 @@ use Illuminate\Support\Facades\Cache;
 
 class PublicController extends Controller
 {
+    /**
+     * Show the public shop listing page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
+     */
     public function index(Request $request)
     {
         $query = Shop::where('is_verified', true);
 
         $search = $request->input('search');
 
-        // Search Prevention: Minimum 3 characters to prevent CPU Spike
+        // --- Section: Logika Pencarian & Keamanan ---
+        // Mencegah Search Flooding / CPU Spike dengan membatasi panjang karakter minimum
         if ($search) {
              if (strlen($search) < 3) {
-                 // Or just return empty or ignore
-                 // For UX, maybe just ignore or search exact if very short? 
-                 // Safeguard: Only perform DB search if reasonable length.
-                 // We will filter by name using standard LIKE for short words if absolutely needed, but for DoS prevention, we strictly limit.
+                 // Abaikan pencarian jika kurang dari 3 karakter untuk mengurangi beban database
              } else {
                  // Full Text Search (MySQL MATCH AGAINST)
-                 // Mode: Boolean Mode allows * wildcard for prefix matching (e.g. "kop*" matches "kopi")
-                 // This avoids Full Table Scan.
+                 // Mode Boolean memungkinkan penggunaan wildcard '*' untuk pencarian prefix (contoh: "kop*" cocok dengan "kopi")
+                 // Ini jauh lebih efisien daripada LIKE '%...%' karena menggunakan index
                  $query->whereFullText(['name', 'description'], $search . '*', ['mode' => 'boolean']);
              }
         }
 
+        // --- Section: Filtering ---
         // Filter by Region
         if ($request->has('region') && $request->region) {
             $regionName = $request->region;
@@ -44,16 +49,15 @@ class PublicController extends Controller
              $query->where('business_type', $request->category);
         }
 
-        // PAGINATION: Essential for DoS Prevention (Memory)
-        // Never use get() on potentially large datasets.
-        $shops = $query->with('region')->orderByDesc('created_at')->paginate(12)->withQueryString();
+        // --- Section: Pagination & Security ---
+        // PENTING: Jangan gunakan get() tanpa limit pada dataset yang berpotensi besar untuk menghindari Memory Exhaustion (DoS).
+        $shops = $query->with(['region', 'photos'])->orderByDesc('created_at')->paginate(12)->withQueryString();
 
         // Get all regions for filter dropdown
         $regions = Region::pluck('name');
 
-        // Prepare Shops Data for Frontend (AlpineJS)
-        // Only return the *current page* data to Alpine.
-        // This breaks "Client-Side Filtering" for all data, but enables scalability for 1000s of shops.
+        // --- Section: Transformasi Data Frontend ---
+        // Hanya mengembalikan data halaman saat ini ke AlpineJS untuk mengurangi ukuran payload HTML.
         $shopsData = collect($shops->items())->map(function($shop) {
             $formattedOmset = 'Rp. -';
             if ($shop->omset_min || $shop->omset_max) {
@@ -69,15 +73,69 @@ class PublicController extends Controller
                  }
             }
 
+            $formattedLicenses = '-';
+            if ($shop->licenses) {
+                 $licenses = is_string($shop->licenses) ? json_decode($shop->licenses, true) : $shop->licenses;
+                 if (is_array($licenses) && count($licenses) > 0) {
+                     // FIX: Ensure all elements are strings to prevent "Array to string conversion"
+                     $formattedLicenses = collect($licenses)->pluck('type')->filter()->implode(', ');
+                 }
+            }
+
+            // Prepare Images Array (Popup Slider)
+            // Logic: Use Shop Photos (Manage Photos) as source of truth.
+            // Sidebar Cover = Photo index 0
+            // Popup Slider = All Photos
+            $photoUrls = [];
+            if ($shop->photos && $shop->photos->count() > 0) {
+                $photoUrls = $shop->photos->sortBy('order')->pluck('path')->map(function($path) {
+                    return storage_url($path);
+                })->values()->toArray();
+            }
+            
+            // If has photos, use them. Else fallback to logo/icon.
+            if (count($photoUrls) > 0) {
+                $images = $photoUrls;
+                $mainImage = $photoUrls[0];
+            } else {
+                $images = [$shop->logo_url];
+                $mainImage = $shop->logo_url;
+            }
+            
+            // Map Icon Logic (Simple fallback logic similar to Shop Model)
+            $iconType = 'default';
+            $customIcon = null;
+            $typeLower = strtolower($shop->business_type ?? '');
+            
+            if (str_contains($typeLower, 'kuliner') || str_contains($typeLower, 'makan')) $iconType = 'food';
+            elseif (str_contains($typeLower, 'fashion') || str_contains($typeLower, 'pakaian')) $iconType = 'fashion';
+            elseif (str_contains($typeLower, 'jasa')) $iconType = 'work';
+            elseif (str_contains($typeLower, 'kelontong')) $iconType = 'kelontong';
+            elseif (str_contains($typeLower, 'agribisnis') || str_contains($typeLower, 'tani')) $iconType = 'agribisnis';
+            elseif (str_contains($typeLower, 'kerajinan')) $iconType = 'kerajinan';
+            
             return [
                 'id' => $shop->id,
                 'name' => $shop->name,
                 'location' => optional($shop->region)->name ?? '',
                 'category' => $shop->business_type,
-                'desc' => \Illuminate\Support\Str::limit($shop->description, 100),
+                'badge' => $shop->business_type, // Frontend expects 'badge'
+                'product_type' => $shop->product_type,
+                'description' => \Illuminate\Support\Str::limit($shop->description, 100),
                 'omset' => $formattedOmset,
-                'image' => $shop->logo_url,
-                'link' => route('umkm.comment', $shop->id)
+                'image' => $mainImage, // Sidebar uses Cover Photo (index 0)
+                'img' => $mainImage, // Frontend expects 'img' fallback
+                'srcset' => cloudinary_srcset($mainImage) ?: null, // Generate SrcSet for Responsive Image
+                'images' => $images, // Frontend expects 'images' array
+                'surat' => $formattedLicenses, // Frontend expects 'surat'
+                'link' => route('umkm.comment', $shop->id),
+                'lat' => $shop->latitude,
+                'lng' => $shop->longitude,
+                'omset_min' => (int) preg_replace('/[^0-9]/', '', $shop->omset_min),
+                'omset_max' => (int) preg_replace('/[^0-9]/', '', $shop->omset_max),
+                'logo_url' => $shop->logo_url,
+                'iconType' => $iconType,
+                'customIcon' => $customIcon
             ];
         });
 
@@ -93,6 +151,12 @@ class PublicController extends Controller
         return view('umkm.index', compact('shops', 'regions', 'shopsData', 'contents', 'businessTypes'));
     }
 
+    /**
+     * Show the shop detail page.
+     *
+     * @param  int  $id
+     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
+     */
     public function show($id)
     {
         $shop = Shop::with(['user', 'region', 'photos', 'products' => function($q) {
@@ -103,17 +167,12 @@ class PublicController extends Controller
             abort(404);
         }
         
-        $relatedShops = Shop::where('is_verified', true)
-            ->where('id', '!=', $shop->id)
-            ->where('business_type', $shop->business_type)
-            ->inRandomOrder()
-            ->take(3)
-            ->get();
+        // --- Section: Related Shops ---
+        // Optimization: Removed extra 3 queries for related shops since they are not displayed in the current UI.
+        $relatedShops = collect([]);
 
-        // View Increment Logic (Device ID Cookie + Cache)
-        // Solusi Hemat Storage: Gunakan Cache Key (ShopID + DeviceID + Tanggal)
-        // Data akan hilang otomatis besoknya, tapi count di table shops tetap bertambah permanen.
-        
+        // --- Section: View Increment Logic (Business Rule) ---
+        // Menggunakan Cookie (Device ID) 5 Tahun + Cache Harian untuk mencegah spam view count dari user yang sama di hari yang sama.
         $deviceId = request()->cookie('umkm_device_id');
         if (!$deviceId) {
             $deviceId = \Illuminate\Support\Str::uuid()->toString();
@@ -125,11 +184,10 @@ class PublicController extends Controller
 
         if (!Cache::has($cacheKey)) {
             $shop->increment('views');
-            // Cache valid sampai akhir hari ini saja (besok bisa view lagi)
             Cache::put($cacheKey, true, now()->endOfDay());
         }
 
-        // Prepare Products Data for Frontend (AlpineJS)
+        // --- Section: Transformasi Produk untuk Frontend ---
         $productsData = $shop->products->map(function($product) {
             return [
                 'id' => $product->id,
@@ -137,7 +195,10 @@ class PublicController extends Controller
                 'category' => $product->category,
                 'variant' => $product->variant,
                 'price' => 'Rp ' . number_format($product->price, 0, ',', '.'),
-                'image' => $product->image ? asset('storage/' . $product->image) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=80'
+                'description' => $product->description,
+                'image' => storage_url($product->image, 300),
+                'link' => route('umkm.product', $product->id),
+                'is_best_seller' => $product->is_best_seller
             ];
         });
 
@@ -180,5 +241,36 @@ class PublicController extends Controller
         }
 
         return view('umkm.detail.index', compact('shop', 'relatedShops', 'productsData', 'productCategories', 'licenses', 'formattedOmset'));
+    }
+
+    /**
+     * Show the product detail page.
+     *
+     * @param  int  $id
+     * @return \Illuminate\View\View
+     */
+    public function productDetail($id)
+    {
+        $product = \App\Models\Product::with(['shop.user', 'shop.region', 'images'])->findOrFail($id);
+        
+        // Memastikan toko terverifikasi sebelum menampilkan produk
+        if (!$product->shop->is_verified) {
+             abort(404);
+        }
+        
+        $shop = $product->shop;
+        
+        // Similar Logic for Shop Data as in Show method if needed
+        $shop->append(['logo_url', 'instagram_username', 'tiktok_username', 'facebook_username']);
+        
+        $otherProducts = \App\Models\Product::where('shop_id', $shop->id)
+                            ->where('id', '!=', $product->id)
+                            ->where('is_active', true)
+                            ->with('images') // Prevent N+1 query when displaying product images
+                            ->inRandomOrder()
+                            ->take(5)
+                            ->get();
+
+        return view('umkm.product.index', compact('product', 'shop', 'otherProducts'));
     }
 }

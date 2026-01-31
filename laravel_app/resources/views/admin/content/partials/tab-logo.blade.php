@@ -1,4 +1,4 @@
-<div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6" x-data="{ 
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6" x-data="{ 
     showImage: {{ $logoShowImage && $logoShowImage->value == '1' ? 'true' : 'false' }},
     showText: {{ $logoShowText && $logoShowText->value == '1' ? 'true' : 'false' }},
     previewImage: '{{ $logoImage && $logoImage->value ? asset('storage/' . $logoImage->value) : '' }}',
@@ -36,7 +36,6 @@
             this.saveStatus = 'saved';
             setTimeout(() => this.saveStatus = '', 2000);
         } catch (error) {
-             console.error('Error saving settings:', error);
              this.saveStatus = 'error';
         }
     }
@@ -89,8 +88,8 @@
              So the toggle just changes local x-data state.
              The button will trigger the save.
         --}}
-        <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 space-y-6">
-            <h4 class="font-bold text-slate-900 text-sm mb-4 border-b border-slate-200 pb-2">{{ translate('Visibilitas Elemen') }}</h4>
+        <div class="bg-gray-50 rounded-xl p-6 border border-gray-200 space-y-6">
+            <h4 class="font-bold text-slate-900 text-sm mb-4 border-b border-gray-200 pb-2">{{ translate('Visibilitas Elemen') }}</h4>
             
             {{-- Toggle Show Image --}}
             <div class="flex items-center justify-between group cursor-pointer select-none" 
@@ -102,7 +101,7 @@
                 
                 <div class="relative inline-flex items-center pointer-events-none">
                     <input type="checkbox" x-model="showImage" class="sr-only peer">
-                    <div class="w-14 h-8 bg-slate-200 rounded-full peer peer-checked:bg-[#FFC107] peer-focus:ring-4 peer-focus:ring-[#FFC107]/20 transition-all duration-300 ease-in-out"></div>
+                    <div class="w-14 h-8 bg-gray-200 rounded-full peer peer-checked:bg-brand-yellow peer-focus:ring-4 peer-focus:ring-brand-yellow/20 transition-all duration-300 ease-in-out"></div>
                     <div class="absolute left-[4px] top-[4px] bg-white w-6 h-6 rounded-full shadow-md transform transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] peer-checked:translate-x-6 peer-checked:shadow-lg flex items-center justify-center"></div>
                 </div>
             </div>
@@ -117,13 +116,13 @@
                 
                 <div class="relative inline-flex items-center pointer-events-none">
                     <input type="checkbox" x-model="showText" class="sr-only peer">
-                    <div class="w-14 h-8 bg-slate-200 rounded-full peer peer-checked:bg-[#FFC107] peer-focus:ring-4 peer-focus:ring-[#FFC107]/20 transition-all duration-300 ease-in-out"></div>
+                    <div class="w-14 h-8 bg-gray-200 rounded-full peer peer-checked:bg-brand-yellow peer-focus:ring-4 peer-focus:ring-brand-yellow/20 transition-all duration-300 ease-in-out"></div>
                     <div class="absolute left-[4px] top-[4px] bg-white w-6 h-6 rounded-full shadow-md transform transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] peer-checked:translate-x-6 peer-checked:shadow-lg flex items-center justify-center"></div>
                 </div>
             </div>
 
             {{-- Save Button --}}
-            <div class="flex justify-end pt-4 border-t border-slate-200">
+            <div class="flex justify-end pt-4 border-t border-gray-200">
                 <x-ui.button type="button" @click="saveSettings()"
                     class="font-medium rounded-lg">
                     <span>{{ translate('Simpan Perubahan') }}</span>
@@ -139,7 +138,7 @@
                     <form action="{{ route('admin.contents.update', $logoImage->id ?? 0) }}" method="POST" enctype="multipart/form-data">
                         @csrf @method('PUT')
                         <label class="block text-sm font-medium text-slate-700 mb-2">{{ translate('Upload Logo') }}</label>
-                        <div class="border-2 border-dashed border-slate-200 rounded-xl p-8 text-center hover:bg-slate-50 transition-colors cursor-pointer relative group"
+                        <div class="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:bg-gray-50 transition-colors cursor-pointer relative group"
                              @click="$refs.fileInput.click()"
                              @dragover.prevent="$el.classList.add('border-primary', 'bg-primary/5')"
                              @dragleave.prevent="$el.classList.remove('border-primary', 'bg-primary/5')"
@@ -153,7 +152,7 @@
                                        }
                                    ">
                             
-                            <div class="w-16 h-16 mx-auto bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+                            <div class="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4 text-slate-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
                                  <x-icons.ui-cloud-upload class="w-8 h-8" />
                             </div>
                             <p class="text-slate-900 font-medium">{{ translate('Ganti Gambar Logo') }}</p>
@@ -189,22 +188,22 @@
     <label class="block text-sm font-medium text-slate-700 mb-2">{{ translate('Preview Tampilan') }}</label>
     
     {{-- Container Preview --}}
-    <div class="relative bg-slate-100 rounded-xl p-8 border border-slate-200 overflow-hidden min-h-[300px] flex flex-col justify-center">
+    <div class="relative bg-gray-100 rounded-xl p-8 border border-gray-200 overflow-hidden min-h-[300px] flex flex-col justify-center">
          
          {{-- Background decorative --}}
          <div class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white to-transparent opacity-50"></div>
          
          {{-- Navbar Simulation --}}
          {{-- Note: 'max-w-md' dihapus pada md (desktop) agar navbar bisa melebar --}}
-         <nav class="relative w-full bg-white rounded-full shadow-lg px-6 py-4 flex items-center justify-between max-w-[320px] md:max-w-full mx-auto transition-all duration-500 shadow-slate-200/50">
+         <nav class="relative w-full bg-white rounded-full shadow-lg px-6 py-4 flex items-center justify-between max-w-[320px] md:max-w-full mx-auto transition-all duration-500 shadow-gray-200/50">
              
              {{-- Left Side: Logo --}}
              <div class="shrink-0 inline-flex items-center gap-3">
                  {{-- Image Element --}}
                  <template x-if="showImage">
                      <div class="h-8 md:h-10 relative transition-all">
-                         <img :src="previewImage" alt="Logo" class="h-full w-auto object-contain">
-                         <div x-show="!previewImage" class="absolute inset-0 bg-slate-100 flex items-center justify-center text-[10px] text-slate-400 rounded border border-slate-200 w-10">
+                         <img loading="lazy" :src="previewImage" alt="Logo Preview" class="h-full w-auto object-contain">
+                         <div x-show="!previewImage" class="absolute inset-0 bg-gray-100 flex items-center justify-center text-[10px] text-slate-400 rounded border border-gray-200 w-10">
                              IMG
                          </div>
                      </div>
@@ -217,7 +216,7 @@
 
                  {{-- Empty State --}}
                  <template x-if="!showImage && !showText">
-                     <span class="text-xs text-slate-400 italic bg-slate-100 px-2 py-1 rounded">{{ translate('Hidden') }}</span>
+                     <span class="text-xs text-slate-400 italic bg-gray-100 px-2 py-1 rounded">{{ translate('Hidden') }}</span>
                  </template>
              </div>
 
@@ -226,15 +225,15 @@
              {{-- 1. Desktop View (Menu Lines) --}}
              {{-- 'hidden md:flex' artinya: tersembunyi di mobile, muncul (flex) di layar medium ke atas --}}
              <div class="hidden md:flex items-center gap-4">
-                 <div class="h-2.5 w-16 bg-slate-200 rounded-full"></div>
-                 <div class="h-2.5 w-16 bg-slate-200 rounded-full"></div>
-                 <div class="h-2.5 w-16 bg-slate-200 rounded-full"></div>
-                 <div class="h-8 w-8 bg-slate-200 rounded-full ml-2"></div> {{-- Simulasi Profile Avatar --}}
+                 <div class="h-2.5 w-16 bg-gray-200 rounded-full"></div>
+                 <div class="h-2.5 w-16 bg-gray-200 rounded-full"></div>
+                 <div class="h-2.5 w-16 bg-gray-200 rounded-full"></div>
+                 <div class="h-8 w-8 bg-gray-200 rounded-full ml-2"></div> {{-- Simulasi Profile Avatar --}}
              </div>
 
              {{-- 2. Mobile View (Hamburger) --}}
              {{-- 'flex md:hidden' artinya: muncul di mobile, tersembunyi di layar medium ke atas --}}
-             <div class="flex md:hidden items-center justify-center w-8 h-8 bg-slate-50 rounded-lg text-slate-600">
+             <div class="flex md:hidden items-center justify-center w-8 h-8 bg-gray-50 rounded-lg text-slate-600">
                  <x-icons.ui-menu class="w-5 h-5" />
              </div>
          </nav>

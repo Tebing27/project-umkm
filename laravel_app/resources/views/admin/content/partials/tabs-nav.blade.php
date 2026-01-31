@@ -22,8 +22,8 @@
                     class="shrink-0 snap-start flex items-center gap-2 px-4 py-2 rounded-full border text-base font-semibold whitespace-nowrap scroll-mt-4"
                     :class="activeTab === '{{ $key }}'
                         ?
-                        'bg-[#004a85] text-white border-[#004a85] shadow-md' :
-                        'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'"
+                        'bg-brand-blue-dark text-white border-brand-blue-dark shadow-md' :
+                        'bg-white text-slate-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'"
                     @if(request()->query('tab') === $key || (!request()->has('tab') && $key === 'home_hero'))
                         x-init="$el.scrollIntoView({ block: 'nearest', inline: 'center' })"
                     @endif

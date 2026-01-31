@@ -1,10 +1,69 @@
 <x-layouts.guest :title="translate('Edit Toko - UMKM Sasuma')" :header-title="translate('Edit Toko')" :header-subtitle="translate('Perbarui informasi toko')">
 
+    {{-- ALERTS --}}
+    @if (session('success'))
+        <div x-data="{ show: true }" x-show="show" x-transition.opacity
+            class="mb-6 p-4 rounded-xl bg-green-50 border border-green-200 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-green-100 p-2 rounded-full">
+                    <x-icons.ui-check class="w-5 h-5 text-green-600" />
+                </div>
+                <div>
+                    <h4 class="font-bold text-green-800">{{ translate('Berhasil!') }}</h4>
+                    <p class="text-sm text-green-700">{{ session('success') }}</p>
+                </div>
+            </div>
+            <button @click="show = false" class="text-green-600 hover:bg-green-100 p-2 rounded-lg transition-colors">
+                <x-icons.ui-close class="w-5 h-5" />
+            </button>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div x-data="{ show: true }" x-show="show" x-transition.opacity
+            class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-red-100 p-2 rounded-full">
+                    <x-icons.ui-close class="w-5 h-5 text-red-600" />
+                </div>
+                <div>
+                    <h4 class="font-bold text-red-800">{{ translate('Gagal!') }}</h4>
+                    <p class="text-sm text-red-700">{{ session('error') }}</p>
+                </div>
+            </div>
+            <button @click="show = false" class="text-red-600 hover:bg-red-100 p-2 rounded-lg transition-colors">
+                <x-icons.ui-close class="w-5 h-5" />
+            </button>
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div x-data="{ show: true }" x-show="show" x-transition.opacity
+            class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 flex items-start justify-between">
+            <div class="flex items-start gap-3">
+                <div class="bg-red-100 p-2 rounded-full shrink-0">
+                    <x-icons.ui-close class="w-5 h-5 text-red-600" />
+                </div>
+                <div>
+                    <h4 class="font-bold text-red-800">{{ translate('Ada Kesalahan!') }}</h4>
+                    <ul class="list-disc pl-5 mt-1 text-sm text-red-700">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+            <button @click="show = false" class="text-red-600 hover:bg-red-100 p-2 rounded-lg transition-colors">
+                <x-icons.ui-close class="w-5 h-5" />
+            </button>
+        </div>
+    @endif
+
     {{-- Header Page --}}
     <div class="mb-10 flex items-center justify-between">
         <div>
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">{{ translate('Edit Data Toko') }}</h2>
-            <p class="text-gray-500 mt-1">{{ translate('Perbarui logo dan informasi usaha Anda.') }}</p>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900">{{ translate('Edit Data Toko') }}</h2>
+            <p class="text-slate-500 mt-1">{{ translate('Perbarui logo dan informasi usaha Anda.') }}</p>
         </div>
     </div>
 
@@ -40,15 +99,9 @@
                         // 2. Try Fuzzy Match (strip non-alphanumeric)
                         if (this.dynamicLogos) {
                             let normalizedKey = rawKey.replace(/[^a-z0-9]/g, "");
-                            console.log('Debug Logo:', {
-                                raw: rawKey,
-                                norm: normalizedKey,
-                                available: Object.keys(this.dynamicLogos)
-                            });
 
                             for (let k in this.dynamicLogos) {
                                 if (k.toLowerCase().replace(/[^a-z0-9]/g, "") === normalizedKey) {
-                                    console.log('Match Found:', k);
                                     return this.dynamicLogos[k];
                                 }
                             }
@@ -87,7 +140,7 @@
             };
         </script>
         <div class="mb-12" x-data="initShopProfile(window.shopProfileData)">
-            <label class="block font-bold text-lg text-gray-900 mb-4">{{ translate('Logo Toko') }}</label>
+            <label class="block font-bold text-lg text-slate-900 mb-4">{{ translate('Logo Toko') }}</label>
             <div class="flex items-center gap-6">
                 <!-- Hidden Input for File -->
                 <input type="file" class="hidden" x-ref="photo" name="logo" accept="image/png, image/jpeg, image/jpg"
@@ -102,7 +155,7 @@
                         ">
                 
                 <!-- Hidden Input for Delete Flag -->
-                <input type="hidden" name="delete_logo" :value="isDeleted ? 1 : 0">
+                <x-ui.input type="hidden" name="delete_logo" x-bind:value="isDeleted ? 1 : 0" />
 
                 <div class="relative group cursor-pointer" x-on:click="$refs.photo.click()">
                     <!-- State 1: No Custom Logo (Show Fallback) -->
@@ -122,11 +175,11 @@
                          x-show="isDeleted"
                          :style="'background-image: url(\'' + getFallbackUrl() + '\');'">
                          <div class="absolute inset-0 flex items-center justify-center bg-black/10 rounded-full">
-                            <span class="text-xs font-medium bg-white px-2 py-1 rounded shadow text-gray-700">{{ translate('Default') }}</span>
+                            <span class="text-sm font-medium bg-white px-2 py-1 rounded shadow text-slate-700">{{ translate('Default') }}</span>
                          </div>
                     </div>
 
-                    <div class="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-md border border-gray-200 text-gray-500 group-hover:text-[#004a85] transition-colors">
+                    <div class="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-md border border-gray-200 text-slate-500 group-hover:text-brand-blue-dark transition-colors">
                         <x-icons.ui-edit class="w-4 h-4" />
                     </div>
                     <div x-show="(photoPreview || '{{ $shop->logo }}') && !isDeleted" 
@@ -140,13 +193,13 @@
                 <div class="flex flex-col space-y-2">
                     <div class="flex gap-2">
                         <x-ui.button type="button" x-on:click="$refs.photo.click()" variant="outline"
-                            class="bg-white rounded-lg border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-black w-fit shadow-sm">
+                            class="bg-white rounded-lg border-gray-300 text-slate-700 hover:bg-gray-50 hover:text-black w-fit shadow-sm">
                             {{ translate('Upload Foto') }}
                         </x-ui.button>
                     </div>
-                    <span class="text-xs text-gray-500">{{ translate('Maksimal 2MB (JPG, PNG)') }}</span>
+                    <span class="text-sm text-slate-500">{{ translate('Maksimal 2MB (JPG, PNG)') }}</span>
                     @error('logo')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
@@ -160,52 +213,52 @@
 
                 {{-- Nama Usaha --}}
                 <div class="space-y-2" x-data="{ shopName: {{ json_encode(old('shop_name', $shop->name ?? '')) }} }">
-                    <label class="block mb-2 font-medium text-gray-700">{{ translate('Nama Usaha') }} <span
+                    <label class="block mb-2 text-base font-medium text-slate-700">{{ translate('Nama Usaha') }} <span
                             class="text-red-500">*</span></label>
                     <x-ui.input variant="soft" type="text" name="shop_name" x-model="shopName" maxlength="30"
                         placeholder="{{ translate('Tebing') }}"
-                        class="text-sm md:text-base">
+                        class="text-base">
                         <x-slot:icon>
                             <x-icons.data-store class="w-5 h-5" />
                         </x-slot:icon>
                     </x-ui.input>
                     
                     {{-- Character Counter Status --}}
-                    <div class="flex justify-between mt-1 text-xs px-1">
+                    <div class="flex justify-between mt-1 text-sm px-1">
                             <span x-show="shopName.length >= 25" x-transition class="text-amber-600 font-medium">
                             {{ translate('Mendekati batas (30 karakter)') }}
                             </span>
-                            <span class="text-gray-500 ml-auto" x-text="shopName.length + '/30'"
+                            <span class="text-slate-500 ml-auto" x-text="shopName.length + '/30'"
                             :class="{'text-red-600 font-bold': shopName.length >= 30, 'text-amber-600': shopName.length >= 25}"></span>
                     </div>
 
                     @error('shop_name')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
                 {{-- Jenis Produk --}}
                 <div class="space-y-2">
-                    <label class="block mb-2 font-medium text-gray-700">{{ translate('Jenis Produk') }} <span
+                    <label class="block mb-2 text-base font-medium text-slate-700">{{ translate('Jenis Produk') }} <span
                             class="text-red-500">*</span></label>
                     <x-ui.input variant="soft" type="text" name="product_type"
                         value="{{ old('product_type', $shop->product_type ?? '') }}"
-                        placeholder="{{ translate('Contoh: Makanan Ringan') }}" class="text-sm md:text-base">
+                        placeholder="{{ translate('Contoh: Makanan Ringan') }}" class="text-base">
                         <x-slot:icon>
                             <x-icons.shop-cart class="w-5 h-5" />
                         </x-slot:icon>
                     </x-ui.input>
                     @error('product_type')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
                 {{-- Deskripsi Toko --}}
                 <div class="space-y-2">
-                    <label class="block font-medium text-gray-700">{{ translate('Deskripsi Toko') }} <span
+                    <label class="block font-medium text-slate-700">{{ translate('Deskripsi Toko') }} <span
                             class="text-red-500">*</span></label>
                     <x-ui.textarea rows="4" variant="soft" name="description"
-                        placeholder="{{ translate('Ceritakan tentang tokomu...') }}" class="text-sm md:text-base">
+                        placeholder="{{ translate('Ceritakan tentang tokomu...') }}" class="text-base">
                         <x-slot:icon>
                             <x-icons.data-description class="w-5 h-5" />
                         </x-slot:icon>
@@ -216,17 +269,17 @@
                 {{-- Izin Usaha (Dynamic List) --}}
 
                 <div class="space-y-2" x-data="{ licenses: {{ json_encode($licenses) }} }">
-                    <label class="block mb-2 font-medium text-gray-700">{{ translate('Izin Usaha') }}</label>
+                    <label class="block mb-2 font-medium text-slate-700">{{ translate('Izin Usaha') }}</label>
 
                     <template x-for="(license, index) in licenses" :key="index">
                         <div class="flex flex-row gap-3 mb-3">
                             <div class="flex-1">
                                 <x-ui.input variant="soft" type="text" x-model="license.type" name="license_type[]"
-                                    placeholder="{{ translate('Nama Surat Izin') }}" class="text-sm md:text-base" />
+                                    placeholder="{{ translate('Nama Surat Izin') }}" class="text-base" />
                             </div>
                             <div class="flex-1">
                                 <x-ui.input variant="soft" type="text" x-model="license.number"
-                                    name="license_number[]" placeholder="{{ translate('Nomor Surat Izin') }}" class="text-sm md:text-base" />
+                                    name="license_number[]" placeholder="{{ translate('Nomor Surat Izin') }}" class="text-base whitespace-nowrap truncate" />
                             </div>
                             <x-ui.button type="button" @click="licenses.splice(index, 1)" x-show="licenses.length > 1"
                                 variant="ghost"
@@ -238,7 +291,7 @@
                     </template>
 
                     <x-ui.button type="button" @click="licenses.push({ type: '', number: '' })" variant="ghost"
-                        class="mt-2 text-sm text-[#004a85] rounded-lg font-medium flex items-center gap-1 transition-colors">
+                        class="mt-2 text-base text-brand-blue-dark rounded-lg font-medium flex items-center gap-1 transition-colors">
                         <x-icons.ui-plus class="w-4 h-4" />
                         {{ translate('Tambah Izin Lain') }}
                     </x-ui.button>
@@ -251,10 +304,10 @@
 
                 {{-- Nama Pemilik --}}
                 <div class="space-y-2">
-                    <label class="block font-medium text-gray-700">{{ translate('Nama Pemilik') }} <span
+                    <label class="block text-base font-medium text-slate-700">{{ translate('Nama Pemilik') }} <span
                             class="text-red-500">*</span></label>
                     <x-ui.input variant="soft" type="text" value="{{ Auth::user()->name }}" readonly
-                        class="bg-gray-100 text-sm md:text-base">
+                        class="bg-gray-100 text-base">
                         <x-slot:icon>
                             <x-icons.data-user class="w-5 h-5" />
                         </x-slot:icon>
@@ -263,13 +316,13 @@
 
                 {{-- Jenis Usaha (Radio) --}}
                 <div class="space-y-2">
-                    <label class="font-medium text-gray-700">{{ translate('Jenis Usaha') }} <span class="text-red-500">*</span></label>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-y-2 gap-x-4 text-sm md:text-base text-gray-600 mt-1">
-                        @foreach (\App\Models\Shop::getBusinessTypes() as $item)
+                    <label class="text-base font-medium text-slate-700">{{ translate('Jenis Usaha') }} <span class="text-red-500">*</span></label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-y-2 gap-x-4 text-sm text-slate-600 mt-1">
+                        @foreach ($allBusinessTypes as $item)
                             <label
-                                class="flex items-center space-x-2 cursor-pointer group hover:text-gray-900 transition-colors">
+                                class="flex items-center space-x-2 cursor-pointer group hover:text-slate-900 transition-colors">
                                 <input type="radio" name="business_type" value="{{ $item }}"
-                                    class="text-[#004a85] focus:ring-[#004a85] cursor-pointer"
+                                    class="text-brand-blue-dark focus:ring-brand-blue-dark cursor-pointer"
                                     {{ old('business_type', $shop->business_type ?? '') == $item ? 'checked' : '' }}
                                     x-on:change="updateBusinessType('{{ $item }}')">
                                 <span>{{ $item }}</span>
@@ -277,7 +330,7 @@
                         @endforeach
                     </div>
                     @error('business_type')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -299,50 +352,50 @@
                     }
                 }" x-init="minOmset = formatRupiah(minOmset);
                 maxOmset = formatRupiah(maxOmset);">
-                    <label class="block mb-2 font-medium text-gray-700">{{ translate('Omset Penjualan') }} <span
+                    <label class="block mb-2 text-base font-medium text-slate-700">{{ translate('Omset Penjualan') }} <span
                             class="text-red-500">*</span></label>
                     <div class="grid grid-cols-2 gap-4 mt-2">
                         <x-ui.input variant="soft" type="text" name="omset_min" x-model="minOmset"
                             @input="minOmset = formatRupiah($el.value)" placeholder="{{ translate('Minimal') }}"
-                            class="text-sm md:text-base font-medium">
+                            class="text-base font-medium">
                             <x-slot:icon>
                                 <span
-                                    class="mr-2 text-gray-500 font-medium group-focus-within:text-blue-600 transition-colors">Rp</span>
+                                    class="mr-2 text-slate-500 font-medium group-focus-within:text-blue-600 transition-colors">Rp</span>
                             </x-slot:icon>
                         </x-ui.input>
 
                         <x-ui.input variant="soft" type="text" name="omset_max" x-model="maxOmset"
                             @input="maxOmset = formatRupiah($el.value)" placeholder="{{ translate('Maksimal') }}"
-                            class="text-sm md:text-base font-medium">
+                            class="text-base font-medium">
                             <x-slot:icon>
                                 <span
-                                    class="text-gray-500 font-medium group-focus-within:text-blue-600 transition-colors">Rp</span>
+                                    class="text-slate-500 font-medium group-focus-within:text-blue-600 transition-colors">Rp</span>
                             </x-slot:icon>
                         </x-ui.input>
                     </div>
                     @error('omset_min')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                     @error('omset_max')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
                 {{-- Sosmed --}}
                 <div class="space-y-2">
-                    <label class="block font-medium text-gray-700">{{ translate('Sosial Media') }}</label>
+                    <label class="block font-medium text-slate-700">{{ translate('Sosial Media') }}</label>
                     <div class="grid grid-cols-2 gap-4">
                         <x-ui.input variant="soft" type="text" name="social_instagram"
                             value="{{ old('social_instagram', $shop->social_instagram ?? '') }}"
-                            placeholder="{{ translate('Username instagram') }}" class="text-sm md:text-base">
+                            placeholder="{{ translate('Username instagram') }}" class="text-base whitespace-nowrap truncate">
                             <x-slot:icon>
-                                <x-icons.social-instagram class="w-5 h-5 text-[#E4405F]" />
+                                <x-icons.social-instagram class="w-5 h-5 text-social-instagram" />
                             </x-slot:icon>
                         </x-ui.input>
 
                         <x-ui.input variant="soft" type="text" name="social_tiktok"
                             value="{{ old('social_tiktok', $shop->social_tiktok ?? '') }}"
-                            placeholder="{{ translate('Username Tiktok') }}" class="text-sm md:text-base">
+                            placeholder="{{ translate('Username Tiktok') }}" class="text-base whitespace-nowrap truncate">
                             <x-slot:icon>
                                 <x-icons.social-tiktok class="w-5 h-5 text-slate-900" />
                             </x-slot:icon>
@@ -350,15 +403,15 @@
 
                         <x-ui.input variant="soft" type="text" name="social_facebook"
                             value="{{ old('social_facebook', $shop->social_facebook ?? '') }}"
-                            placeholder="{{ translate('Username Facebook') }}" class="text-sm md:text-base">
+                            placeholder="{{ translate('Username Facebook') }}" class="text-base whitespace-nowrap truncate">
                             <x-slot:icon>
-                                <x-icons.social-facebook class="w-5 h-5 text-[#1877F2]" />
+                                <x-icons.social-facebook class="w-5 h-5 text-social-facebook" />
                             </x-slot:icon>
                         </x-ui.input>
 
                         <x-ui.input variant="soft" type="text" name="social_website"
                             value="{{ old('social_website', $shop->social_website ?? '') }}" placeholder="Website"
-                            class="text-sm md:text-base">
+                            class="text-base whitespace-nowrap truncate">
                             <x-slot:icon>
                                 <x-icons.map-globe class="w-5 h-5 text-slate-900" />
                             </x-slot:icon>

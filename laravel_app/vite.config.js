@@ -5,19 +5,18 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
     plugins: [
         laravel({
-            input: ["resources/css/app.css", "resources/js/app.js"],
+            input: ["resources/css/app.css", "resources/js/app.js", "resources/js/pages/realtime-dashboard.js"],
             refresh: true,
         }),
         tailwindcss(),
     ],
     server: {
         host: "0.0.0.0",
-        port: 5174,
-        strictPort: true,
+        port: 5173,
+        strictPort: false,
         hmr: {
             host: "localhost",
             protocol: "ws",
-            port: 5174,
         },
         watch: {
             usePolling: true,

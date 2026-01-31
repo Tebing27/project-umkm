@@ -16,14 +16,18 @@ class ProductUpdated implements ShouldBroadcast
 
     public $userId;
     public $action;
+    public $productId;
+    public $productData;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($userId, $action = 'refresh')
+    public function __construct($userId, $action = 'refresh', $productId = null, $productData = [])
     {
         $this->userId = $userId;
         $this->action = $action;
+        $this->productId = $productId;
+        $this->productData = $productData;
     }
 
     /**
@@ -42,6 +46,8 @@ class ProductUpdated implements ShouldBroadcast
     {
         return [
             'action' => $this->action,
+            'productId' => $this->productId,
+            'data' => $this->productData,
             'timestamp' => now()->toIso8601String(),
         ];
     }

@@ -1,4 +1,4 @@
-<x-ui.card class="bg-white rounded-3xl p-8 border border-slate-100 relative overflow-hidden group transition-all duration-300 md:col-span-2 lg:col-span-2">
+<x-ui.card class="bg-white rounded-3xl p-8 border border-gray-100 relative overflow-hidden group transition-all duration-300 md:col-span-2 lg:col-span-2">
     <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-orange-50 to-transparent rounded-bl-full -mr-10 -mt-10 transition-transform duration-500 group-hover:scale-110"></div>
     
     <div class="relative z-10 h-full flex flex-col justify-between">
@@ -14,7 +14,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             {{-- Terverifikasi --}}
-            <x-ui.card class="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex items-center gap-3 shadow-none">
+            <x-ui.card class="bg-gray-50 rounded-2xl p-4 border border-gray-100 flex items-center gap-3 shadow-none">
                 <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0">
                     <x-icons.ui-check class="w-5 h-5" />
                 </div>
@@ -25,7 +25,7 @@
             </x-ui.card>
 
             {{-- Menunggu --}}
-            <x-ui.card class="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex items-center gap-3 shadow-none">
+            <x-ui.card class="bg-gray-50 rounded-2xl p-4 border border-gray-100 flex items-center gap-3 shadow-none">
                 <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 shrink-0">
                     <x-icons.data-clock class="w-5 h-5" />
                 </div>
@@ -36,7 +36,7 @@
             </x-ui.card>
 
             {{-- Gagal - Placeholder --}}
-            <x-ui.card class="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex items-center gap-3 shadow-none">
+            <x-ui.card class="bg-gray-50 rounded-2xl p-4 border border-gray-100 flex items-center gap-3 shadow-none">
                 <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 shrink-0">
                     <x-icons.ui-close class="w-5 h-5" />
                 </div>

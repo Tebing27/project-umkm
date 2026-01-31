@@ -1,10 +1,9 @@
-
-@include('home.partials.location.maps.style')
-@include('home.partials.location.maps.popup')
+@include('home.partials.location.map-style')
+@include('home.partials.location.map-popup')
 
 @include('home.partials.location.icons')
 
-<section id="location" class="py-0 md:py-12 bg-white overflow-hidden" x-data="umkmMap" x-init="initMap()">
+<section id="locations" class="py-0 md:py-12 bg-white overflow-hidden" x-data="umkmMap" x-init="initMap()">
     <script type="application/json" id="map-data">
         {
             "umkms": @json($mapShops),
@@ -23,4 +22,4 @@
         </div>
     </div>
 </section>
-@include('home.partials.location.maps.script', ['umkms' => $mapShops, 'regionList' => $regionsMap, 'categories' => $categories])
+@include('home.partials.location.map-script', ['umkms' => $mapShops, 'regionList' => $regionsMap, 'categories' => $categories, 'businessTypesWithIcons' => $businessTypesWithIcons])

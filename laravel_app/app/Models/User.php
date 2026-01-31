@@ -12,6 +12,8 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    // --- Section: Attributes ---
+
     /**
      * The attributes that are mass assignable.
      *

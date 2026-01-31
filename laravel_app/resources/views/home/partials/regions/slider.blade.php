@@ -5,14 +5,13 @@
             <div class="min-w-[260px] md:min-w-[320px] snap-center rounded-xl overflow-hidden flex flex-col transition-transform hover:scale-[1.02] duration-300 shadow-sm border border-gray-100/50"
                 :class="item.color">
                 <div class="px-6 pt-8 md:px-8 md:pt-12 pb-0 flex justify-center items-end h-48 md:h-64">
-                    <img :src="item.image"
-                        class="w-full h-full object-cover rounded-t-xl shadow-md object-center"
+                    <img :src="item.image" class="w-full h-full object-cover rounded-t-xl shadow-md object-center"
                         alt="Kategori Image" loading="lazy">
                 </div>
 
                 <div class="p-6 md:p-8 text-center flex flex-col items-center flex-grow bg-opacity-50">
-                    <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mb-1" x-text="item.title"></h3>
-                    <p class="text-gray-700 text-base mb-4 md:mb-6 font-medium" x-text="item.count"></p>
+                    <h3 class="text-xl md:text-2xl font-semibold text-slate-900" x-text="item.title"></h3>
+                    <p class="text-slate-600 text-base mb-4 md:mb-6 font-medium mt-4" x-text="item.count"></p>
 
                     <div class="flex justify-center">
                         <x-ui.button

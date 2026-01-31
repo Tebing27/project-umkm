@@ -1,8 +1,0 @@
-<div class="flex items-start justify-between">
-    <label class="font-bold text-slate-700 text-base">{{translate($item->label) }}</label>
-    @if ($item->type !== 'image')
-        <div class="h-8 w-8 rounded-full bg-blue-50 text-[#004a85] flex items-center justify-center">
-            <x-icons.ui-edit class="w-4 h-4" />
-        </div>
-    @endif
-</div>

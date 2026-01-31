@@ -9,13 +9,13 @@
             <div
                 class="px-4 py-3 border-b border-gray-200 flex items-center justify-between bg-white shadow-sm z-10 shrink-0 h-16">
                 <div>
-                    <h3 class="font-bold text-gray-800 text-lg">{{ translate('Pilih Lokasi') }}</h3>
-                    <p class="text-xs text-gray-500">{{ translate('Geser peta ke titik usaha Anda') }}</p>
+                    <h3 class="font-bold text-slate-800 text-lg">{{ translate('Pilih Lokasi') }}</h3>
+                    <p class="text-xs text-slate-500">{{ translate('Geser peta ke titik usaha Anda') }}</p>
                 </div>
-                <button type="button" @click="closeMobileModal()"
-                    class="p-2 rounded-full hover:bg-gray-100 text-gray-500">
+                <x-ui.button type="button" @click="closeMobileModal()"
+                    variant="ghost-circle" size="compact" class="!p-2 text-slate-500">
                     <x-icons.ui-close class="w-6 h-6" />
-                </button>
+                </x-ui.button>
             </div>
 
             <div class="relative flex-1 w-full bg-gray-100">
@@ -24,11 +24,11 @@
                     <x-icons.map-pin class="w-8 h-8 text-red-600 drop-shadow-md" />
                 </div>
                 <div class="absolute bottom-24 right-4 z-[400]">
-                    <button type="button" @click="locateMeMobile()"
-                        class="bg-white p-3 rounded-full shadow-lg border border-gray-200 text-gray-700 hover:text-blue-600 active:bg-gray-50">
+                    <x-ui.button type="button" @click="locateMeMobile()"
+                        variant="circle-white-lg" size="compact" class="!p-3">
                         <x-icons.status-loading x-show="geoLoading" class="w-6 h-6 animate-spin text-blue-600" />
                         <x-icons.map-pin x-show="!geoLoading" class="w-6 h-6" />
-                    </button>
+                    </x-ui.button>
                 </div>
                 <div id="mobileMap" class="w-full h-full z-0"></div>
                 
@@ -36,18 +36,19 @@
                 <div class="absolute top-4 left-4 right-4 z-[550]">
                      <div class="relative bg-white rounded-xl shadow-lg border border-gray-200">
                          <div class="flex items-center px-4 py-3">
-                             <x-icons.map-pin-search class="w-5 h-5 text-gray-400 shrink-0" />
+                             <x-icons.map-pin-search class="w-5 h-5 text-slate-400 shrink-0" />
                              {{-- Input Search --}}
-                            <input type="text"
-    x-model="tempAddress"
-    @input.debounce.500ms="updateMobileAddressFromInput()"
-    placeholder="{{ translate('Cari jalan, tempat, atau alamat...') }}"
-    class="w-full ml-3 text-sm font-medium text-gray-700 placeholder-gray-400 bg-transparent border-none focus:border-none focus:ring-0 focus:outline-none p-0">
+                            <x-ui.input type="text"
+                                variant="transparent"
+                                x-model="tempAddress"
+                                @input.debounce.500ms="updateMobileAddressFromInput()"
+                                placeholder="{{ translate('Cari jalan, tempat, atau alamat...') }}"
+                                class="text-sm font-medium text-slate-700 placeholder-gray-400 focus:outline-none truncate overflow-hidden whitespace-nowrap" />
                              
                              {{-- Clear Button --}}
-                             <button type="button" x-show="tempAddress" @click="tempAddress = ''; updateMobileAddressFromInput()" class="ml-2 text-gray-400 hover:text-gray-600">
+                             <x-ui.button type="button" x-show="tempAddress" @click="tempAddress = ''; updateMobileAddressFromInput()" variant="link" size="icon-link" class="ml-2 text-slate-400 hover:text-slate-600 no-underline hover:no-underline border-none">
                                  <x-icons.ui-close class="w-5 h-5" />
-                             </button>
+                             </x-ui.button>
                          </div>
                          
                          {{-- Loading Indicator --}}
@@ -66,8 +67,8 @@
                                         <li @click="!result.isError && selectLocation(result, true)" 
                                             class="px-4 py-3 border-b border-gray-100 last:border-0 transition-colors bg-white flex flex-col items-start text-left"
                                             :class="result.isError ? 'cursor-default bg-gray-50' : 'cursor-pointer hover:bg-gray-50'">
-                                            <div class="font-bold text-gray-800 text-sm" x-text="result.title"></div>
-                                            <div class="text-xs text-gray-500 mt-0.5" x-text="result.address"></div>
+                                            <div class="font-bold text-slate-800 text-sm" x-text="result.title"></div>
+                                            <div class="text-xs text-slate-500 mt-0.5" x-text="result.address"></div>
                                         </li>
                                     </template>
                                 </ul>
@@ -92,15 +93,15 @@
                     <p class="font-bold text-red-800">{{ translate('Perhatian') }}</p>
                     <p class="text-sm mt-1 text-red-700 leading-snug" x-text="regionErrorMessage"></p>
                 </div>
-                <button type="button" @click="showRegionErrorAlert = false"
+                <x-ui.button type="button" @click="showRegionErrorAlert = false" variant="ghost" size="icon-link"
                     class="ml-auto text-red-400 hover:text-red-800 font-bold p-1">
                     <x-icons.ui-close />
-                </button>
+                </x-ui.button>
             </div>
         </div>
                  
                 <x-ui.button type="button" @click="confirmMobileLocation()"
-        class="w-full py-3.5 text-base rounded-lg font-medium active:scale-95 transition-transform shadow-xl"
+        class="w-full py-3.5 rounded-lg active:scale-95 transition-transform shadow-xl"
         ::class="showRegionErrorAlert ? 'opacity-50 cursor-not-allowed' : ''"
         x-bind:disabled="showRegionErrorAlert"> 
         {{-- Disabled tombol jika ada error --}}

@@ -19,23 +19,29 @@ class RegisteredUserController extends Controller
 {
     /**
      * Display the registration view.
+     *
+     * @return \Illuminate\View\View
      */
     public function create(): View
     {
         $regions = Region::all();
-        return view('auth.register', compact('regions'));
+        $businessTypes = Shop::getBusinessTypes();
+        return view('auth.register', compact('regions', 'businessTypes'));
     }
 
     /**
      * Handle an incoming registration request.
      *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
     {
-        // 1. Validasi Input
+        // --- Section: Validasi Input ---
         $request->validate([
-            // Data User (Pemilik)
+            // --- Group: Data User (Pemilik) ---
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::min(8)->mixedCase()->numbers()],
@@ -44,7 +50,7 @@ class RegisteredUserController extends Controller
             'date_of_birth' => ['required', 'date'],
             'domicile_address' => ['required', 'string'],
 
-            // Data Toko (Usaha)
+            // --- Group: Data Toko (Usaha) ---
             'shop_name' => ['required', 'string', 'max:255'],
             'product_type' => ['required', 'string', 'max:255'],
             'business_type' => ['required', 'string', 'max:255'],
@@ -53,11 +59,11 @@ class RegisteredUserController extends Controller
             'longitude' => ['nullable', 'numeric'],
             'region_id' => ['required', 'exists:regions,id'],
             
-            // Izin Usaha (Array)
+            // --- Group: Izin Usaha (Array) ---
             'license_type.*' => ['nullable', 'string'],
             'license_number.*' => ['nullable', 'string'],
 
-            // Social Media (Nullable)
+            // --- Group: Social Media (Nullable) ---
             'social_instagram' => ['nullable', 'url'],
             'social_tiktok' => ['nullable', 'url'],
             'social_facebook' => ['nullable', 'url'],
@@ -92,9 +98,11 @@ class RegisteredUserController extends Controller
         ]);
 
         try {
+            // --- Section: Database Transaction ---
+            // Menggunakan transaksi untuk memastikan Data User dan Toko tersimpan bersamaan atau tidak sama sekali (Atomicity)
             DB::beginTransaction();
 
-            // 2. Simpan Data User
+            // --- Section: Simpan Data User ---
             $user = new User();
             $user->fill([
                 'name' => $request->name,
@@ -108,7 +116,7 @@ class RegisteredUserController extends Controller
             $user->role = 'users'; // Explicitly assign role
             $user->save();
 
-            // 3. Proses Data Izin Usaha (Gabungkan Type & Number)
+            // --- Section: Proses Data Izin Usaha ---
             $licenses = [];
             if ($request->has('license_type') && $request->has('license_number')) {
                 foreach ($request->license_type as $key => $type) {
@@ -121,7 +129,9 @@ class RegisteredUserController extends Controller
                 }
             }
 
-            // 4. Simpan Data Toko
+
+
+            // --- Section: Simpan Data Toko ---
             $shop = Shop::create([
                 'user_id' => $user->id,
                 'name' => $request->shop_name,
@@ -140,6 +150,7 @@ class RegisteredUserController extends Controller
 
             DB::commit();
 
+            // --- Section: Post-Registration Jobs ---
             // Dispatch Translation Job after transaction commit
             \App\Jobs\TranslateShopAttributes::dispatch($shop);
 

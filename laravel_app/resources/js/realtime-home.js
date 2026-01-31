@@ -1,13 +1,20 @@
 
+// --- Section: Imports ---
+import { ref, onValue } from "firebase/database";
+import { database } from "./firebase";
+
+/**
+ * Initialize Realtime Updates for Home Page.
+ * Listens to Firebase Realtime Database and updates DOM content dynamically.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     // Only run on pages with these sections
     const heroSection = document.getElementById('hero-section');
-    if (!heroSection || !window.Echo) return;
+    if (!heroSection) return;
 
-    console.log('Real-time updates initialized.');
-
-    const handleUpdate = (e) => {
-        console.log('Real-time update received:', e);
+    const handleUpdate = (snapshot) => {
+        const data = snapshot.val();
+        if (!data) return;
 
         const freshUrl = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 't=' + new Date().getTime();
         fetch(freshUrl)
@@ -19,6 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const sections = ['hero-section', 'wilayah-section', 'location'];
 
                 sections.forEach(id => {
+                    // FIX: Special handling for Map/Location to prevent destroying Leaflet instance
+                    if (id === 'location') {
+                        // Dispatch event specifically for map-script.blade.php to handle
+                        window.dispatchEvent(new CustomEvent('map-data-updated'));
+                        return; 
+                    }
+
                     const newEl = doc.getElementById(id);
                     const oldEl = document.getElementById(id);
 
@@ -26,8 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Replace the element
                         oldEl.replaceWith(newEl);
 
-                        // Re-initialize Alpine on the new element
-                        // We wait a tick to ensure DOM is ready
+                        // --- Section: Re-initialize AlpineJS ---
+                        // Menggunakan setTimeout untuk memastikan DOM sudah dirender ulang sepenuhnya oleh browser
+                        // sebelum AlpineJS mencoba menginisialisasi komponen pada elemen baru.
                         setTimeout(() => {
                             if (window.Alpine) {
                                 window.Alpine.initTree(document.getElementById(id));
@@ -36,14 +51,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             })
-            .catch(err => console.error('Failed to fetch real-time updates:', err));
+            .catch(err => { });
     };
 
-    // Public Content Channel
-    window.Echo.channel('public-content')
-        .listen('ContentUpdated', handleUpdate);
+    // --- Section: Firebase Listeners ---
+    
+    // Listen to Public Content Channel
+    const contentRef = ref(database, 'channels/public-content');
+    onValue(contentRef, handleUpdate);
 
-    // Shops Channel
-    window.Echo.channel('shops')
-        .listen('ShopUpdated', handleUpdate);
+    // Listen to Shops Channel
+    const shopsRef = ref(database, 'channels/shops');
+    onValue(shopsRef, handleUpdate);
 });
+

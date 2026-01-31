@@ -10,13 +10,31 @@ class AdminDashboardController extends Controller
     public function index()
     {
         // Stats only for main dashboard
-        $shops = Shop::all();
+        // Optimized: Single query with conditional counting instead of loading all shops into memory
+        $stats = Shop::whereHas('user', function($query) {
+            $query->whereNotNull('email_verified_at');
+        })
+        ->selectRaw('
+            COUNT(*) as total,
+            SUM(CASE WHEN is_verified = 1 THEN 1 ELSE 0 END) as verified,
+            SUM(CASE WHEN is_verified = 0 AND rejection_reason IS NOT NULL THEN 1 ELSE 0 END) as rejected,
+            SUM(CASE WHEN is_verified = 0 AND rejection_reason IS NULL THEN 1 ELSE 0 END) as pending,
+            SUM(CASE WHEN created_at >= ? THEN 1 ELSE 0 END) as new_this_week
+        ', [now()->subWeek()])
+        ->first();
         
-        $totalShops = $shops->count();
-        $verifiedShopsCount = $shops->where('is_verified', true)->count();
-        $rejectedShopsCount = $shops->where('is_verified', false)->whereNotNull('rejection_reason')->count();
-        $pendingShopsCount = $shops->where('is_verified', false)->whereNull('rejection_reason')->count();
-        $newShopsThisWeek = $shops->where('created_at', '>=', now()->subWeek())->count();
+        $totalShops = $stats->total;
+        $verifiedShopsCount = $stats->verified;
+        $rejectedShopsCount = $stats->rejected;
+        $pendingShopsCount = $stats->pending;
+        $newShopsThisWeek = $stats->new_this_week;
+        
+        // Load shops with eager loading for display (fixes N+1 query)
+        $shops = Shop::with('user')
+            ->whereHas('user', function($query) {
+                $query->whereNotNull('email_verified_at');
+            })
+            ->get();
         
         return view('admin.dashboard.index', compact(
             'shops', 
@@ -35,11 +53,14 @@ class AdminDashboardController extends Controller
         $search = $request->input('search');
         $shops = Shop::with('user')
             ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%")
-                             ->orWhereHas('user', function ($q) use ($search) {
-                                 $q->where('name', 'like', "%{$search}%")
-                                   ->orWhere('email', 'like', "%{$search}%");
-                             });
+                // Wrap search conditions to prevent OR from breaking status filters
+                return $query->where(function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhereHas('user', function ($subQ) use ($search) {
+                          $subQ->where('name', 'like', "%{$search}%")
+                               ->orWhere('email', 'like', "%{$search}%");
+                      });
+                });
             })
             ->when($request->status === 'verified', function ($q) {
                 $q->where('is_verified', true);
@@ -69,7 +90,7 @@ class AdminDashboardController extends Controller
     public function userDetail($id)
     {
         $shop = Shop::with('user')->findOrFail($id);
-        return view('admin.users.detail.index', compact('shop'));
+        return view('admin.users.show', compact('shop'));
     }
 
     public function setting()

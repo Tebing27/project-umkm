@@ -19,6 +19,24 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Fix for Key Too Long error on older MySQL/MariaDB (Shared Hosting)
+        \Illuminate\Support\Facades\Schema::defaultStringLength(191);
+
+        // Register Firebase Listeners
+        \Illuminate\Support\Facades\Event::listen(
+            \App\Events\ContentUpdated::class,
+            \App\Listeners\PushToFirebase::class
+        );
+
+        \Illuminate\Support\Facades\Event::listen(
+            \App\Events\ShopUpdated::class,
+            \App\Listeners\PushToFirebase::class
+        );
+
+        \Illuminate\Support\Facades\Event::listen(
+            \App\Events\ProductUpdated::class,
+            \App\Listeners\PushToFirebase::class
+        );
         // View Composer for Admin Navigation
         \Illuminate\Support\Facades\View::composer('components.navigation-admin', function ($view) {
             $menus = [
@@ -48,7 +66,7 @@ class AppServiceProvider extends ServiceProvider
 
         // View Composer for Public Navigation (Logo data)
         \Illuminate\Support\Facades\View::composer(
-            'components.navigation',
+            ['components.navigation', 'components.navigation-umkm'],
             \App\View\Composers\NavigationComposer::class
         );
 
@@ -74,6 +92,7 @@ class AppServiceProvider extends ServiceProvider
                     'name' => translate('Kelola Toko'),
                     'url' => '/users/toko',
                     'icon' => 'data-store',
+                    'active_routes' => ['users/toko*', 'users/edit-toko*'],
                 ],
                 [
                     'name' => translate('Pengaturan'),
@@ -83,6 +102,16 @@ class AppServiceProvider extends ServiceProvider
             ];
             $view->with('menus', $menus);
         });
+
+        // View Composer for Footer
+        \Illuminate\Support\Facades\View::composer('components.footer', function ($view) {
+            $content = \App\Models\Content::whereIn('group', ['footer', 'logo'])->get()->keyBy('key');
+            $view->with('content', $content);
+        });
+
+
+
+
         // Custom Verify Email Notification
         \Illuminate\Auth\Notifications\VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
             return (new \Illuminate\Notifications\Messages\MailMessage)

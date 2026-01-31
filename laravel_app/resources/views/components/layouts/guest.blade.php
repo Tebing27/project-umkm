@@ -7,6 +7,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Dashboard UMKM' }}</title>
 
+    <link rel="preconnect" href="https://res.cloudinary.com">
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -25,7 +27,7 @@
         <x-navigation-users />
 
         {{-- MAIN CONTENT WRAPPER --}}
-        <div class="flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out bg-slate-50"
+        <div class="flex-1 flex flex-col min-h-screen bg-gray-50 overflow-x-hidden"
             :class="sidebarExpanded ? 'lg:ml-72' : 'lg:ml-8'">
 
             {{-- MOBILE HEADER --}}
@@ -39,10 +41,7 @@
 
         {{-- MOBILE OVERLAY --}}
         <div x-show="sidebarOpen" @click="sidebarOpen = false"
-            x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300"
-            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-            class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm lg:hidden" x-cloak>
+            class="fixed inset-0 z-40 bg-gray-900/50 backdrop-blur-sm lg:hidden" x-cloak>
         </div>
 
     </div>

@@ -1,74 +1,56 @@
-<x-layouts.app :title="translate('Detail Toko - UMKM Sasuma')">
-    <x-navigation />
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32" x-data="shopDetail({
+<x-layouts.app :title="translate('Detail Toko - ' . $shop->name)" :hideNavigation="true" :shop="$shop">
+    {{-- Section: Initialize Alpine Shop Detail --}}
+    <div x-data="shopDetail({
         shop: @js($shop),
-        products: @js($productsData),
         formattedOmset: '{{ $formattedOmset }}',
-        licenses: @js($licenses),
-        id: {{ $shop->id }}
-    })">
-        @include('umkm.detail.partials.card')
-        @include('umkm.detail.partials.products')
-    </main>
+        products: @js($productsData),
+        categories: @js($productCategories),
+        licenses: @js($licenses ?? []),
+        defaultLabel: '{{ translate('Semua') }}'
+    })" class="min-h-screen pb-20">
+    {{-- End Section: Initialize Alpine Shop Detail --}}
+
+        {{-- Section: Custom Navigation --}}
+        <x-navigation-umkm/>
+        {{-- End Section: Custom Navigation --}}
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            {{-- Section: Shop Header --}}
+            @include('umkm.detail.partials.header')
+            {{-- End Section: Shop Header --}}
+
+            {{-- Section: Tabs Navigation --}}
+            <div class="border-b border-gray-200 mb-6 flex space-x-8">
+                <button @click="tab = 'toko'" class="pb-4 px-1 text-base font-bold transition-colors border-b-2"
+                    :class="tab === 'toko' ? 'border-brand-blue-dark text-brand-blue-dark' :
+                        'border-transparent text-slate-500 hover:text-slate-700 hover:border-gray-300'">
+                    {{ translate('Toko') }}
+                </button>
+                <button @click="tab = 'produk'" class="pb-4 px-1 text-base font-bold transition-colors border-b-2"
+                    :class="tab === 'produk' ? 'border-brand-blue-dark text-brand-blue-dark' :
+                        'border-transparent text-slate-500 hover:text-slate-700 hover:border-gray-300'">
+                    {{ translate('Produk') }}
+                </button>
+            </div>
+            {{-- End Section: Tabs Navigation --}}
+
+            {{-- Section: Tab Contents --}}
+            <div>
+                {{-- Tab: Toko --}}
+                <div x-show="tab === 'toko'" x-transition.opacity>
+                    @include('umkm.detail.partials.tab-shop')
+                </div>
+
+                {{-- Tab: Produk --}}
+                <div x-show="tab === 'produk'" x-transition.opacity>
+                    @include('umkm.detail.partials.products')
+                </div>
+            </div>
+            {{-- End Section: Tab Contents --}}
+        </main>
+    </div>
 
     @push('scripts')
-        @if(isset($shop) && $shop->id)
-        <script>
-            document.addEventListener('alpine:init', () => {
-                Alpine.data('shopDetail', (initial) => ({
-                    shop: initial.shop,
-                    products: initial.products,
-                    formattedOmset: initial.formattedOmset,
-                    licenses: initial.licenses,
-                    
-                    init() {
-                        let attempt = 0;
-                        const waitForEcho = setInterval(() => {
-                            attempt++;
-                            if (window.Echo) {
-                                clearInterval(waitForEcho);
-                                console.log("Echo found! Subscribing to shop detail...");
-                                
-                                window.Echo.channel('shops')
-                                    .listen('ShopUpdated', (e) => {
-                                        console.log('Shop Update Received:', e);
-                                        if (e.shop_id == this.shop.id) {
-                                            setTimeout(() => {
-                                                this.refreshShop();
-                                            }, 1000);
-                                        }
-                                    });
-                            } else if (attempt > 20) {
-                                clearInterval(waitForEcho);
-                                console.error("Critical: Pusher Echo failed to load in Detail Page.");
-                            }
-                        }, 500);
-                    },
-                    
-                    refreshShop() {
-                        // Use Cache Busting for fresh data
-                        const freshUrl = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 't=' + new Date().getTime();
-                        
-                        fetch(freshUrl, {
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'Accept': 'application/json'
-                            }
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            this.shop = data.shop;
-                            this.products = data.products; // Update internal products state
-                            this.formattedOmset = data.formattedOmset; 
-                            this.licenses = data.licenses;
-                            this.$dispatch('shop-data-updated', data);
-                        });
-                    }
-                }));
-            });
-        </script>
-        @endif
+        {{-- Script logic moved to resources/js/pages/realtime-shop-detail.js --}}
     @endpush
 </x-layouts.app>
-

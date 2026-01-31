@@ -76,7 +76,6 @@ window.locationHybrid = function (config) {
                     }
                 }
             } catch (e) {
-                console.error(e);
                 this.regionErrorMessage = config.text.failedToLoadAddress || "Gagal memuat alamat.";
                 this.showRegionErrorAlert = true;
                 let failMsg = config.text.failedToLoadAddress || "Gagal memuat alamat";
@@ -139,7 +138,6 @@ window.locationHybrid = function (config) {
                     this.showSuggestions = true;
                 }
             } catch (e) {
-                console.error(e);
             } finally {
                 this.isLoadingAddress = false;
             }
@@ -205,7 +203,6 @@ window.locationHybrid = function (config) {
                     this.tempAddress = '';
                     this.updateMobileMap(centerLat, centerLng);
                 }
-                console.log("Reset ke Center Sawangan:", centerLat, centerLng);
                 return;
             }
 
@@ -227,7 +224,6 @@ window.locationHybrid = function (config) {
                     this.address = '';
                     this.isLoadingAddress = false;
                 } else {
-                    console.warn("Koordinat tidak ditemukan di database untuk:", name);
                     let regionQuery = `Kelurahan ${name}, Kecamatan Sawangan, Depok, Indonesia`;
                     fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(regionQuery)}&format=json&limit=1&accept-language=id`)
                         .then(res => res.json())
@@ -246,7 +242,7 @@ window.locationHybrid = function (config) {
                                 this.address = '';
                             }
                         })
-                        .catch(e => console.error("Gagal cari wilayah", e))
+                        .catch(e => { })
                         .finally(() => this.isLoadingAddress = false);
                 }
             }
@@ -379,7 +375,6 @@ window.locationHybrid = function (config) {
                 }
                 return { isValid: false, address: null };
             } catch (e) {
-                console.error("Check validity error", e);
                 return { isValid: false, address: null };
             }
         },
@@ -469,11 +464,9 @@ window.locationHybrid = function (config) {
                     attempt++;
                     if (window.Echo) {
                         clearInterval(waitForEcho);
-                        console.log("Echo found! Subscribing to location sync...");
 
                         window.Echo.channel('shops')
                             .listen('ShopUpdated', (e) => {
-                                console.log('Location Hybrid: Shop Updated', e);
                                 if (e.shop_id == config.shopId) {
                                     setTimeout(() => {
                                         // Fetch fresh data
@@ -488,7 +481,6 @@ window.locationHybrid = function (config) {
 
                                                     // Update if changed
                                                     if (newLat !== this.lat || newLng !== this.lng) {
-                                                        console.log('Location changed remotely, updating map...');
                                                         this.lat = newLat;
                                                         this.lng = newLng;
                                                         this.address = data.shop.address;
@@ -505,13 +497,12 @@ window.locationHybrid = function (config) {
                                                     }
                                                 }
                                             })
-                                            .catch(err => console.error('Failed to sync location', err));
+                                            .catch(err => { });
                                     }, 1000);
                                 }
                             });
                     } else if (attempt > 20) {
                         clearInterval(waitForEcho);
-                        console.error("Critical: Pusher Echo failed to load in Location Hybrid.");
                     }
                 }, 500);
             }

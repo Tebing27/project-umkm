@@ -9,6 +9,11 @@ class Content extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'key',
         'value',
@@ -19,6 +24,10 @@ class Content extends Model
 
     /**
      * Get content by key.
+     * 
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
      */
     public static function get(string $key, $default = null)
     {
@@ -26,7 +35,8 @@ class Content extends Model
         return $content ? $content->value : $default;
     }
 
-    // --- Accessors for Clean View ---
+    // --- Section: Accessors for Clean View ---
+    // Accessor ini bertujuan untuk menjaga template Blade tetap bersih dari logika kondisi yang rumit
 
     public function getIsHeroImageAttribute(): bool
     {

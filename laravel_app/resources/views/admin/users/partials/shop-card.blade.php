@@ -1,11 +1,11 @@
 <x-ui.card
     id="shop-card-{{ $shop->id }}"
-    class="bg-white rounded-3xl border border-slate-100 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 group flex flex-col overflow-hidden relative">
+    class="bg-white rounded-3xl border border-gray-100 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 group flex flex-col overflow-hidden relative">
     
     <div id="shop-card-bar-{{ $shop->id }}" class="absolute top-0 left-0 w-full h-1.5 {{ $shop->is_verified ? 'bg-green-500' : ($shop->rejection_reason ? 'bg-red-500' : 'bg-yellow-500') }}">
     </div>
 
-    <div class="p-6 pb-4 border-b border-slate-50 flex justify-between items-start gap-4 pt-8">
+    <div class="p-6 pb-4 border-b border-gray-50 flex justify-between items-start gap-4 pt-8">
         <div>
             <h3 class="text-lg font-bold text-slate-900 group-hover:text-primary transition-colors line-clamp-1">
                 {{ $shop->name }}</h3>
@@ -32,8 +32,8 @@
 
     <div class="p-6 flex-1 space-y-5">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-sm border border-slate-200 ring-2 ring-white shadow-sm overflow-hidden">
-                <img src="{{ $shop->logo_url }}" alt="{{ $shop->name }}"
+            <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-slate-500 font-bold text-sm border border-gray-200 ring-2 ring-white shadow-sm overflow-hidden">
+                <img loading="lazy" src="{{ $shop->logo_url }}" alt="{{ $shop->name }}"
                     class="w-full h-full object-cover">
             </div>
             <div>
@@ -43,11 +43,11 @@
         </div>
 
         <div class="space-y-3">
-            <div class="flex items-start gap-3 text-sm text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+            <div class="flex items-start gap-3 text-sm text-slate-600 bg-gray-50 p-2.5 rounded-lg border border-gray-100">
                 <x-icons.contact-mail class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
                 <span class="truncate font-medium">{{ $shop->user->email ?? '-' }}</span>
             </div>
-            <div class="flex items-start gap-3 text-sm text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+            <div class="flex items-start gap-3 text-sm text-slate-600 bg-gray-50 p-2.5 rounded-lg border border-gray-100">
                 <x-icons.contact-phone class="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
                 <span class="truncate font-medium">{{ $shop->user->phone_number ?? '-' }}</span>
             </div>
@@ -58,7 +58,7 @@
         
     </div>
 
-    <div class="p-4 bg-slate-50 border-t border-slate-100 grid grid-cols-1 mt-auto">
+    <div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-1 mt-auto">
         <x-ui.button href="{{ url('/admin/users/detail/' . $shop->id) }}" variant="outline"
             class="w-full rounded-lg justify-center group/btn">
             {{ translate('Detail') }}

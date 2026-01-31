@@ -18,40 +18,23 @@
         document.addEventListener('alpine:init', () => {
             Alpine.data('dashboardStats', (initial) => ({
                 stats: initial,
+                cleanupListener: null,
                 
                 init() {
-                    let attempt = 0;
-                    const waitForEcho = setInterval(() => {
-                        attempt++;
-                        if (window.Echo) {
-                            clearInterval(waitForEcho);
-                            
-                            // Listen to private user channel
-                            window.Echo.private(`private-user.${this.stats.userId}`)
-                                .listen('UserUpdated', (e) => {
-                                    console.log('User Updated, refreshing dashboard stats...', e);
-                                    setTimeout(() => {
-                                        this.refreshStats();
-                                    }, 1000);
+                    // Initialize Firebase Listener (Lazy Load)
+                    if (this.stats.shop && this.stats.shop.id) {
+                        import("{{ Vite::asset('resources/js/pages/realtime-dashboard.js') }}")
+                            .then(module => {
+                                this.cleanupListener = module.initVerificationListener(this.stats.shop.id, (data) => {
+                                    this.refreshStats();
                                 });
-
-                            // Listen to admin-global for ShopUpdated (Verification status changes)
-                            window.Echo.channel('admin-global')
-                                .listen('ShopUpdated', (e) => {
-                                    console.log('Shop Updated (Global), checking target...', e);
-                                    if (e.shop_id && parseInt(e.shop_id) === this.stats.shop.id) {
-                                       console.log('This shop updated! Refreshing...');
-                                       setTimeout(() => {
-                                            this.refreshStats();
-                                        }, 1000);
-                                    }
-                                });
-
-                        } else if (attempt > 20) {
-                            clearInterval(waitForEcho);
-                            console.error("Critical: Pusher Echo failed to load in Dashboard.");
-                        }
-                    }, 500);
+                            })
+                            .catch(err => {});
+                    }
+                },
+                
+                destroy() {
+                    if (this.cleanupListener) this.cleanupListener();
                 },
 
                 refreshStats() {

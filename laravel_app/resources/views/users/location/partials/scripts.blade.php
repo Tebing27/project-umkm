@@ -4,7 +4,7 @@
                     lat: '{{ $shop->latitude ?? -6.4025 }}',
                     lng: '{{ $shop->longitude ?? 106.7720 }}',
                     shopId: '{{ $shop->id }}',
-                    address: {!! json_encode($shop->address ?? '') !!},
+                    address: @json($shop->address ?? ''),
                     initialId: '{{ $initialId }}',
                     initialName: '{{ $initialName }}',
                     showSuccessAlert: {{ session('success') ? 'true' : 'false' }},

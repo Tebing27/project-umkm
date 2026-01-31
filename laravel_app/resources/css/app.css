@@ -5,6 +5,14 @@
     --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
+
+    --color-brand-navy: #003366;
+    --color-brand-blue: #005da6;
+    --color-brand-blue-dark: #004a85;
+    --color-brand-yellow: #FFC107;
+    --color-brand-yellow-hover: #ffcd38;
+    --color-social-facebook: #1877F2;
+    --color-social-instagram: #E4405F;
 }
 
 [x-cloak] {

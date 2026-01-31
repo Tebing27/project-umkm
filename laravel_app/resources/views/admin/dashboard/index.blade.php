@@ -12,15 +12,12 @@
             if (window.Echo) {
                 window.Echo.channel('admin-global')
                     .listen('UserUpdated', (e) => {
-                        console.log('Admin Dashboard: UserUpdated', e);
                         window.location.reload();
                     })
                     .listen('ShopUpdated', (e) => {
-                        console.log('Admin Dashboard: ShopUpdated', e);
                         window.location.reload();
                     })
                     .listen('SettingsUpdated', (e) => {
-                        console.log('Admin Dashboard: SettingsUpdated', e);
                         window.location.reload();
                     });
             }

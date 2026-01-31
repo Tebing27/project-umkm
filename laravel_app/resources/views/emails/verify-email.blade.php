@@ -36,8 +36,8 @@
                 <a href="{{ $url }}" 
    target="_blank"
    style="display: inline-block; 
-          background-color: #FFC107; /* bg-[#FFC107] */
-          color: #0f172a;            /* text-slate-900 */
+          background-color: #FFC107; /* bg-brand-yellow */
+          color: #111827;            /* text-slate-900 */
           font-weight: 500;          /* font-medium */
           border-radius: 8px;        /* rounded-lg */
           padding: 12px 24px;        /* Padding standard tombol */

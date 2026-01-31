@@ -22,7 +22,8 @@ Route::get('/lang/{locale}', function ($locale) {
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/umkm', [PublicController::class, 'index'])->name('umkm.index');
-Route::get('/umkm/{id}', [PublicController::class, 'show'])->name('umkm.comment');
+Route::get('/umkm/{id}', [PublicController::class, 'show'])->name('umkm.comment')->whereNumber('id');
+Route::get('/umkm/product/{id}', [PublicController::class, 'productDetail'])->name('umkm.product');
 
 // Dashboard Redirect
 Route::get('/dashboard', function () {
@@ -55,6 +56,7 @@ Route::middleware(['auth', 'verified', \App\Http\Middleware\CheckRole::class . '
     Route::post('/users/foto/store', [UserDashboardController::class, 'storePhoto'])->name('user.toko.foto.store');
     Route::post('/users/toko/produk', [UserDashboardController::class, 'storeProduct'])->name('user.toko.produk.store');
     Route::post('/toko/produk/{id}/toggle', [UserDashboardController::class, 'toggleProductStatus'])->name('user.toko.produk.toggle');
+    Route::post('/toko/produk/{id}/toggle-best-seller', [UserDashboardController::class, 'toggleBestSeller'])->name('user.toko.produk.toggle-best-seller');
     Route::put('/toko/produk/{id}', [UserDashboardController::class, 'updateProduct'])->name('user.toko.produk.update');
     Route::delete('/toko/produk/{id}', [UserDashboardController::class, 'deleteProduct'])->name('user.toko.produk.destroy');
 });

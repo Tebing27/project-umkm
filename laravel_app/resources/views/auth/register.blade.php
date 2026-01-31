@@ -6,7 +6,7 @@
     <div class="container mx-auto max-w-7xl px-4 md:px-8 lg:px-16 pt-12">
 
         <h1 class="text-center text-4xl md:text-5xl font-bold mb-12 tracking-tight">{{ translate('Daftar Usaha') }}</h1>
-        <p class="text-gray-600 mb-6 font-normal text-center">{{ translate('Sudah memiliki akun?') }} <a href="{{ route('login') }}"
+        <p class="text-slate-600 mb-6 font-normal text-center">{{ translate('Sudah memiliki akun?') }} <a href="{{ route('login') }}"
                 class="text-blue-600 hover:text-blue-700 font-medium p-0 h-auto underline-offset-4 hover:underline">{{ translate('Masuk') }}</a>.
         </p>
 
@@ -17,7 +17,7 @@
                 {{-- KOLOM KIRI --}}
                 <div class="space-y-6">
                     <div class="border-b border-gray-200 pb-2 mb-4">
-                        <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
                             <x-icons.data-store class="w-5 h-5" />
                             {{ translate('Data Usaha') }}
                         </h2>
@@ -25,7 +25,7 @@
 
                     {{-- Nama Usaha --}}
                     <div x-data="{ shopName: {{ json_encode(old('shop_name', '')) }} }">
-                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Nama Usaha') }}
+                        <label class="block text-base font-semibold text-slate-700 font-medium text-base mb-2">{{ translate('Nama Usaha') }}
                             <span class="text-red-500">*</span></label>
                         <x-ui.input type="text" name="shop_name" x-model="shopName" maxlength="30"
                             placeholder="{{ translate('Warung Kopi Sejahtera') }}"
@@ -40,7 +40,7 @@
                              <span x-show="shopName.length >= 25" x-transition class="text-amber-600 font-medium">
                                 {{ translate('Mendekati batas (30 karakter)') }}
                              </span>
-                             <span class="text-gray-500 ml-auto" x-text="shopName.length + '/30'"
+                             <span class="text-slate-500 ml-auto" x-text="shopName.length + '/30'"
                                 :class="{'text-red-600 font-bold': shopName.length >= 30, 'text-amber-600': shopName.length >= 25}"></span>
                         </div>
 
@@ -51,7 +51,7 @@
 
                     {{-- Izin Usaha (Dynamic) --}}
                     <div x-data="{ licenses: [{ type: '', number: '' }] }">
-                        <label class="block font-medium text-gray-700 text-base mb-2">{{ translate('Izin Usaha') }}
+                        <label class="block font-medium text-slate-700 text-base mb-2">{{ translate('Izin Usaha') }}
                             <span>{{ translate('(Opsional)') }}</span></label>
 
                         <template x-for="(license, index) in licenses" :key="index">
@@ -72,20 +72,20 @@
 
                                 {{-- Tombol Hapus --}}
                                 <x-ui.button type="button" @click="licenses.splice(index, 1)"
-                                    x-show="licenses.length > 1" variant="ghost"
-                                    class="p-3 text-red-500 hover:bg-red-50 hover:text-red-600 border border-transparent hover:border-red-100 h-auto rounded-xl transition-all">
+                                    x-show="licenses.length > 1" variant="ghost" size="icon"
+                                    class="text-red-500 hover:bg-red-50 hover:text-red-600 border border-transparent hover:border-red-100 rounded-xl transition-all">
                                     <x-icons.ui-delete class="w-5 h-5" />
                                 </x-ui.button>
                             </div>
                         </template>
 
-                        <x-ui.button type="button" @click="licenses.push({ type: '', number: '' })" variant="ghost"
-                            class="mt-1 text-sm text-blue-600 font-medium hover:text-blue-700 hover:bg-transparent p-0 h-auto justify-start gap-1 inline-flex items-center rounded-xl transition-all">
+                        <x-ui.button type="button" @click="licenses.push({ type: '', number: '' })" variant="ghost" size="compact"
+                            class="mt-1 text-base text-blue-600 font-medium hover:text-blue-700 hover:bg-transparent justify-start gap-1 p-0 h-auto inline-flex items-center rounded-xl transition-all">
                             <x-icons.ui-plus class="w-4 h-4" />
                             {{ translate('Tambah Izin Lain') }}
                         </x-ui.button>
                         @if ($errors->has('license_type.*') || $errors->has('license_number.*'))
-                            <div class="mt-2 text-sm text-red-500">
+                            <div class="mt-2 text-base text-red-500">
                                 <p>{{ translate('Harap periksa kembali data izin usaha Anda.') }}</p>
                                 @foreach ($errors->get('license_type.*') as $messages)
                                     @foreach ($messages as $message)
@@ -103,7 +103,7 @@
 
                     {{-- Jenis Produk --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Jenis Produk') }}
+                        <label class="block text-base font-semibold text-slate-700 font-medium text-base mb-2">{{ translate('Jenis Produk') }}
                             <span class="text-red-500">*</span></label>
                         <x-ui.input type="text" name="product_type" value="{{ old('product_type') }}"
                             placeholder="{{ translate('Camilan, Pakaian Pria, Jasa Jahit') }}"
@@ -119,16 +119,16 @@
 
                     {{-- Jenis Usaha (Radio) --}}
                     <div>
-                        <label class="block font-medium text-gray-700 text-base mb-2">{{ translate('Jenis Usaha') }} <span
+                        <label class="block font-medium text-slate-700 text-base mb-2">{{ translate('Jenis Usaha') }} <span
                                 class="text-red-500">*</span></label>
                         <div class="space-y-3 pl-1">
-                            @foreach (\App\Models\Shop::getBusinessTypes() as $item)
+                            @foreach ($businessTypes as $item)
                                 <label class="flex items-center space-x-3 cursor-pointer group">
                                     <input type="radio" name="business_type" value="{{ $item }}"
                                         {{ old('business_type') == $item ? 'checked' : '' }}
                                         class="form-radio h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
                                     <span
-                                        class="text-gray-700 text-sm font-normal group-hover:text-black transition-colors">{{ $item }}</span>
+                                        class="text-slate-700 text-sm font-normal group-hover:text-black transition-colors">{{ $item }}</span>
                                 </label>
                             @endforeach
                         </div>
@@ -143,7 +143,7 @@
 
                     {{-- KEMUDIAN LANJUT KE INPUT SEPERTI SEBELUMNYA --}}
                     <div class="mb-4">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label class="block text-base font-semibold text-slate-700 mb-2">
                             {{ translate('Wilayah / Kelurahan') }} <span class="text-red-500">*</span>
                         </label>
 
@@ -158,35 +158,35 @@
                                 $dispatch('region-changed', { name: name });
                             }
                         }" @click.outside="open = false">
-                            <input type="hidden" name="region_id" x-model="selectedId">
+                            <x-ui.input type="hidden" name="region_id" x-model="selectedId" />
 
-                            <button type="button" @click="open = !open"
-                                class="group w-full bg-gray-50 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 py-2.5 px-4 flex items-center justify-between transition-all">
+                            <x-ui.button type="button" @click="open = !open" variant="ghost"
+                                class="group w-full bg-gray-50 rounded-lg border border-gray-300 hover:bg-gray-50 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 py-2.5 px-4 flex items-center justify-between transition-all">
 
                                 <div class="flex items-center gap-3">
                                     <x-icons.map-folded
                                         class="w-5 h-5 text-slate-500 transition-colors duration-200 group-focus:text-blue-600" />
 
-                                    <span class="text-sm font-normal truncate"
-                                        :class="selectedId ? 'text-gray-900' : 'text-gray-500'"
+                                    <span class="text-base font-normal truncate"
+                                        :class="selectedId ? 'text-slate-900' : 'text-slate-500'"
                                         x-text="selectedName"></span>
                                 </div>
 
                                 <x-icons.ui-chevron-down
-                                    class="w-4 h-4 text-gray-400 transition-transform duration-200 group-focus:text-blue-600 "
+                                    class="w-4 h-4 text-slate-400 transition-transform duration-200 group-focus:text-blue-600 "
                                     x-bind:class="open ? 'rotate-180' : ''" />
-                            </button>
+                            </x-ui.button>
 
                             <div x-show="open" x-transition.origin.top x-cloak
-                                class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl shadow-slate-200/50 border border-slate-100 z-50 overflow-hidden max-h-60 overflow-y-auto">
+                                class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl shadow-gray-200/50 border border-gray-100 z-50 overflow-hidden max-h-60 overflow-y-auto">
                                 <div @click="select('', '{{ translate('Pilih Wilayah') }}')"
-                                    class="px-5 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 cursor-pointer flex items-center justify-between transition-colors border-b border-slate-50">
+                                    class="px-5 py-3 text-base font-medium text-slate-600 hover:bg-gray-50 cursor-pointer flex items-center justify-between transition-colors border-b border-gray-50">
                                     <span>{{ translate('Pilih Wilayah') }}</span>
                                 </div>
 
                                 @foreach ($regions as $region)
                                     <div @click="select('{{ $region->id }}', '{{ $region->name }}')"
-                                        class="px-5 py-3 text-sm font-medium cursor-pointer flex items-center justify-between transition-colors hover:bg-slate-50"
+                                        class="px-5 py-3 text-base font-medium cursor-pointer flex items-center justify-between transition-colors hover:bg-gray-50"
                                         :class="selectedId == '{{ $region->id }}' ? 'text-blue-600 bg-blue-50/50' :
                                             'text-slate-600'">
                                         <span class="truncate">{{ $region->name }}</span>
@@ -204,7 +204,7 @@
                     </div>
                     {{-- ALAMAT LENGKAP --}}
                     <div class="mt-4" x-data="addressSearch()">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label class="block text-base font-semibold text-slate-700 mb-2">
                             {{ translate('Alamat Usaha') }} <span class="text-red-500">*</span>
                         </label>
 
@@ -212,30 +212,31 @@
                         <div
                             class="flex flex-col border border-gray-300 rounded-xl bg-gray-50 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all duration-200 relative">
                             
-                            <input type="hidden" name="latitude" x-model="lat">
-                            <input type="hidden" name="longitude" x-model="lng">
+                            <x-ui.input type="hidden" name="latitude" x-model="lat" />
+                            <x-ui.input type="hidden" name="longitude" x-model="lng" />
 
-                            <div class="relative w-full">
-                                <div class="absolute top-3 left-4 text-slate-500 pointer-events-none">
-                                    <x-icons.map-pin class="w-5 h-5" />
-                                </div>
-                                <textarea name="shop_address" rows="2" x-model="address" @input.debounce.500ms="searchAddress()"
-                                    class="w-full bg-transparent border-none outline-none pl-11 pr-4 py-3 text-sm text-slate-900 focus:ring-0 resize-none"
-                                    :class="{'border-red-300 ring-2 ring-red-100': regionError}"
-                                    placeholder="{{ translate('Nama Jalan, Blok, No. Rumah') }}">{{ old('shop_address') }}</textarea>
+                                <x-ui.textarea name="shop_address" rows="2" x-model="address" @input.debounce.500ms="searchAddress()"
+                                    variant="transparent"
+                                    class="text-base text-slate-900 font-normal py-3 pr-4 bg-transparent border-none outline-none resize-none"
+                                    x-bind:class="{'border-red-300 ring-2 ring-red-100': regionError}"
+                                    placeholder="{{ translate('Nama Jalan, Blok, No. Rumah') }}">
+                                    <x-slot:icon>
+                                        <x-icons.map-pin class="w-5 h-5" />
+                                    </x-slot:icon>
+                                    {{ old('shop_address') }}
+                                </x-ui.textarea>
                                 
                                 {{-- WARNING ICON / TOOLTIP --}}
-                                <div x-show="regionError" class="absolute top-10 left-4 right-0 z-10">
+                                <div x-show="regionError" class="absolute top-10 left-4 right-0 z-10 pointer-events-none">
                                     <span class="text-xs text-red-500 bg-red-50 px-2 py-1 rounded border border-red-200 shadow-sm animate-pulse">
                                         {{ translate('Silakan pilih Wilayah/Kelurahan terlebih dahulu.') }}
                                     </span>
                                 </div>
                                 
                                 {{-- LOADING INDICATOR --}}
-                                <div x-show="isLoading" class="absolute top-3 right-4 text-blue-600">
+                                <div x-show="isLoading" class="absolute top-3 right-4 text-blue-600 pointer-events-none">
                                     <x-icons.status-loading class="w-5 h-5 animate-spin" />
                                 </div>
-                            </div>
 
                             {{-- DROPDOWN HASIL PENCARIAN --}}
                             <div x-show="searchResults.length > 0 && showSuggestions" 
@@ -246,8 +247,8 @@
                                     <template x-for="(result, index) in searchResults" :key="index">
                                         <li @click="selectAddress(result)" 
                                             class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0 transition-colors">
-                                            <div class="font-bold text-gray-800 text-sm" x-text="result.title"></div>
-                                            <div class="text-xs text-gray-500 mt-0.5" x-text="result.address"></div>
+                                            <div class="font-bold text-slate-800 text-base" x-text="result.title"></div>
+                                            <div class="text-xs text-slate-500 mt-0.5" x-text="result.address"></div>
                                         </li>
                                     </template>
                                 </ul>
@@ -354,7 +355,6 @@
                                                 // Optional: Bisa set message "Alamat tidak ditemukan di [RegionName]"
                                             }
                                         } catch (e) {
-                                            console.error("Address search error:", e);
                                         } finally {
                                             this.isLoading = false;
                                         }
@@ -378,7 +378,7 @@
                 {{-- KOLOM KANAN --}}
                 <div class="space-y-6">
                     <div class="border-b border-gray-200 pb-2 mb-4">
-                        <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
                             <x-icons.data-user class="w-5 h-5" />
                             {{ translate('Data Pemilik') }}
                         </h2>
@@ -386,7 +386,7 @@
 
                     {{-- Nama Pemilik --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Nama Pemilik') }}
+                        <label class="block text-base font-semibold text-slate-700 font-medium text-base mb-2">{{ translate('Nama Pemilik') }}
                             <span class="text-red-500">*</span></label>
                         <x-ui.input type="text" name="name" value="{{ old('name') }}"
                             placeholder="John Rizky Hernandes"
@@ -402,8 +402,10 @@
 
                     {{-- Nomor HP --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Nomor Handphone') }} <span class="text-red-500">*</span></label>
+                        <label class="block text-base font-semibold text-slate-700 font-medium text-base mb-2">{{ translate('Nomor Handphone') }} <span class="text-red-500">*</span></label>
                         <x-ui.input type="text" name="phone_number" value="{{ old('phone_number') }}"
+                            inputmode="numeric" 
+                            autocomplete="tel"
                             placeholder="0812XXXXXX"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                             <x-slot:icon>
@@ -417,7 +419,7 @@
 
                     {{-- Tempat, Tanggal Lahir --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Tempat, Tanggal Lahir') }} <span class="text-red-500">*</span></label>
+                        <label class="block text-base font-semibold text-slate-700 font-medium text-base mb-2">{{ translate('Tempat, Tanggal Lahir') }} <span class="text-red-500">*</span></label>
                         <div class="flex gap-3">
                             <div class="w-1/2">
                                 <x-ui.input type="text" name="place_of_birth" value="{{ old('place_of_birth') }}"
@@ -430,15 +432,14 @@
                                 @error('place_of_birth')
                                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                 @enderror
-                            </div>
+                            </div>   
                             <div class="w-1/2">
-                                <x-ui.input type="text" name="date_of_birth" value="{{ old('date_of_birth') }}"
-                                    onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="2001/12/18"
-                                    class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
+                                <x-ui.date-picker name="date_of_birth" :value="old('date_of_birth')"
+                                    placeholder="2001/12/18" class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500">
                                     <x-slot:icon>
                                         <x-icons.data-calendar class="w-5 h-5" stroke-width="1.5" />
                                     </x-slot:icon>
-                                </x-ui.input>
+                                </x-ui.date-picker>
                                 @error('date_of_birth')
                                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                 @enderror
@@ -448,7 +449,7 @@
 
                     {{-- Alamat Domisili --}}
                     <div class="mt-4">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label class="block text-base font-semibold text-slate-700 mb-2">
                             {{ translate('Alamat Domisili') }} <span class="text-red-500">*</span>
                         </label>
 
@@ -457,14 +458,15 @@
                             class="flex flex-col border border-gray-300 rounded-xl bg-gray-50 overflow-hidden focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all duration-200">
 
                             {{-- BAGIAN ATAS: TEXTAREA ALAMAT --}}
-                            <div class="relative w-full">
-                                <div class="absolute top-3 left-4 text-slate-500 pointer-events-none">
-                                    <x-icons.map-pin class="w-5 h-5" />
-                                </div>
-                                <textarea name="domicile_address" rows="2"
-                                    class="w-full bg-transparent border-none outline-none pl-11 pr-4 py-3 text-sm text-slate-900 focus:ring-0 resize-none"
-                                    placeholder="{{ translate('Nama Jalan, Blok, No. Rumah') }}">{{ old('domicile_address') }}</textarea>
-                            </div>
+                                <x-ui.textarea name="domicile_address" rows="2"
+                                    variant="transparent"
+                                    class="text-base text-slate-900 font-normal py-3 pr-4 bg-transparent border-none outline-none resize-none"
+                                    placeholder="{{ translate('Nama Jalan, Blok, No. Rumah') }}">
+                                    <x-slot:icon>
+                                        <x-icons.map-pin class="w-5 h-5" />
+                                    </x-slot:icon>
+                                    {{ old('domicile_address') }}
+                                </x-ui.textarea>
                     </div>
                     {{-- Error Messages --}}
                         @if ($errors->has('domicile_address'))
@@ -474,7 +476,7 @@
                 {{-- Email --}}
                 <div class="mt-4">
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Email') }} <span
+                    <label class="block text-base font-semibold text-slate-700 font-medium text-base mb-2">{{ translate('Email') }} <span
                             class="text-red-500">*</span></label>
                     <x-ui.input type="email" name="email" value="{{ old('email') }}"
                         placeholder="john@email.com"
@@ -532,7 +534,7 @@
                     }
                 }">
                     <div class="mb-4">
-                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Kata Sandi') }}
+                        <label class="block text-base font-semibold text-slate-700 font-medium text-base mb-2">{{ translate('Kata Sandi') }}
                             <span class="text-red-500">*</span></label>
                         <x-ui.input ::type="show ? 'text' : 'password'" name="password" x-model="password" @input="checkStrength()" placeholder="{{ translate('Masukkan kata sandi') }}"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
@@ -551,7 +553,7 @@
                         @enderror
 
                         {{-- Strength Meter --}}
-                        <div class="mt-2 text-sm transition-all duration-300" x-show="password.length > 0" x-transition>
+                        <div class="mt-2 text-base transition-all duration-300" x-show="password.length > 0" x-transition>
                             <div class="flex justify-between mb-1">
                                 <span class="font-medium" :class="strengthText">{{ translate('Kekuatan Password:') }} <span x-text="strengthLabel"></span></span>
                             </div>
@@ -563,22 +565,22 @@
                             <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-y-1 gap-x-2">
                                 <div class="flex items-center gap-1.5" :class="checks.length ? 'text-green-600' : 'text-slate-500'">
                                     <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.length" />
-                                    <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.length"></div>
+                                    <div class="w-3.5 h-3.5 rounded-full border border-gray-300" x-show="!checks.length"></div>
                                     <span>{{ translate('Min 8 karakter') }}</span>
                                 </div>
                                  <div class="flex items-center gap-1.5" :class="checks.lower ? 'text-green-600' : 'text-slate-500'">
                                     <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.lower" />
-                                    <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.lower"></div>
+                                    <div class="w-3.5 h-3.5 rounded-full border border-gray-300" x-show="!checks.lower"></div>
                                     <span>{{ translate('Huruf kecil (a-z)') }}</span>
                                 </div>
                                 <div class="flex items-center gap-1.5" :class="checks.upper ? 'text-green-600' : 'text-slate-500'">
                                     <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.upper" />
-                                    <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.upper"></div>
+                                    <div class="w-3.5 h-3.5 rounded-full border border-gray-300" x-show="!checks.upper"></div>
                                     <span>{{ translate('Huruf besar (A-Z)') }}</span>
                                 </div>
                                 <div class="flex items-center gap-1.5" :class="checks.number ? 'text-green-600' : 'text-slate-500'">
                                     <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.number" />
-                                    <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.number"></div>
+                                    <div class="w-3.5 h-3.5 rounded-full border border-gray-300" x-show="!checks.number"></div>
                                     <span>{{ translate('Angka (0-9)') }}</span>
                                 </div>
                             </div>
@@ -587,7 +589,7 @@
 
                     {{-- Konfirmasi Kata Sandi --}}
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Konfirmasi Kata Sandi') }}
+                        <label class="block text-base font-semibold text-slate-700 font-medium text-base mb-2">{{ translate('Konfirmasi Kata Sandi') }}
                             <span class="text-red-500">*</span></label>
                         <x-ui.input ::type="showConfirm ? 'text' : 'password'" name="password_confirmation" x-model="confirmation" placeholder="{{ translate('Ulangi kata sandi') }}"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal"
@@ -611,7 +613,7 @@
 
                 {{-- Sosmed --}}
                 <div class="mt-4">
-                    <label class="block text-sm font-semibold text-gray-700 font-medium text-base mb-2">{{ translate('Alamat Sosial Media atau Platform Digital Usaha') }} <span>{{ translate('(Opsional)') }}</span></label>
+                    <label class="block text-base font-semibold text-slate-700 font-medium text-base mb-2">{{ translate('Alamat Sosial Media atau Platform Digital Usaha') }} <span>{{ translate('(Opsional)') }}</span></label>
                     <div class="grid grid-cols-2 gap-4">
                         <x-ui.input type="url" name="social_instagram" value="{{ old('social_instagram') }}"
                             placeholder="https://instagram.com/@umkm"
@@ -639,7 +641,7 @@
                             placeholder="https://facebook.com/umkm"
                             class="bg-gray-50 rounded-lg border-gray-300 focus:ring-blue-500/20 focus:border-blue-500 font-normal">
                             <x-slot:icon>
-                                <x-icons.social-facebook class="text-[#1877F2]" />
+                                <x-icons.social-facebook class="text-social-facebook" />
                             </x-slot:icon>
                         </x-ui.input>
                         @error('social_facebook')
@@ -665,7 +667,7 @@
     <div class="mt-12 mb-8 text-center px-4">
         <div class="mt-12 mb-8 text-center px-4">
             <x-ui.button type="submit"
-                class="w-full md:w-auto md:min-w-[200px] py-3 md:py-3.5 px-6 font-semibold text-sm md:text-base rounded-xl shadow-lg hover:shadow-blue-500/30 transition-all duration-300 transform hover:-translate-y-0.5">
+                class="w-full md:w-auto md:min-w-[200px] py-3 md:py-3.5 px-6 rounded-xl shadow-lg hover:shadow-blue-500/30 transition-all duration-300 transform hover:-translate-y-0.5">
                 {{ translate('Daftar Sekarang') }}
             </x-ui.button>
         </div>

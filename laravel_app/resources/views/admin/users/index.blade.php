@@ -3,48 +3,25 @@
     @include('admin.users.partials.shop-grid')
 
     @push('scripts')
-    <script>
+    <script type="module">
+        import { initGlobalListener } from "{{ Vite::asset('resources/js/pages/realtime-dashboard.js') }}";
+        
         document.addEventListener('DOMContentLoaded', () => {
-            if (window.Echo) {
-                window.Echo.channel('admin-global')
-                    .listen('ShopUpdated', (e) => {
-                        console.log('Admin Users: ShopUpdated', e);
-                        
-                        if (e.action === 'refresh' && e.shop_id) {
-                            const cardId = `shop-card-${e.shop_id}`;
-                            const cardElement = document.getElementById(cardId);
-                            
-                            if (cardElement) {
-                                console.log(`Updating card ${cardId}...`);
-                                fetch(window.location.href)
-                                    .then(response => response.text())
-                                    .then(html => {
-                                        const parser = new DOMParser();
-                                        const doc = parser.parseFromString(html, 'text/html');
-                                        const newCard = doc.getElementById(cardId);
-                                        if (newCard) {
-                                            cardElement.replaceWith(newCard);
-                                            
-                                            // Optional: Visual highlight
-                                            const updatedCard = document.getElementById(cardId);
-                                            updatedCard.classList.add('ring-2', 'ring-blue-500');
-                                            setTimeout(() => updatedCard.classList.remove('ring-2', 'ring-blue-500'), 2000);
-                                        }
-                                    })
-                                    .catch(err => console.error('Failed to background update card:', err));
+            let isInitialLoad = true;
 
-                            } else {
-                                // New shop? Reload to show it.
-                                window.location.reload();
-                            }
-                        } else {
-                            window.location.reload();
-                        }
-                    })
-                    .listen('UserUpdated', (e) => {
-                         window.location.reload();
-                    });
-            }
+            initGlobalListener((data) => {
+                // Ignore the very first snapshot that fires immediately on connection
+                if (isInitialLoad) {
+                    isInitialLoad = false;
+                    return;
+                }
+
+                // If a refresh action is specifically requested, or just general update
+                // For simplicity on the index page, we reload to get fresh data (new users, status changes etc)
+                if (data && (data.action === 'refresh' || data.shop_id || data.user_id)) {
+                    window.location.reload();
+                }
+            });
         });
     </script>
     @endpush

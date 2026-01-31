@@ -11,12 +11,32 @@ use Illuminate\Validation\Rules;
 
 class UserDashboardController extends Controller
 {
+    /**
+     * @var \App\Services\ImageService
+     */
+    protected $imageService;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param \App\Services\ImageService $imageService
+     */
+    public function __construct(\App\Services\ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
+    /**
+     * Show the user dashboard.
+     *
+     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         $user = Auth::user();
         $shop = $user->shop;
 
-        // Statistics
+        // --- Section: Statistik Workshop ---
         $totalProducts = $shop->products()->count();
         $activeProducts = $shop->products()->where('is_active', true)->count();
         
@@ -24,13 +44,13 @@ class UserDashboardController extends Controller
             ->select('category', DB::raw('count(*) as total'))
             ->groupBy('category')
             ->orderByDesc('total')
-            ->take(5) // Limit to top 5 categories
+            ->take(5)
             ->get();
 
-        // Placeholder for views (needs database column)
+        // Menggunakan view count dari database (saat ini masih placeholder karena kolom belum ada)
         $totalViews = $shop->views; 
 
-        // Chart Colors for Dashboard
+        // --- Section: Konfigurasi Tampilan ---
         $chartColors = ['bg-blue-500', 'bg-orange-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500'];
 
         if (request()->wantsJson()) {
@@ -46,6 +66,11 @@ class UserDashboardController extends Controller
         return view('users.dashboard.index', compact('shop', 'totalProducts', 'activeProducts', 'productCategories', 'totalViews', 'chartColors'));
     }
 
+    /**
+     * Show the location settings page.
+     *
+     * @return \Illuminate\View\View
+     */
     public function detailLokasi()
     {
         $user = Auth::user();
@@ -65,32 +90,47 @@ class UserDashboardController extends Controller
 
 
 
+    /**
+     * Update the shop's location and address.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function storeLokasi(Request $request)
     {
+        // --- Section: Validasi Data ---
         $request->validate([
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'address' => 'nullable|string',
-            'region_id' => 'required|exists:regions,id', // Validasi region
+            'region_id' => 'required|exists:regions,id',
         ]);
 
         $user = Auth::user();
         $shop = $user->shop;
 
+        // --- Section: Update Database ---
         $shop->update([
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
-            'address' => $request->address, // Update main address
-            'region_id' => $request->region_id, // Simpan region_id
+            'address' => $request->address,
+            'region_id' => $request->region_id,
         ]);
 
-        $this->checkVerificationStatus($shop);
+        // Memeriksa ulang status verifikasi karena data lokasi wajib diisi untuk verified shop
+        $shop->updateVerificationStatus();
 
         \App\Events\ShopUpdated::dispatch($shop->id);
 
         return redirect()->back()->with('success', 'Titik lokasi dan alamat berhasil disimpan.');
     }
 
+    /**
+     * Display the shop's product management page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
+     */
     public function toko(Request $request)
     {
         $user = Auth::user();
@@ -98,7 +138,7 @@ class UserDashboardController extends Controller
 
         $query = $shop->products();
 
-        // Search
+        // --- Section: Pencarian Produk ---
         if ($request->has('search') && $request->search) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -107,14 +147,14 @@ class UserDashboardController extends Controller
             });
         }
 
-        // Filter by Status
+        // --- Section: Filter Status ---
         if ($request->has('status') && $request->status !== 'semua') {
             $isActive = $request->status === 'aktif';
             $query->where('is_active', $isActive);
         }
 
-        // Pagination
-        $products = $query->orderByDesc('created_at')->paginate(6);
+        // --- Section: Pagination ---
+        $products = $query->with('images')->orderByDesc('created_at')->paginate(6);
 
         if ($request->ajax()) {
              return response()->json([
@@ -126,6 +166,12 @@ class UserDashboardController extends Controller
         return view('users.products.index', compact('shop', 'products'));
     }
 
+    /**
+     * Toggle the active status of a product.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function toggleProductStatus($id)
     {
         $user = Auth::user();
@@ -136,9 +182,19 @@ class UserDashboardController extends Controller
             'is_active' => !$product->is_active
         ]);
         
+        // --- Section: Realtime Broadcast ---
+        // Menyiapkan data snapshot untuk UI frontend agar update in-place tanpa refresh
+        $productData = [
+            'is_active' => $product->is_active,
+            'name' => $product->name,
+            'price' => $product->price,
+            'description' => $product->description,
+            'variant' => $product->variant,
+            'image' => $product->image ? storage_url($product->image) : null,
+        ];
 
-        \App\Events\ProductUpdated::dispatch($user->id, 'update');
-        \App\Events\ShopUpdated::dispatch($shop->id); // Updates public shop view
+        \App\Events\ProductUpdated::dispatch($user->id, 'update', $product->id, $productData);
+        \App\Events\ShopUpdated::dispatch($shop->id); // Update tampilan toko publik
 
         return response()->json([
             'success' => true,
@@ -147,6 +203,42 @@ class UserDashboardController extends Controller
         ]);
     }
 
+    /**
+     * Toggle the best seller status of a product.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function toggleBestSeller($id)
+    {
+        $user = Auth::user();
+        $shop = $user->shop;
+        $product = $shop->products()->findOrFail($id);
+
+        $product->update([
+            'is_best_seller' => !$product->is_best_seller
+        ]);
+
+        // Status best seller mungkin mempengaruhi urutan/tampilan, jadi perlu broadcast data baru
+        $productData = [
+            'is_best_seller' => $product->is_best_seller
+        ];
+
+        \App\Events\ProductUpdated::dispatch($user->id, 'update', $product->id, $productData);
+        \App\Events\ShopUpdated::dispatch($shop->id);
+
+        return response()->json([
+            'success' => true,
+            'is_best_seller' => (bool)$product->is_best_seller,
+            'message' => 'Status produk terlaris berhasil diperbarui.'
+        ]);
+    }
+
+    /**
+     * Show the shop profile edit form.
+     *
+     * @return \Illuminate\View\View
+     */
     public function editToko()
     {
         $user = Auth::user();
@@ -160,7 +252,8 @@ class UserDashboardController extends Controller
             $licenses = [['type' => '', 'number' => '']];
         }
 
-        // Fetch Dynamic Business Type Logos (Fallback for Shop Profile)
+        // --- Section: Dynamic Logos ---
+        // Mengambil logo dynamic berdasarkan tipe bisnis untuk fallback jika user belum upload logo
         $businessTypes = \App\Models\Content::where('group', 'business_types')->get();
         $logoContents = \App\Models\Content::where('group', 'business_type_logos')->get();
         
@@ -169,21 +262,29 @@ class UserDashboardController extends Controller
             $logoKey = 'logo_fallback_for_' . $bt->id;
             $logo = $logoContents->where('key', $logoKey)->first();
             if ($logo && $logo->value) {
-                // Map lowercase type name to logo URL
-                $businessTypeLogos[strtolower($bt->value)] = asset('storage/' . $logo->value);
+                $businessTypeLogos[strtolower($bt->value)] = storage_url($logo->value);
             }
         }
 
-        return view('users.shop-profile.index', compact('shop', 'regions', 'licenses', 'businessTypeLogos'));
+        // Fetch All Business Types for dropdown
+        $allBusinessTypes = \App\Models\Shop::getBusinessTypes();
+
+        return view('users.shop-profile.index', compact('shop', 'regions', 'licenses', 'businessTypeLogos', 'allBusinessTypes'));
     }
 
+    /**
+     * Update shop profile information.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updateToko(Request $request)
     {
         $request->validate([
             'shop_name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'product_type' => 'required|string|max:255',
-            'business_type' => ['required', 'string', \Illuminate\Validation\Rule::in(\App\Models\Shop::BUSINESS_TYPES)],
+            'business_type' => ['required', 'string', \Illuminate\Validation\Rule::in(\App\Models\Shop::getBusinessTypes())],
             'omset_min' => 'nullable|string',
             'omset_max' => 'nullable|string',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -193,26 +294,29 @@ class UserDashboardController extends Controller
         $user = Auth::user();
         $shop = $user->shop;
         
-        // Handle Logo Deletion
+        // --- Section: Handle Logo ---
         $logoPath = $shop->logo;
+        // User requesting to delete existing logo
         if ($request->boolean('delete_logo') && $shop->logo) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($shop->logo);
+            $this->imageService->delete($shop->logo);
             $logoPath = null;
         }
         
+        // User uploading new logo
         if ($request->hasFile('logo')) {
             if ($shop->logo) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($shop->logo);
+                // Hapus logo lama sebelum replace
+                $this->imageService->delete($shop->logo);
             }
-            // Resize to max 300px
-            $logoPath = $this->resizeUpload($request->file('logo'), 'shops/logos', 300);
+            // Resize ke 300px untuk optimasi
+            $logoPath = $this->imageService->resizeAndSave($request->file('logo'), 'shops/logos', 300);
         }
 
-        // Omset cleanup
+        // --- Section: Sanitasi Omset ---
         $omset_min = $request->omset_min ? preg_replace('/[^0-9]/', '', $request->omset_min) : null;
         $omset_max = $request->omset_max ? preg_replace('/[^0-9]/', '', $request->omset_max) : null;
 
-        // Licenses JSON Construction
+        // --- Section: Konstruksi JSON Licenses ---
         $licenses = [];
         if($request->license_type && $request->license_number) {
             foreach($request->license_type as $key => $type) {
@@ -237,16 +341,22 @@ class UserDashboardController extends Controller
             'logo' => $logoPath,
         ]);
 
-        $this->checkVerificationStatus($shop);
+        // --- Section: Update & Event Dispatch ---
+        $shop->updateVerificationStatus();
 
         \App\Events\ShopUpdated::dispatch($shop->id);
 
-        // Dispatch Translation Job
+        // Menjalankan job translasi di background untuk mendukung multi-bahasa
         \App\Jobs\TranslateShopAttributes::dispatch($shop);
 
         return redirect()->back()->with('success', 'Informasi toko berhasil diperbarui.');
     }
 
+    /**
+     * Show settings page.
+     *
+     * @return \Illuminate\View\View
+     */
     public function setting()
     {
         $user = Auth::user();
@@ -254,19 +364,26 @@ class UserDashboardController extends Controller
         return view('users.settings.index', compact('user', 'shop'));
     }
 
+    /**
+     * Update user profile information.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
 
-        // Security: Validate string length to prevent DoS (Memory Exhaustion)
+        // --- Section: Validasi Keamanan ---
+        // Validasi dan proteksi input length untuk menghindari Memory Exhaustion
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($user->id)],
             'phone_number' => ['required', 'string', 'max:20'],
             'place_of_birth' => ['nullable', 'string', 'max:100'],
             'date_of_birth' => ['nullable', 'date'],
-            'domicile_address' => ['nullable', 'string', 'max:500'], // Limit address length
-            'current_password' => ['required', 'current_password'], // Security: Confirm ownership
+            'domicile_address' => ['nullable', 'string', 'max:500'],
+            'current_password' => ['required', 'current_password'], // Konfirmasi kepemilikan akun sebelum update
         ]);
 
         $user->fill([
@@ -278,7 +395,8 @@ class UserDashboardController extends Controller
             'domicile_address' => $request->domicile_address,
         ]);
 
-        // Security: Reset email verification if email changed
+        // --- Section: Reset Verifikasi ---
+        // Jika email berubah, reset status verifikasi email
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
@@ -294,6 +412,12 @@ class UserDashboardController extends Controller
         return redirect()->back()->with('success', 'Profil berhasil diperbarui. Jika email berubah, silakan verifikasi ulang.');
     }
 
+    /**
+     * Update user password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updatePassword(Request $request)
     {
         $request->validate([
@@ -310,17 +434,23 @@ class UserDashboardController extends Controller
         return redirect()->back()->with('success', 'Password berhasil diperbarui.');
     }
 
+    /**
+     * Show photo management page.
+     *
+     * @return \Illuminate\View\View
+     */
     public function foto()
     {
         $user = Auth::user();
         $shop = $user->shop;
         $photos = $shop->photos()->orderBy('order')->get();
+        // Placeholder array for 5 slots
         $photoArray = array_fill(0, 5, ['id' => null, 'url' => null]);
         foreach($photos as $photo) {
             if(isset($photoArray[$photo->order])) {
                 $photoArray[$photo->order] = [
                     'id' => $photo->id,
-                    'url' => asset('storage/' . $photo->path)
+                    'url' => storage_url($photo->path, 800)
                 ];
             }
         }
@@ -328,10 +458,16 @@ class UserDashboardController extends Controller
         return view('users.shop-profile.manage-photos', compact('shop', 'photos', 'photoArray'));
     }
 
+    /**
+     * Update shop photos (add, replace, delete).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function storePhoto(Request $request)
     {
         $request->validate([
-            'photos.*' => 'image|max:2048', // Validate each photo
+            'photos.*' => 'image|max:2048',
             'delete_ids' => 'nullable|array',
             'delete_ids.*' => 'exists:shop_photos,id',
         ]);
@@ -342,28 +478,29 @@ class UserDashboardController extends Controller
         try {
             DB::beginTransaction();
 
-            // 1. Handle Deletions
+            // --- Section: Hapus Foto ---
             if ($request->has('delete_ids')) {
                 foreach ($request->delete_ids as $id) {
                     $photo = $shop->photos()->find($id);
                     if ($photo) {
-                        \Illuminate\Support\Facades\Storage::disk('public')->delete($photo->path);
+                        $this->imageService->delete($photo->path);
                         $photo->delete();
                     }
                 }
             }
 
-            // 2. Handle Uploads (Key is order)
+            // --- Section: Upload/Replace Foto ---
             if ($request->hasFile('photos')) {
                 foreach ($request->file('photos') as $order => $file) {
-                    // Check existing at this order and delete it first (replace)
+                    // Cek jika ada foto eksisting di slot ini, hapus dulu (replace)
                     $existing = $shop->photos()->where('order', $order)->first();
                     if ($existing) {
-                         \Illuminate\Support\Facades\Storage::disk('public')->delete($existing->path);
+                         $this->imageService->delete($existing->path);
                          $existing->delete();
                     }
 
-                    $path = $this->resizeUpload($file, 'sliders', 800);
+                    // Upload Cloudinary max 800px
+                    $path = $this->imageService->uploadToCloudinary($file, 'shops/photos', 800);
                     $shop->photos()->create([
                         'path' => $path,
                         'order' => $order,
@@ -371,9 +508,9 @@ class UserDashboardController extends Controller
                 }
             }
 
-            $this->checkVerificationStatus($shop);
+            $shop->updateVerificationStatus();
 
-            \App\Events\ShopUpdated::dispatch($shop->id); // Trigger Real-time Update
+            \App\Events\ShopUpdated::dispatch($shop->id);
 
             DB::commit();
             return redirect()->back()->with('success', 'Foto berhasil diperbarui.');
@@ -385,6 +522,12 @@ class UserDashboardController extends Controller
         }
     }
 
+    /**
+     * Delete a specific photo.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function deletePhoto($id)
     {
         $user = Auth::user();
@@ -392,19 +535,27 @@ class UserDashboardController extends Controller
         
         $photo = $shop->photos()->findOrFail($id);
         
-        // Delete file from storage
-        \Illuminate\Support\Facades\Storage::disk('public')->delete($photo->path);
+        // Hapus file fisik dari storage
+        $this->imageService->delete($photo->path);
         
         $photo->delete();
         
-        $this->checkVerificationStatus($shop);
+        $shop->updateVerificationStatus();
+
+        \App\Events\ShopUpdated::dispatch($shop->id);
         
         return redirect()->back()->with('success', 'Foto berhasil dihapus.');
     }
 
+    /**
+     * Store a new product.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function storeProduct(Request $request)
     {
-        // Sanitize price (remove non-numeric chars)
+        // --- Section: Sanitasi Harga ---
         if ($request->has('price')) {
             $request->merge([
                 'price' => preg_replace('/[^0-9]/', '', $request->price)
@@ -420,7 +571,8 @@ class UserDashboardController extends Controller
             ],
             'price' => 'required|numeric',
             'category' => 'required|string|max:255',
-            'image' => 'nullable|image|max:2048',
+            'images' => 'array|max:5',
+            'images.*' => 'image|max:2048',
             'variant' => 'nullable|string',
             'description' => 'nullable|string',
         ]);
@@ -428,25 +580,58 @@ class UserDashboardController extends Controller
         try {
             DB::beginTransaction();
 
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                // Resize to max 600px
-                $imagePath = $this->resizeUpload($request->file('image'), 'shops/products', 600);
-            }
-
             $user = Auth::user();
             $shop = $user->shop;
-
-            $shop->products()->create([
+            
+            // --- Section: Create Product ---
+            $product = $shop->products()->create([
                 'name' => $request->name,
                 'price' => $request->price,
                 'category' => $request->category,
-                'image' => $imagePath,
                 'variant' => $request->variant,
                 'description' => $request->description,
+                'image' => null, // Akan diupdate setelah upload gambar
             ]);
 
-            \App\Events\ProductUpdated::dispatch($user->id, 'create');
+            $mainImagePath = null;
+
+            // --- Section: Handle Upload Gambar (Slot 0-4) ---
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $index => $file) {
+                    if ($index >= 5) break; 
+
+                    // Upload Cloudinary max 600px untuk produk
+                    $path = $this->imageService->uploadToCloudinary($file, 'shops/products', 600);
+                    
+                    $product->images()->create([
+                        'image' => $path,
+                        'sort_order' => $index
+                    ]);
+
+                    // Set Main Image (Slot 0 atau yang pertama tersedia)
+                    if ($index == 0 || $mainImagePath === null) {
+                        $mainImagePath = $path;
+                    }
+                }
+            }
+
+            // Sync main image (kolom lama) untuk backward compatibility
+            if ($mainImagePath) {
+                $product->update(['image' => $mainImagePath]);
+            }
+
+            // --- Section: Realtime Broadcast ---
+             $productData = [
+                'name' => $product->name,
+                'price' => $product->price,
+                'description' => $product->description,
+                'variant' => $product->variant,
+                'category' => $product->category,
+                'image' => $mainImagePath ? storage_url($mainImagePath) : null,
+                'is_active' => $product->is_active
+            ];
+
+            \App\Events\ProductUpdated::dispatch($user->id, 'create', $product->id, $productData);
             \App\Events\ShopUpdated::dispatch($shop->id);
 
             DB::commit();
@@ -459,9 +644,16 @@ class UserDashboardController extends Controller
         }
     }
 
+    /**
+     * Update an existing product.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updateProduct(Request $request, $id)
     {
-        // Sanitize price
+        // --- Section: Sanitasi Harga ---
         if ($request->has('price')) {
             $request->merge([
                 'price' => preg_replace('/[^0-9]/', '', $request->price)
@@ -477,183 +669,119 @@ class UserDashboardController extends Controller
             ],
             'price' => 'required|numeric',
             'category' => 'required|string|max:255',
-            'image' => 'nullable|image|max:2048',
+            'images' => 'array|max:5',
+            'images.*' => 'image|max:2048',
+            'delete_image_indices' => 'array',
             'variant' => 'nullable|string',
             'description' => 'nullable|string',
         ]);
 
-        $user = Auth::user();
-        $shop = $user->shop;
-        $product = $shop->products()->findOrFail($id);
+        try {
+            DB::beginTransaction();
 
-        $data = [
-            'name' => $request->name,
-            'price' => $request->price,
-            'category' => $request->category,
-            'variant' => $request->variant,
-            'description' => $request->description,
-        ];
+            $user = Auth::user();
+            $shop = $user->shop;
+            $product = $shop->products()->with('images')->findOrFail($id);
 
-        if ($request->hasFile('image')) {
-            // Delete old image
-            if ($product->image) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
+            $product->update([
+                'name' => $request->name,
+                'price' => $request->price,
+                'category' => $request->category,
+                'variant' => $request->variant,
+                'description' => $request->description,
+            ]);
+
+            // --- Section: Handle Penghapusan Gambar ---
+            if ($request->has('delete_image_indices')) {
+                foreach ($request->delete_image_indices as $index) {
+                    $existing = $product->images()->where('sort_order', $index)->first();
+                    if ($existing) {
+                        $this->imageService->delete($existing->image);
+                        $existing->delete();
+                    }
+                }
             }
-            // Resize to max 600px
-            $data['image'] = $this->resizeUpload($request->file('image'), 'shops/products', 600);
+
+            // --- Section: Handle Upload/Replace Gambar ---
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $index => $file) {
+                     // Replace existing at this slot
+                    $existing = $product->images()->where('sort_order', $index)->first();
+                    if ($existing) {
+                        $this->imageService->delete($existing->image);
+                        $existing->delete();
+                    }
+
+                    // Cloudinary max 600px
+                    $path = $this->imageService->uploadToCloudinary($file, 'shops/products', 600);
+                    $product->images()->create([
+                        'image' => $path,
+                        'sort_order' => $index
+                    ]);
+                }
+            }
+            
+            // Sync Slot 0 ke Main Image
+            $slot0 = $product->images()->where('sort_order', 0)->first();
+            $product->update(['image' => $slot0 ? $slot0->image : null]);
+
+            $productData = [
+                'name' => $product->name,
+                'price' => $product->price,
+                'category' => $product->category,
+                'variant' => $product->variant,
+                'description' => $product->description,
+                'image' => $product->image ? storage_url($product->image) : null,
+                'is_active' => $product->is_active
+            ];
+
+            \App\Events\ProductUpdated::dispatch($user->id, 'update', $product->id, $productData);
+            \App\Events\ShopUpdated::dispatch($shop->id);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Produk berhasil diperbarui.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error updating product: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal memperbarui produk.');
         }
-
-        $product->update($data);
-
-        \App\Events\ProductUpdated::dispatch($user->id, 'update');
-        \App\Events\ShopUpdated::dispatch($shop->id);
-
-        return redirect()->back()->with('success', 'Produk berhasil diperbarui.');
     }
 
+    /**
+     * Delete a product.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function deleteProduct($id)
     {
         $user = Auth::user();
         $shop = $user->shop;
-        $product = $shop->products()->findOrFail($id);
+        $product = $shop->products()->with('images')->findOrFail($id);
 
+        // Hapus main image jika ada
         if ($product->image) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
+            $this->imageService->delete($product->image);
+        }
+
+        // Hapus semua gambar varian terkait
+        foreach ($product->images as $img) {
+             $this->imageService->delete($img->image);
         }
 
         $product->delete();
 
-        $product->delete();
-
-        \App\Events\ProductUpdated::dispatch($user->id, 'delete');
+        \App\Events\ProductUpdated::dispatch($user->id, 'delete', $id, []);
         
-        // Check verification after deletion (in case products count becomes 0)
-        $this->checkVerificationStatus($shop);
+        // Cek ulang status verifikasi setelah penghapusan (misal produk jadi 0)
+        $shop->updateVerificationStatus();
         
         \App\Events\ShopUpdated::dispatch($shop->id);
 
         return redirect()->back()->with('success', 'Produk berhasil dihapus.');
     }
 
-    /**
-     * Resize uploaded image using native GD.
-     * Preserves original format (JPG/PNG/WebP).
-     *
-     * @param \Illuminate\Http\UploadedFile $file
-     * @param string $directory
-     * @param int $maxWidth
-     * @return string
-     */
-    private function resizeUpload($file, $directory, $maxWidth)
-    {
-        // 1. Get original image info
-        $imagePath = $file->getRealPath();
-        $imageInfo = getimagesize($imagePath);
-        
-        if (!$imageInfo) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
-                'image' => 'File gambar tidak valid.'
-            ]);
-        }
-
-        list($origWidth, $origHeight, $type) = $imageInfo;
-
-        // PREVENTION: Image Bomb / DoS Check
-        // Limit Max Resolution (e.g., 3000x3000px) regardless of file size
-        if ($origWidth > 3000 || $origHeight > 3000) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
-                'image' => 'Resolusi gambar terlalu besar. Maksimal 3000x3000px.'
-            ]);
-        }
-
-        // 2. Load image based on type
-        switch ($type) {
-            case IMAGETYPE_JPEG:
-                $source = imagecreatefromjpeg($imagePath);
-                break;
-            case IMAGETYPE_PNG:
-                $source = imagecreatefrompng($imagePath);
-                break;
-            case IMAGETYPE_WEBP:
-                $source = imagecreatefromwebp($imagePath);
-                break;
-            default:
-                // SECURITY: STRICTLY UNSUPPORTED TYPES
-                // Do NOT fallback to store(). This prevents SVG/HTML upload bypass.
-                throw \Illuminate\Validation\ValidationException::withMessages([
-                    'image' => 'Format file tidak didukung. Gunakan JPG, PNG, atau WebP.'
-                ]);
-        }
-        
-        if (!$source) {
-              throw \Illuminate\Validation\ValidationException::withMessages([
-                    'image' => 'Gagal memproses gambar.'
-              ]);
-        }
-
-        // 3. Calculate new dimensions
-        if ($origWidth > $maxWidth) {
-            $ratio = $maxWidth / $origWidth;
-            $newWidth = $maxWidth;
-            $newHeight = (int) ($origHeight * $ratio);
-        } else {
-            // No resize needed, but we can still re-save to compress
-            $newWidth = $origWidth;
-            $newHeight = $origHeight;
-        }
-
-        // 4. Create new image resource
-        $newImage = imagecreatetruecolor($newWidth, $newHeight);
-
-        // 5. Handle Transparency for PNG/WebP
-        if ($type == IMAGETYPE_PNG || $type == IMAGETYPE_WEBP) {
-            imagecolortransparent($newImage, imagecolorallocatealpha($newImage, 0, 0, 0, 127));
-            imagealphablending($newImage, false);
-            imagesavealpha($newImage, true);
-        }
-
-        // 6. Resize
-        imagecopyresampled($newImage, $source, 0, 0, 0, 0, $newWidth, $newHeight, $origWidth, $origHeight);
-
-        // 7. Save to Buffer (Capture output)
-        ob_start();
-        switch ($type) {
-            case IMAGETYPE_JPEG:
-                imagejpeg($newImage, null, 80); // Quality 80
-                break;
-            case IMAGETYPE_PNG:
-                imagepng($newImage, null, 8); // Compression level 8 (0-9)
-                break;
-            case IMAGETYPE_WEBP:
-                imagewebp($newImage, null, 80); // Quality 80
-                break;
-        }
-        $imageData = ob_get_clean();
-
-        // Cleanup resources
-        imagedestroy($source);
-        imagedestroy($newImage);
-
-        // 8. Store using Laravel Storage
-        $filename = $file->hashName();
-        $path = $directory . '/' . $filename;
-        \Illuminate\Support\Facades\Storage::disk('public')->put($path, $imageData);
-
-        return $path;
-    }
-
-    /**
-     * Check if the shop is still complete. If not, revoke verification.
-     */
-    private function checkVerificationStatus($shop)
-    {
-        if ($shop->is_verified && !$shop->isComplete()) {
-            $shop->is_verified = false;
-            $shop->save();
-
-            // Notify Admin and User
-            \App\Events\ShopUpdated::dispatch($shop->id);
-            \App\Events\UserUpdated::dispatch($shop->user_id, 'refresh');
-        }
-    }
+    // --- Section: Removed Dead Code ---
+    // (Removed unused comments/methods)
 }

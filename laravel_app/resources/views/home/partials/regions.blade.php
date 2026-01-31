@@ -1,4 +1,4 @@
-<section id="wilayah-section" class="py-12 bg-white overflow-hidden">
+<section id="regions" class="py-12 bg-white overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" x-data="{
         items: {{ json_encode($items) }},
         getScrollAmount() {
@@ -24,7 +24,12 @@
             }
         }
     }">
-        @include('home.partials.regions.header-title', ['title' => $title])
+        
+<h1
+    class="text-center lg:text-center text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 mb-8 lg:mb-16 tracking-tight">
+    {{ translate($title) }}
+</h1>
+
 
         <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
             @include('home.partials.regions.info-panel', ['subtitle' => $subtitle, 'desc' => $desc])

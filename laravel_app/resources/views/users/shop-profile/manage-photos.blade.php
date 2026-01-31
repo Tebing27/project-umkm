@@ -3,7 +3,7 @@
     <div class="max-w-5xl mx-auto min-h-screen pb-32" x-data="photoManager({{ json_encode($photoArray) }})">
 
         {{-- PAGE HEADER --}}
-        <div class="mb-10 border-b border-slate-200 pb-6">
+        <div class="mb-10 border-b border-gray-200 pb-6">
             <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ translate('Visualisasi Toko') }}</h1>
             <p class="text-slate-500 mt-2 text-lg">
                 {{ translate('Foto yang Anda upload di sini akan tampil di Peta dan Popup Slider.') }}
@@ -14,34 +14,67 @@
             @csrf
             {{-- Hidden Inputs for Deleted IDs --}}
             <template x-for="id in deletedIds" :key="id">
-                <input type="hidden" name="delete_ids[]" :value="id">
+                <x-ui.input type="hidden" name="delete_ids[]" ::value="id" />
             </template>
 
             <div class="space-y-12">
                 
                 {{-- ALERTS --}}
                 @if (session('success'))
-                    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded relative mb-6" role="alert">
-                        <strong class="font-bold">{{ translate('Berhasil!') }}</strong>
-                        <span class="block sm:inline">{{ session('success') }}</span>
+                    <div x-data="{ show: true }" x-show="show" x-transition.opacity
+                        class="mb-6 p-4 rounded-xl bg-green-50 border border-green-200 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-green-100 p-2 rounded-full">
+                                <x-icons.ui-check class="w-5 h-5 text-green-600" />
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-green-800">{{ translate('Berhasil!') }}</h4>
+                                <p class="text-sm text-green-700">{{ session('success') }}</p>
+                            </div>
+                        </div>
+                        <button @click="show = false" class="text-green-600 hover:bg-green-100 p-2 rounded-lg transition-colors">
+                            <x-icons.ui-close class="w-5 h-5" />
+                        </button>
                     </div>
                 @endif
 
                 @if (session('error'))
-                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
-                        <strong class="font-bold">{{ translate('Gagal!') }}</strong>
-                        <span class="block sm:inline">{{ session('error') }}</span>
+                    <div x-data="{ show: true }" x-show="show" x-transition.opacity
+                        class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-red-100 p-2 rounded-full">
+                                <x-icons.ui-close class="w-5 h-5 text-red-600" />
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-red-800">{{ translate('Gagal!') }}</h4>
+                                <p class="text-sm text-red-700">{{ session('error') }}</p>
+                            </div>
+                        </div>
+                        <button @click="show = false" class="text-red-600 hover:bg-red-100 p-2 rounded-lg transition-colors">
+                            <x-icons.ui-close class="w-5 h-5" />
+                        </button>
                     </div>
                 @endif
 
                 @if ($errors->any())
-                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
-                        <strong class="font-bold">{{ translate('Ada Kesalahan!') }}</strong>
-                        <ul class="list-disc pl-5 mt-1">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
+                    <div x-data="{ show: true }" x-show="show" x-transition.opacity
+                        class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 flex items-start justify-between">
+                        <div class="flex items-start gap-3">
+                            <div class="bg-red-100 p-2 rounded-full shrink-0">
+                                <x-icons.ui-close class="w-5 h-5 text-red-600" />
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-red-800">{{ translate('Ada Kesalahan!') }}</h4>
+                                <ul class="list-disc pl-5 mt-1 text-sm text-red-700">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        <button @click="show = false" class="text-red-600 hover:bg-red-100 p-2 rounded-lg transition-colors">
+                            <x-icons.ui-close class="w-5 h-5" />
+                        </button>
                     </div>
                 @endif
 
@@ -49,11 +82,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
                     <div class="md:col-span-5">
                         <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                            <x-icons.data-photo class="w-6 h-6 text-[#004a85]" />
+                            <x-icons.data-photo class="w-6 h-6 text-brand-blue-dark" />
                             {{ translate('Foto Sampul (Cover)') }}
                         </h2>
-                        <div class="prose prose-slate prose-sm mt-4 text-slate-500">
-    <p class="text-md">
+                        <div class="prose prose-gray prose-sm mt-4 text-slate-500">
+    <p class="text-base text-slate-600 leading-relaxed">
         {{ translate('Foto ini akan otomatis disesuaikan untuk tampilan Peta (Potrait) dan Popup (Landscape).') }}
     </p>
     <div class="bg-blue-50 p-3 mt-2 rounded-lg border border-blue-100 text-blue-800 text-sm">
@@ -69,7 +102,7 @@
                     <div class="md:col-span-7">
                         {{-- Aspect Ratio disesuaikan dengan Popup (4:3) untuk konsistensi --}}
                         <div
-                            class="relative w-full max-w-lg aspect-[4/3] rounded-2xl overflow-hidden group bg-slate-50 transition-all border-2 border-dashed border-slate-300 hover:border-[#004a85] hover:bg-blue-50/30 shadow-sm mx-auto md:mx-0">
+                            class="relative w-full max-w-lg aspect-[4/3] rounded-2xl overflow-hidden group bg-gray-50 transition-all border-2 border-dashed border-gray-300 hover:border-brand-blue-dark hover:bg-blue-50/30 shadow-sm mx-auto md:mx-0">
 
                             <input type="file" name="photos[0]" class="hidden" x-ref="photo0" @change="handleFileSelect($event, 0)"
                                 accept="image/*">
@@ -77,7 +110,7 @@
                             <div class="absolute inset-0 flex flex-col items-center justify-center cursor-pointer p-6 text-center"
                                 x-show="!photos[0].url" @click="$refs.photo0.click()">
                                 <div
-                                    class="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 text-[#004a85] group-hover:scale-110 transition-transform">
+                                    class="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 text-brand-blue-dark group-hover:scale-110 transition-transform">
                                     <x-icons.data-photo class="w-8 h-8" />
                                 </div>
                                 <h3 class="font-bold text-slate-700 text-lg">{{ translate('Upload Foto Sampul') }}</h3>
@@ -88,18 +121,18 @@
                                 <div class="relative w-full h-full group">
                                     <img :src="photos[0].url" loading="lazy" class="w-full h-full object-cover">
                                     <div
-                                        class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-3 backdrop-blur-sm">
-                                        <button type="button" @click="removePhoto(0)"
-                                            class="p-2.5 bg-red-500 text-white rounded-full hover:scale-110 transition shadow-lg">
+                                        class="absolute inset-0 bg-gray-900/40 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-3 backdrop-blur-sm">
+                                        <x-ui.button type="button" @click="confirmDeletePhoto(0)"
+                                            variant="circle-red" size="icon-lg" class="rounded-lg">
                                             <x-icons.ui-delete class="w-5 h-5" />
-                                        </button>
-                                        <button type="button" @click="$refs.photo0.click()"
-                                            class="p-2.5 bg-white text-slate-900 rounded-full hover:scale-110 transition shadow-lg">
+                                        </x-ui.button>
+                                        <x-ui.button type="button" @click="$refs.photo0.click()"
+                                            variant="circle-white-action" size="icon-lg" class="rounded-lg">
                                             <x-icons.ui-edit class="w-5 h-5" />
-                                        </button>
+                                        </x-ui.button>
                                     </div>
                                     <div
-                                        class="absolute top-4 left-4 bg-[#FFC107] text-black text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
+                                        class="absolute top-4 left-4 bg-brand-yellow text-black text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm">
                                         {{ translate('Tampilan Depan') }}
                                     </div>
                                 </div>
@@ -109,13 +142,13 @@
                 </div>
 
                 {{-- DIVIDER --}}
-                <div class="border-t border-slate-200"></div>
+                <div class="border-t border-gray-200"></div>
 
                 {{-- BAGIAN 2: SLIDER TAMBAHAN --}}
 <div>
     <div class="mb-6">
         <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <x-icons.data-photo class="w-5 h-5 text-[#004a85]" />
+            <x-icons.data-photo class="w-5 h-5 text-brand-blue-dark" />
             {{ translate('Urutan Slider Berikutnya') }}
         </h2>
         <p class="text-sm text-slate-500 mt-1">
@@ -138,8 +171,7 @@
                                     </span>
                                 </div>
 
-                                <div class="aspect-[4/3] relative rounded-2xl overflow-hidden bg-slate-50 border-2 border-dashed border-slate-300 hover:border-[#004a85] transition-all shadow-sm">
-
+                                <div class="aspect-[4/3] relative rounded-2xl overflow-hidden bg-gray-50 border-2 border-dashed border-gray-300 hover:border-brand-blue-dark transition-all shadow-sm">
                                     {{-- FORM INPUT --}}
                                     {{-- Teknik Overlay: Input menutupi area saat kosong (z-index tinggi & opacity 0) --}}
                                     {{-- Saat terisi, input disembunyikan (hidden) dan dipanggil via tombol Edit --}}
@@ -153,8 +185,8 @@
                                     {{-- KONDISI 1: JIKA KOSONG (Visual Saja) --}}
                                     <div class="absolute inset-0 flex flex-col items-center justify-center transition-colors z-10"
                                          x-show="!photos[i].url">
-                                        <x-icons.ui-plus class="w-6 h-6 text-slate-300 group-hover:text-[#004a85] mb-1 transition-colors" />
-                                        <span class="text-sm text-slate-400 group-hover:text-[#004a85]">{{ translate('Tambah') }}</span>
+                                        <x-icons.ui-plus class="w-6 h-6 text-slate-300 group-hover:text-brand-blue-dark mb-1 transition-colors" />
+                                        <span class="text-sm text-slate-400 group-hover:text-brand-blue-dark">{{ translate('Tambah') }}</span>
                                     </div>
 
                                     {{-- KONDISI 2: SUDAH ADA FOTO --}}
@@ -166,19 +198,21 @@
                                             <div class="absolute top-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 
                                                 {{-- Tombol Edit --}}
-                                                <button type="button" 
+                                                <x-ui.button type="button" 
                                                         @click="document.getElementById('slider-input-' + i).click()"
-                                                        class="p-1.5 bg-white text-slate-700 rounded-md shadow-sm hover:bg-slate-50 hover:text-[#004a85] transition border border-slate-200"
+                                                        variant="icon-box"
+                                                        size="icon"
                                                         title="{{ translate('Ganti Foto') }}">
                                                     <x-icons.ui-edit class="w-3.5 h-3.5" />
-                                                </button>
+                                                </x-ui.button>
 
                                                 {{-- Tombol Hapus --}}
-                                                <button type="button" @click="removePhoto(i)"
-                                                        class="p-1.5 bg-red-500 text-white rounded-md shadow-sm hover:bg-red-600 transition"
+                                                <x-ui.button type="button" @click="confirmDeletePhoto(i)"
+                                                        variant="icon-box-danger"
+                                                        size="icon"
                                                         title="{{ translate('Hapus Foto') }}">
                                                     <x-icons.ui-delete class="w-3.5 h-3.5" />
-                                                </button>
+                                                </x-ui.button>
                                             </div>
 
                                             {{-- Number Overlay --}}
@@ -197,25 +231,31 @@
 
 
             {{-- FLOATING ACTION BAR --}}
-            <div
-                class="fixed bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-40 w-[90%] md:w-auto flex justify-center">
-                <div
-                    class="bg-white p-1.5 rounded-full shadow-2xl border border-slate-100 flex items-center justify-between md:justify-center gap-2 pr-2 pl-2 ring-1 ring-slate-900/5 w-full md:w-auto">
+            <div x-show="isDirty"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-10"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 translate-y-10"
+                 class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-auto max-w-md"
+                 style="display: none;">
 
-                    {{-- TOMBOL BATAL --}}
-                    <button type="button" @click="cancelAction"
-                        class="px-4 py-2 md:px-5 md:py-2.5 rounded-full text-slate-500 font-bold hover:bg-slate-50 transition-colors text-base tracking-wide flex-1 md:flex-none text-center">
-                        {{ translate('Batal') }}
-                    </button>
+                <div class="bg-white/90 backdrop-blur-md p-1.5 sm:p-2 rounded-full shadow-2xl border border-gray-200/80 flex items-center justify-center sm:justify-start gap-3 ring-1 ring-black/5">
+
+                    <div class="pl-2 text-sm font-medium text-slate-700 whitespace-nowrap">
+                        {{ translate('Perubahan belum disimpan') }}
+                    </div>
 
                     {{-- TOMBOL SIMPAN --}}
                     <x-ui.button type="submit"
-                        class="px-5 py-2 md:px-6 md:py-2.5 text-slate-900 rounded-full font-medium text-base tracking-wide shadow-lg active:scale-95 flex items-center justify-center gap-2 flex-1 md:flex-none">
-                        <x-icons.ui-check class="w-4 h-4" />
+                        class="px-6 py-2.5 rounded-full shadow-lg active:scale-95 flex items-center justify-center transition-all hover:-translate-y-0.5 text-sm sm:text-base">
+                        
+                        <x-icons.ui-check class="w-5 h-5 shrink-0" />
 
-                        {{-- Trik Text Responsif --}}
-                        <span x-ref="submitText">
-                            {{ translate('Simpan') }} <span class="hidden sm:inline">{{ translate('Perubahan') }}</span>
+                        <span x-ref="submitText" class="whitespace-nowrap font-bold">
+                            <span class="sm:hidden">{{ translate('Simpan') }}</span>
+                            <span class="hidden sm:inline">{{ translate('Simpan Perubahan') }}</span>
                         </span>
                     </x-ui.button>
 
@@ -223,6 +263,27 @@
             </div>
 
         </form>
+
+        {{-- DELETE CONFIRMATION MODAL --}}
+        <x-ui.modal show="deleteModalOpen" max-width="sm">
+            <div class="p-6 text-center">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <x-icons.ui-delete class="w-8 h-8 text-red-600" />
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">{{ translate('Hapus Foto?') }}</h3>
+                <p class="text-slate-500 mb-6">
+                    {{ translate('Tandai foto ini untuk dihapus? Foto akan hilang sepenuhnya setelah Anda menyimpan perubahan.') }}
+                </p>
+                <div class="flex gap-3 justify-center">
+                    <x-ui.button type="button" variant="ghost" @click="deleteModalOpen = false" class="px-6 rounded-lg">
+                        {{ translate('Batal') }}
+                    </x-ui.button>
+                    <x-ui.button type="button" variant="destructive" @click="executeDelete()" class="px-6 rounded-lg">
+                        {{ translate('Ya, Hapus') }}
+                    </x-ui.button>
+                </div>
+            </div>
+        </x-ui.modal>
     </div>
 
     @push('scripts')
@@ -232,8 +293,17 @@
                     photos: initialPhotos,
                     deletedIds: [],
                     isDirty: false,
+                    deleteModalOpen: false,
+                    photoIndexToDelete: null,
 
                     init() {
+                        // Apply Cloudinary transformations to initial URLs in JS side if any
+                        this.photos.forEach(p => {
+                            if (p.url && p.url.includes('res.cloudinary.com')) {
+                                p.url = this.resizeCloudinary(p.url, 800);
+                            }
+                        });
+
                         this.$watch('deletedIds', () => { this.isDirty = true });
                         window.onbeforeunload = (e) => {
                             if (this.isDirty) {
@@ -241,6 +311,18 @@
                                 e.returnValue = '{{ translate("Anda memiliki perubahan yang belum disimpan. Yakin ingin meninggalkan halaman?") }}';
                             }
                         };
+                    },
+
+
+                    resizeCloudinary(url, width) {
+                        if (!url || !url.includes('res.cloudinary.com') || !url.includes('/upload/')) return url;
+                        if (url.includes('/upload/f_auto,q_auto')) {
+                            if (url.includes('w_')) {
+                                return url.replace(/w_\d+/, 'w_' + width);
+                            }
+                            return url.replace('/upload/f_auto,q_auto', '/upload/f_auto,q_auto,w_' + width + ',c_limit');
+                        }
+                        return url.replace('/upload/', '/upload/w_' + width + ',c_limit/');
                     },
 
                     handleFileSelect(event, index) {
@@ -255,24 +337,38 @@
                         }
                     },
 
-                    removePhoto(index) {
-                        if (confirm('{{ translate("Tandai foto ini untuk dihapus? Perubahan akan diterapkan setelah Anda klik Simpan.") }}')) {
-                            // If it has an ID (existing in DB), add to deletedIds
-                            if (this.photos[index].id) {
-                                this.deletedIds.push(this.photos[index].id);
-                            }
-                            
-                            this.photos[index].url = null;
-                            this.photos[index].id = null;
-                            this.isDirty = true;
+                    confirmDeletePhoto(index) {
+                        this.photoIndexToDelete = index;
+                        this.deleteModalOpen = true;
+                    },
 
-                            if (index === 0) {
-                                if (this.$refs.photo0) this.$refs.photo0.value = '';
-                            } else {
-                                const input = document.getElementById('slider-input-' + index);
-                                if (input) input.value = '';
-                            }
+                    executeDelete() {
+                        const index = this.photoIndexToDelete;
+                        if (index === null) return;
+
+                        // If it has an ID (existing in DB), add to deletedIds
+                        if (this.photos[index].id) {
+                            this.deletedIds.push(this.photos[index].id);
                         }
+                        
+                        this.photos[index].url = null;
+                        this.photos[index].id = null;
+                        this.isDirty = true;
+
+                        if (index === 0) {
+                            if (this.$refs.photo0) this.$refs.photo0.value = '';
+                        } else {
+                            const input = document.getElementById('slider-input-' + index);
+                            if (input) input.value = '';
+                        }
+
+                        this.deleteModalOpen = false;
+                        this.photoIndexToDelete = null;
+                    },
+
+                    removePhoto(index) {
+                        // Keep for legacy/internal but we use confirmDeletePhoto and executeDelete
+                        this.confirmDeletePhoto(index);
                     },
 
                     cancelAction() {

@@ -7,11 +7,11 @@
         <x-ui.card class="w-full max-w-[420px] p-6 md:p-10 shadow-xl border-gray-100">
 
             <!-- Judul -->
-            <h1 class="text-center text-2xl md:text-3xl font-bold mb-4 text-gray-900 tracking-tight">
+            <h1 class="text-center text-2xl md:text-3xl font-bold mb-4 text-slate-900 tracking-tight">
                 Verifikasi Email
             </h1>
 
-            <div class="mb-6 text-sm text-gray-600 text-center">
+            <div class="mb-6 text-sm text-slate-600 text-center">
                 {{ __('Terima kasih telah mendaftar! Sebelum memulai, mohon verifikasi alamat email Anda dengan mengklik tautan yang baru saja kami barchan ke email Anda. Jika Anda tidak menerima email tersebut, kami dengan senang hati akan mengirimkan ulang.') }}
             </div>
 
@@ -26,17 +26,16 @@
                     @csrf
 
                     <x-ui.button type="submit"
-                        class="w-full py-2.5 md:py-3 px-4 text-sm md:text-base font-semibold rounded-lg transition-all shadow-md hover:shadow-lg">
+                        class="w-full py-2.5 md:py-3 px-4 rounded-lg transition-all shadow-md hover:shadow-lg">
                         {{ __('Kirim Ulang Email Verifikasi') }}
                     </x-ui.button>
                 </form>
 
                 <form method="POST" action="{{ route('logout') }}" class="text-center">
                     @csrf
-                    <button type="submit"
-                        class="text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 underline underline-offset-4">
+                    <x-ui.button type="submit" variant="link-gray" size="compact" class="text-sm h-auto !p-0 !bg-transparent font-normal">
                         {{ __('Keluar') }}
-                    </button>
+                    </x-ui.button>
                 </form>
             </div>
         </x-ui.card>

@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Shop extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'user_id',
         'name',
@@ -34,6 +39,11 @@ class Shop extends Model
         'licenses' => 'array',
     ];
 
+    // --- Section: Relationships ---
+
+    /**
+     * Get the user that owns the shop.
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -54,6 +64,14 @@ class Shop extends Model
         return $this->hasMany(ShopPhoto::class);
     }
 
+    // --- Section: Business Logic: Types & Logos ---
+
+    /**
+     * Get available business types.
+     * Uses dynamic content from DB, falls back to hardcoded list.
+     *
+     * @return array
+     */
     public static function getBusinessTypes()
     {
         $customTypes = \App\Models\Content::where('group', 'business_types')->pluck('value')->toArray();
@@ -72,17 +90,24 @@ class Shop extends Model
         ];
     }
 
+    /**
+     * Get the URL for the shop's logo.
+     * Prioritizes custom logo -> dynamic fallback -> hardcoded fallback.
+     *
+     * @return string
+     */
     public function getLogoUrlAttribute()
     {
         // 1. Return custom shop logo if exists
         if ($this->logo) {
-            return asset('storage/' . $this->logo);
+            return storage_url($this->logo);
         }
-
+    
         // 2. Try dynamic logo from database (admin-managed fallback)
+        // Penjelasan: Admin bisa mengubah icon default per jenis usaha di database tanpa deploy code
         $dynamicLogo = $this->getDynamicFallbackLogo();
         if ($dynamicLogo) {
-            return asset('storage/' . $dynamicLogo);
+            return storage_url($dynamicLogo);
         }
 
         // 3. Hardcoded fallback based on business type
@@ -114,9 +139,20 @@ class Shop extends Model
     /**
      * Get hardcoded default logo based on business type.
      */
+    /**
+     * Get hardcoded default logo based on business type.
+     */
     protected function getHardcodedFallbackLogo(): string
     {
-        $businessType = strtolower($this->business_type ?? 'kuliner');
+        return asset('images/' . self::getFallbackLogoForType($this->business_type ?? 'kuliner'));
+    }
+
+    /**
+     * Get hardcoded fallback logo filename based on business type.
+     */
+    public static function getFallbackLogoForType(string $type): string
+    {
+        $val = strtolower($type);
         
         $map = [
             'kuliner' => 'kuliner.svg',
@@ -128,9 +164,41 @@ class Shop extends Model
             'agribisnis' => 'agribisnis.svg',
         ];
 
-        $image = $map[$businessType] ?? 'kuliner.svg';
+        // Try exact match
+        if (isset($map[$val])) {
+            return $map[$val];
+        }
+        
+        // Try loose match
+        foreach ($map as $key => $logo) {
+            if (str_contains($val, $key)) {
+                return $logo;
+            }
+        }
 
-        return asset('images/' . $image);
+        return 'kuliner.svg';
+    }
+
+    /**
+     * Get fallback marker icon name based on business type value.
+     */
+    public static function getFallbackMarkerIconForType(string $type): string
+    {
+        $val = strtolower($type);
+        if (str_contains($val, 'kuliner') || str_contains($val, 'makan') || str_contains($val, 'food')) {
+            return 'map-pin-food';
+        } elseif (str_contains($val, 'fashion') || str_contains($val, 'baju') || str_contains($val, 'pakaian') || str_contains($val, 'aksesoris')) {
+            return 'map-pin-fashion';
+        } elseif (str_contains($val, 'jasa') || str_contains($val, 'service') || str_contains($val, 'work')) {
+            return 'map-pin-work';
+        } elseif (str_contains($val, 'kelontong') || str_contains($val, 'toko')) {
+            return 'map-pin-shop';
+        } elseif (str_contains($val, 'agribisnis') || str_contains($val, 'tani') || str_contains($val, 'pertanian')) {
+            return 'map-pin-plants';
+        } elseif (str_contains($val, 'kerajinan') || str_contains($val, 'craft')) {
+            return 'map-pin-craft';
+        }
+        return 'map-pin';
     }
 
     public function getInstagramUsernameAttribute()
@@ -171,8 +239,12 @@ class Shop extends Model
             : 'https://' . $this->social_website;
     }
 
+    // --- Section: Verification Logic ---
+
     /**
      * Check if the shop has all required fields filled to be approved.
+     *
+     * @return bool
      */
     public function isComplete(): bool
     {
@@ -215,5 +287,25 @@ class Shop extends Model
     public function getHasSocialsAttribute(): bool
     {
         return $this->social_instagram || $this->social_tiktok || $this->social_facebook || $this->social_website;
+    }
+
+    /**
+     * Check and update verification status if incomplete.
+     *
+     * @return void
+     */
+    public function updateVerificationStatus()
+    {
+        // Aturan Bisnis:
+        // Jika data toko tidak lengkap (misal user menghapus foto/lokasi), 
+        // status verifikasi otomatis dicabut demi menjaga kualitas konten Verified Shop.
+        if ($this->is_verified && !$this->isComplete()) {
+            $this->is_verified = false;
+            $this->save();
+
+            // Notify Admin and User
+            \App\Events\ShopUpdated::dispatch($this->id);
+            \App\Events\UserUpdated::dispatch($this->user_id, 'refresh');
+        }
     }
 }

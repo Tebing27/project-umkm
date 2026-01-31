@@ -92,7 +92,7 @@
                                 @enderror
 
                                 {{-- Strength Meter --}}
-                                <div class="mt-2 text-sm transition-all duration-300 bg-slate-50 p-3 rounded-lg border border-slate-200" x-show="password.length > 0" x-transition>
+                                <div class="mt-2 text-sm transition-all duration-300 bg-gray-50 p-3 rounded-lg border border-gray-200" x-show="password.length > 0" x-transition>
                                     <div class="flex justify-between mb-1">
                                         <span class="font-medium" :class="strengthText">{{ translate('Kekuatan:') }} <span x-text="strengthLabel"></span></span>
                                     </div>
@@ -104,22 +104,22 @@
                                     <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-y-1 gap-x-2">
                                         <div class="flex items-center gap-1.5" :class="checks.length ? 'text-green-600' : 'text-slate-500'">
                                             <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.length" />
-                                            <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.length"></div>
+                                            <div class="w-3.5 h-3.5 rounded-full border border-gray-300" x-show="!checks.length"></div>
                                             <span>{{ translate('Min 8 karakter') }}</span>
                                         </div>
                                          <div class="flex items-center gap-1.5" :class="checks.lower ? 'text-green-600' : 'text-slate-500'">
                                             <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.lower" />
-                                            <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.lower"></div>
+                                            <div class="w-3.5 h-3.5 rounded-full border border-gray-300" x-show="!checks.lower"></div>
                                             <span>{{ translate('Huruf kecil (a-z)') }}</span>
                                         </div>
                                         <div class="flex items-center gap-1.5" :class="checks.upper ? 'text-green-600' : 'text-slate-500'">
                                             <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.upper" />
-                                            <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.upper"></div>
+                                            <div class="w-3.5 h-3.5 rounded-full border border-gray-300" x-show="!checks.upper"></div>
                                             <span>{{ translate('Huruf besar (A-Z)') }}</span>
                                         </div>
                                         <div class="flex items-center gap-1.5" :class="checks.number ? 'text-green-600' : 'text-slate-500'">
                                             <x-icons.ui-check class="w-3.5 h-3.5" x-show="checks.number" />
-                                            <div class="w-3.5 h-3.5 rounded-full border border-slate-300" x-show="!checks.number"></div>
+                                            <div class="w-3.5 h-3.5 rounded-full border border-gray-300" x-show="!checks.number"></div>
                                             <span>{{ translate('Angka (0-9)') }}</span>
                                         </div>
                                     </div>
@@ -143,7 +143,7 @@
 
                         {{-- Tombol Action --}}
                         <div class="pt-2 flex justify-start">
-                            <x-ui.button type="submit" class="rounded-lg font-medium">
+                            <x-ui.button type="submit" class="rounded-lg">
                                 {{ translate('Update Password') }}
                             </x-ui.button>
                         </div>

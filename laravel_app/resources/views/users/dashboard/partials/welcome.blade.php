@@ -1,4 +1,4 @@
-    {{-- Welcome Section --}}
+{{-- Welcome Section --}}
     <div class="relative overflow-hidden text-slate-900">
         <div class="relative z-10">
             <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight mb-2">Hi, {{ Auth::user()->name }} 👋</h2>

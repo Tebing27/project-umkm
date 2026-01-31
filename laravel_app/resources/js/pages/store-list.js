@@ -1,3 +1,7 @@
+
+import { database } from '../firebase';
+import { ref, onValue } from "firebase/database";
+
 window.storeApp = function (initialData) {
     return {
         // --- STATE ---
@@ -96,7 +100,6 @@ window.storeApp = function (initialData) {
         },
 
         // --- INIT (WATCHERS) ---
-        // Reset ke halaman 1 jika user mengubah filter
         init() {
             this.$watch('searchQuery', () => {
                 this.currentPage = 1;
@@ -108,32 +111,20 @@ window.storeApp = function (initialData) {
                 this.currentPage = 1;
             });
 
-            // WaitForEcho Pattern
-            let attempt = 0;
-            const waitForEcho = setInterval(() => {
-                attempt++;
-                if (window.Echo) {
-                    clearInterval(waitForEcho);
-                    console.log("Echo found! Subscribing to [shops]...");
-
-                    window.Echo.channel('shops')
-                        .listen('ShopUpdated', (e) => {
-                            console.log('ShopUpdated event received', e);
-                            setTimeout(() => {
-                                this.refreshData();
-                            }, 1000); // 1s delay for race condition
-                        });
-
-                } else if (attempt > 20) { // Timeout after 10s
-                    clearInterval(waitForEcho);
-                    console.error("Critical: Pusher Echo failed to load in store-list.js");
+            // Firebase Listener Pattern
+            const shopsRef = ref(database, 'channels/shops');
+            onValue(shopsRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    // Debounce or simple delay
+                    setTimeout(() => {
+                        this.refreshData();
+                    }, 1000);
                 }
-            }, 500);
+            });
         },
 
         refreshData() {
-            console.log('Refreshing data...');
-
             // Build current URL params
             const params = new URLSearchParams(window.location.search);
 
@@ -148,8 +139,6 @@ window.storeApp = function (initialData) {
                 headers: { 'Accept': 'application/json' }
             })
                 .then(response => {
-                    console.log('Refresh response:', response);
-
                     let newItems = [];
                     // PublicController returns JSON array of items on `wantsJson()` or `json=true`
                     if (Array.isArray(response.data)) {
@@ -157,16 +146,12 @@ window.storeApp = function (initialData) {
                     } else if (response.data.data && Array.isArray(response.data.data)) {
                         newItems = response.data.data;
                     } else {
-                        console.warn('Unexpected response format:', response.data);
                         return;
                     }
 
                     this.items = newItems;
-                    console.log('Items updated:', this.items.length);
                 })
-                .catch(error => {
-                    console.error('Error refreshing data:', error);
-                });
+                .catch(error => { });
         }
     }
 }

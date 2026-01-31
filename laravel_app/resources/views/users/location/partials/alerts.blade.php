@@ -4,7 +4,7 @@
             <x-icons.ui-check class="w-6 h-6 shrink-0" />
             <span x-text="successMessage"></span>
             <button @click="showSuccessAlert = false"
-                class="ml-auto text-green-500 hover:text-green-700">&times;</button>
+                class="ml-auto text-green-500 hover:text-green-700"><x-icons.ui-close class="w-5 h-5" /></button>
         </div>
 
         {{-- ALERT LOCKED (Desktop) --}}
@@ -15,7 +15,7 @@
             <span class="text-sm font-medium">{{ translate('Mode Desktop Terkunci: Silakan masukkan koordinat manual atau gunakan HP.') }}</span>
             <button type="button" @click="showLockedAlert = false"
                 class="ml-auto text-red-400 hover:text-red-600 focus:outline-none p-1">
-                <span class="text-xl font-bold leading-none">&times;</span>
+                <x-icons.ui-close class="w-5 h-5" />
             </button>
         </div>
 

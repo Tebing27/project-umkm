@@ -13,24 +13,47 @@ use enshrined\svgSanitize\Sanitizer;
 
 class ContentController extends Controller
 {
+    /**
+     * @var \App\Services\ImageService
+     */
+    protected $imageService;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param \App\Services\ImageService $imageService
+     */
+    public function __construct(\App\Services\ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
+    /**
+     * Show the content management dashboard.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
+     */
     public function index(Request $request)
     {
-        // Ensure default structure exists for specific sections if they don't exist
+        // --- Section: Inisialisasi Konten Default ---
+        // Memastikan struktur konten dasar tersedia jika belum ada di database
         $this->ensureDefaultContents();
         
         $group = $request->query('tab', 'home_hero');
         
-        // Organize contents by group for easier access in the view
+    // --- Section: Pengelompokan Data ---
         $contents = Content::where('group', $group)->get()->groupBy('group');
         
-        // Data khusus untuk tab tertentu
+        // --- Section: Data Wilayah (Khusus Tab Wilayah/Hero) ---
         $regions = collect([]);
         if ($group === 'home_wilayah' || $group === 'home_hero') {
             $regions = Region::with(['shops' => function($query) {
+                // Hanya ambil toko verified untuk featured selection
                 $query->where('is_verified', true)->select('id', 'name', 'region_id');
             }])->get();
 
-            // Pre-calculate selected shop name for the view to avoid inline PHP
+            // Pre-calculate selected shop name (business logic: avoid inline PHP logic in view)
             $regions->each(function($region) {
                 $selectedName = translate('Acak / Tidak Ada');
                 if ($region->featured_shop_id) {
@@ -44,22 +67,24 @@ class ContentController extends Controller
             });
         }
 
+        // --- Section: Tab Configuration ---
         $tabs = [
             'home_hero' => ['label' => 'Hero Section', 'icon' => 'home'],
             'home_wilayah' => ['label' => 'Wilayah', 'icon' => 'map'],
             'umkm_index' => ['label' => 'Halaman UMKM', 'icon' => 'shopping-bag'],
+            'footer' => ['label' => 'Footer', 'icon' => 'archive'],
             'business_types' => ['label' => 'Jenis Usaha', 'icon' => 'tag'],
             'logo' => ['label' => 'Logo', 'icon' => 'star'],
         ];
 
-        // Prepare data for Business Types
+        // --- Section: Data Jenis Usaha ---
         $businessTypes = $contents->get('business_types') ?? collect([]);
         // Fetch icons for business types
         $businessTypeIcons = Content::where('group', 'business_type_icons')->get()->keyBy('key');
         // Fetch logos for business types
         $businessTypeLogos = Content::where('group', 'business_type_logos')->get()->keyBy('key');
         
-        // Attach icon, logo and fallback values to businessType object (for view)
+        // Menggabungkan data icon dan logo ke object businessType untuk kemudahan akses di view
         foreach ($businessTypes as $bt) {
             $iconKey = 'icon_for_' . $bt->id;
             $bt->icon_url = isset($businessTypeIcons[$iconKey]) ? $businessTypeIcons[$iconKey]->value : null;
@@ -67,12 +92,12 @@ class ContentController extends Controller
             $logoKey = 'logo_fallback_for_' . $bt->id;
             $bt->logo_url = isset($businessTypeLogos[$logoKey]) ? $businessTypeLogos[$logoKey]->value : null;
             
-            // Pre-compute fallback values for view (Zero PHP Blade)
-            $bt->fallback_marker_icon = $this->getFallbackMarkerIcon($bt->value);
-            $bt->fallback_logo = $this->getFallbackLogo($bt->value);
+            // Fallback values (Zero PHP Blade logic)
+            $bt->fallback_marker_icon = \App\Models\Shop::getFallbackMarkerIconForType($bt->value);
+            $bt->fallback_logo = \App\Models\Shop::getFallbackLogoForType($bt->value);
         }
 
-        // Prepare data for Logo
+        // --- Section: Data Logo ---
         $logoData = $contents->get('logo') ?? collect([]);
         $logoType = $logoData->where('key', 'logo_type')->first();
         $logoText = $logoData->where('key', 'logo_text')->first();
@@ -83,9 +108,14 @@ class ContentController extends Controller
         return view('admin.content.index', compact('contents', 'regions', 'tabs', 'businessTypes', 'logoType', 'logoText', 'logoImage', 'logoShowImage', 'logoShowText'));
     }
 
+    /**
+     * Ensure default contents exist in the database.
+     * 
+     * @return void
+     */
     private function ensureDefaultContents()
     {
-        // Business Types Defaults
+        // --- Section: Default Jenis Usaha ---
         $types = ['Kuliner', 'Pakaian & Aksesoris', 'Kelontong', 'Agribisnis', 'Jasa', 'Kerajinan Tangan'];
         foreach ($types as $type) {
             Content::firstOrCreate(
@@ -94,13 +124,14 @@ class ContentController extends Controller
             );
         }
 
-        // Logo Defaults
+        // --- Section: Default Logo Configuration ---
         Content::firstOrCreate(['key' => 'logo_type'], ['group' => 'logo', 'value' => 'text', 'type' => 'text', 'label' => 'Tipe Logo']);
         Content::firstOrCreate(['key' => 'logo_text'], ['group' => 'logo', 'value' => 'Sasuma UMKM', 'type' => 'text', 'label' => 'Teks Logo']);
         Content::firstOrCreate(['key' => 'logo_image'], ['group' => 'logo', 'value' => '', 'type' => 'image', 'label' => 'Gambar Logo']);
         Content::firstOrCreate(['key' => 'logo_show_image'], ['group' => 'logo', 'value' => '0', 'type' => 'text', 'label' => 'Tampilkan Gambar']);
         Content::firstOrCreate(['key' => 'logo_show_text'], ['group' => 'logo', 'value' => '1', 'type' => 'text', 'label' => 'Tampilkan Teks']);
 
+        // --- Section: Default Page Contents ---
         $defaults = [
             'home_hero' => [
                 'home_hero_title' => ['label' => 'Hero Title', 'type' => 'text', 'value' => 'UMKM SASUMA.'],
@@ -119,6 +150,17 @@ class ContentController extends Controller
                 'umkm_banner_stat_number' => ['label' => 'Banner Stat Number', 'type' => 'text', 'value' => '100+ UMKM'],
                 'umkm_banner_stat_text' => ['label' => 'Banner Stat Text', 'type' => 'text', 'value' => 'Terdaftar di Sasuma'],
             ],
+            'footer' => [
+                'footer_about' => ['label' => 'About Text', 'type' => 'textarea', 'value' => 'Small change. Big change.'],
+                'footer_copyright' => ['label' => 'Copyright Text', 'type' => 'text', 'value' => 'Copyright © 2026'],
+                'footer_cta_text' => ['label' => 'CTA Button Text', 'type' => 'text', 'value' => 'CONTACT US'],
+                'footer_cta_link' => ['label' => 'CTA Button Link', 'type' => 'text', 'value' => '/contact'],
+                'footer_section_1_title' => ['label' => 'Link Section 1 Title', 'type' => 'text', 'value' => 'Home'],
+                'footer_section_2_title' => ['label' => 'Link Section 2 Title', 'type' => 'text', 'value' => 'How it works'],
+                'footer_social_facebook' => ['label' => 'Facebook URL', 'type' => 'text', 'value' => '#'],
+                'footer_social_instagram' => ['label' => 'Instagram URL', 'type' => 'text', 'value' => '#'],
+                'footer_social_tiktok' => ['label' => 'TikTok URL', 'type' => 'text', 'value' => '#'],
+            ],
         ];
 
         foreach ($defaults as $group => $items) {
@@ -136,6 +178,12 @@ class ContentController extends Controller
         }
     }
 
+    /**
+     * Store new content in the database.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -151,19 +199,20 @@ class ContentController extends Controller
 
         $data = $request->only(['key', 'type', 'group', 'label']);
         
+        // --- Section: Handle Content Value ---
         if ($request->type === 'image') {
             if ($request->hasFile('image')) {
+                // Resize image depending on use-case
                 $file = $request->file('image');
-                $filename = 'content/' . Str::random(20) . '.jpg';
-                
-                $maxWidth = ($request->group === 'umkm_index') ? 1200 : 800;
-                
-                $this->resizeAndSaveImage($file, $filename, $maxWidth);
+                $maxWidth = ($request->group === 'umkm_index') ? 1200 : 800; // Banner needs more width
+
+                $filename = $this->imageService->resizeAndSave($file, 'content', $maxWidth);
                 $data['value'] = $filename;
             }
         } else {
             $data['value'] = $request->value;
-            // Auto Translate if NOT in exclusion list
+            // --- Section: Auto Translation ---
+            // Trigger translasi otomatis jika bukan exclude list
             if ($data['value'] && !in_array($data['key'], ['home_hero_title', 'umkm_index_title'])) {
                 $this->triggerTranslation($data['value']);
             }
@@ -171,7 +220,7 @@ class ContentController extends Controller
 
         $content = Content::create($data);
         
-        // Handle Icon Upload for Business Types
+        // --- Section: Business Type Special Assets (Icon/Logo) ---
         if ($request->group === 'business_types') {
             if ($request->hasFile('icon')) {
                 $this->saveIcon($request->file('icon'), $content->id);
@@ -186,6 +235,13 @@ class ContentController extends Controller
         return redirect()->route('admin.contents.index', ['tab' => $data['group'] ?? 'home_hero'])->with('success', translate('Konten berhasil dibuat.'));
     }
 
+    /**
+     * Update existing content.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, $id)
     {
         $content = Content::findOrFail($id);
@@ -202,24 +258,21 @@ class ContentController extends Controller
 
         $request->validate($rules);
 
+        // --- Section: Update Content ---
         if ($content->type === 'image') {
             if ($request->hasFile('image')) {
-                // Delete old image
-                if ($content->value && Storage::disk('public')->exists($content->value)) {
-                    Storage::disk('public')->delete($content->value);
-                }
+                // Hapus image lama sebelum replace
+                $this->imageService->delete($content->value);
                 
                 $file = $request->file('image');
-                $filename = 'content/' . Str::random(20) . '.jpg';
-                
                 $maxWidth = ($content->group === 'umkm_index') ? 1200 : 800;
                 
-                $this->resizeAndSaveImage($file, $filename, $maxWidth);
+                $filename = $this->imageService->resizeAndSave($file, 'content', $maxWidth);
                 $content->value = $filename;
             }
         } else {
             $content->value = $request->value;
-            // Auto Translate if NOT in exclusion list
+            // --- Section: Auto Translation ---
             if ($content->value && !in_array($content->key, ['home_hero_title', 'umkm_index_title'])) {
                 $this->triggerTranslation($content->value);
             }
@@ -227,23 +280,22 @@ class ContentController extends Controller
         
         $content->save();
 
+        // --- Section: Business Type Assets Updates ---
         if ($content->group === 'business_types') {
-            // Handle Icon Deletion
+            // Hapus assets jika checkbox dicentang
             if ($request->boolean('remove_icon')) {
                 $iconKey = 'icon_for_' . $content->id;
                 $this->deleteAssociatedImage($iconKey);
             }
-            // Handle Logo Deletion
             if ($request->boolean('remove_logo')) {
                 $logoKey = 'logo_fallback_for_' . $content->id;
                 $this->deleteAssociatedImage($logoKey);
             }
 
-            // Handle Icon Update
+            // Update/Upload assets baru
             if ($request->hasFile('icon')) {
                 $this->saveIcon($request->file('icon'), $content->id);
             }
-            // Handle Logo Update
             if ($request->hasFile('logo_fallback')) {
                 $this->saveLogoFallback($request->file('logo_fallback'), $content->id);
             }
@@ -254,12 +306,18 @@ class ContentController extends Controller
         return redirect()->route('admin.contents.index', ['tab' => $content->group])->with('success', translate('Konten berhasil diperbarui.'));
     }
 
+    /**
+     * Delete content.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy($id)
     {
         $content = Content::findOrFail($id);
         
-        if ($content->type === 'image' && $content->value && Storage::disk('public')->exists($content->value)) {
-            Storage::disk('public')->delete($content->value);
+        if ($content->type === 'image' && $content->value) {
+            $this->imageService->delete($content->value);
         }
 
         // If Business Type, delete associated icon and logo
@@ -280,9 +338,7 @@ class ContentController extends Controller
     {
         $item = Content::where('key', $key)->first();
         if ($item) {
-            if ($item->value && Storage::disk('public')->exists($item->value)) {
-                Storage::disk('public')->delete($item->value);
-            }
+            $this->imageService->delete($item->value);
             $item->delete();
         }
     }
@@ -297,31 +353,30 @@ class ContentController extends Controller
          $this->saveSvgContent($file, $businessTypeId, 'logo_fallback_for_', 'business_type_logos', 'Logo Fallback for ');
     }
 
+    // --- Section: Helpers for SVG Assets ---
+
     private function saveSvgContent($file, $businessTypeId, $keyPrefix, $group, $labelPrefix)
     {
-         // Check availability of Sanitizer code handled by function logic
-        if (!class_exists('enshrined\svgSanitize\Sanitizer')) {
-             throw new \Exception('SVG Sanitizer library not found. Please run composer require enshrined/svg-sanitize');
+        try {
+            $filename = $this->imageService->saveSvg($file, 'icons');
+            
+            $key = $keyPrefix . $businessTypeId;
+            
+            Content::updateOrCreate(
+                ['key' => $key],
+                [
+                    'group' => $group,
+                    'value' => $filename,
+                    'type' => 'image',
+                    'label' => $labelPrefix . $businessTypeId
+                ]
+            );
+        } catch (\Exception $e) {
+            \Log::error('SFG Upload Failed: ' . $e->getMessage());
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                 'icon' => 'Gagal mengupload file SVG: ' . $e->getMessage()
+            ]);
         }
-
-        $sanitizer = new Sanitizer();
-        $fileContent = file_get_contents($file->getRealPath());
-        $cleanSvg = $sanitizer->sanitize($fileContent);
-        
-        $filename = 'icons/' . Str::random(20) . '.svg';
-        Storage::disk('public')->put($filename, $cleanSvg);
-
-        $key = $keyPrefix . $businessTypeId;
-        
-        Content::updateOrCreate(
-            ['key' => $key],
-            [
-                'group' => $group,
-                'value' => $filename,
-                'type' => 'image',
-                'label' => $labelPrefix . $businessTypeId
-            ]
-        );
     }
     
     protected function triggerTranslation($text)
@@ -333,132 +388,14 @@ class ContentController extends Controller
         }
     }
 
-    private function resizeAndSaveImage($file, $path, $maxWidth)
-    {
-        // ... (existing code)
-        // No changes needed here, just keep content
-        if (!extension_loaded('gd')) {
-            $directory = dirname($path);
-            $filename = basename($path);
-            $file->storeAs($directory, $filename, 'public');
-            return;
-        }
 
-        try {
-            $imageInfo = \getimagesize($file->getRealPath());
-            if (!$imageInfo) return; 
-
-            list($width, $height, $type) = $imageInfo;
-            
-            if ($width > 4000 || $height > 4000) {
-                 throw \Illuminate\Validation\ValidationException::withMessages([
-                    'image' => 'Resolusi gambar konten terlalu besar. Maksimal 4000x4000px.'
-                ]);
-            }
-            
-            $newWidth = $width;
-            $newHeight = $height;
-
-            if ($width > $maxWidth) {
-                $ratio = $maxWidth / $width;
-                $newWidth = $maxWidth;
-                $newHeight = $height * $ratio;
-            }
-
-            $src = null;
-            switch ($type) {
-                case IMAGETYPE_JPEG:
-                    $src = \imagecreatefromjpeg($file->getRealPath());
-                    break;
-                case IMAGETYPE_PNG:
-                    $src = \imagecreatefrompng($file->getRealPath());
-                    break;
-                case IMAGETYPE_WEBP:
-                    $src = \imagecreatefromwebp($file->getRealPath());
-                    break;
-            }
-
-            if ($src) {
-                $dst = \imagecreatetruecolor($newWidth, $newHeight);
-                
-                if ($type == IMAGETYPE_PNG || $type == IMAGETYPE_WEBP) {
-                    \imagecolortransparent($dst, \imagecolorallocatealpha($dst, 0, 0, 0, 127));
-                    \imagealphablending($dst, false);
-                    \imagesavealpha($dst, true);
-                }
-
-                \imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-                
-                $fullPath = storage_path('app/public/' . $path);
-                $directory = dirname($fullPath);
-                if (!file_exists($directory)) {
-                    mkdir($directory, 0755, true);
-                }
-
-                \imagejpeg($dst, $fullPath, 85);
-                
-                \imagedestroy($src);
-                \imagedestroy($dst);
-            } else {
-                $directory = dirname($path);
-                $filename = basename($path);
-                $file->storeAs($directory, $filename, 'public');
-            }
-        } catch (\Throwable $e) {
-            \Log::warning('Image resize failed: ' . $e->getMessage());
-            $directory = dirname($path);
-            $filename = basename($path);
-            $file->storeAs($directory, $filename, 'public');
-        }
-    }
 
     /**
-     * Get fallback marker icon name based on business type value.
+     * Delete a specific image file from content.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    private function getFallbackMarkerIcon(string $value): string
-    {
-        $val = strtolower($value);
-        if (str_contains($val, 'kuliner') || str_contains($val, 'makan') || str_contains($val, 'food')) {
-            return 'map-pin-food';
-        } elseif (str_contains($val, 'fashion') || str_contains($val, 'baju') || str_contains($val, 'pakaian')) {
-            return 'map-pin-fashion';
-        } elseif (str_contains($val, 'jasa') || str_contains($val, 'service') || str_contains($val, 'work')) {
-            return 'map-pin-work';
-        }
-        return 'content-tag';
-    }
-
-    /**
-     * Get fallback logo filename based on business type value.
-     */
-    private function getFallbackLogo(string $value): string
-    {
-        $val = strtolower($value);
-        $defaultLogos = [
-            'kuliner' => 'kuliner.svg',
-            'pakaian & aksesoris' => 'pakaian.svg',
-            'pakaian & fashion' => 'pakaian.svg',
-            'kerajinan tangan' => 'kerajinan.svg',
-            'kelontong' => 'kelontong.svg',
-            'jasa' => 'jasa.svg',
-            'agribisnis' => 'agribisnis.svg',
-        ];
-        
-        // Try exact match
-        if (isset($defaultLogos[$val])) {
-            return $defaultLogos[$val];
-        }
-        
-        // Try loose match
-        foreach ($defaultLogos as $key => $logo) {
-            if (str_contains($val, $key)) {
-                return $logo;
-            }
-        }
-        
-        return 'kuliner.svg'; // Ultimate fallback
-    }
-
     public function deleteImage($id)
     {
         $content = Content::findOrFail($id);

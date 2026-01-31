@@ -16,7 +16,7 @@
     </style>
 </head>
 
-<body class="bg-slate-50 font-sans text-slate-800 antialiased" x-data="{
+<body class="bg-gray-50 font-sans text-slate-800 antialiased" x-data="{
     sidebarOpen: false,
     sidebarExpanded: true
 }">
@@ -27,15 +27,13 @@
         <x-navigation-admin />
 
         {{-- MAIN CONTENT WRAPPER --}}
-        {{-- Added: overflow-x-hidden & w-full fix --}}
-        <div class="flex-1 flex flex-col min-h-screen duration-300 ease-in-out bg-slate-50 relative overflow-x-hidden"
+        <div class="flex-1 flex flex-col min-h-screen bg-gray-50 relative overflow-x-hidden"
             :class="sidebarExpanded ? 'lg:ml-72' : 'lg:ml-20'">
 
             {{-- MOBILE HEADER --}}
             <x-header-mobile :title="$headerTitle ?? 'Dashboard Admin'" :subtitle="$headerSubtitle ?? 'Overview & Statistik'" />
 
             {{-- CONTENT AREA --}}
-            {{-- Adjusted: Padding dikurangi sedikit agar space lebih luas untuk konten --}}
             <main class="flex-1 py-8 px-4 sm:px-6 lg:px-8 w-full mx-auto max-w-[1600px]">
                 {{ $slot }}
             </main>
@@ -46,7 +44,7 @@
             x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0"
             x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300"
             x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-            class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm lg:hidden" x-cloak>
+            class="fixed inset-0 z-40 bg-gray-900/50 backdrop-blur-sm lg:hidden" x-cloak>
         </div>
 
     </div>

@@ -13,17 +13,17 @@
             </div>
 
             <!-- Judul -->
-            <h1 class="text-2xl md:text-3xl font-bold mb-4 text-gray-900 tracking-tight">
+            <h1 class="text-2xl md:text-3xl font-bold mb-4 text-slate-900 tracking-tight">
                 Sukses
             </h1>
 
-            <p class="text-gray-600 mb-8 text-base">
+            <p class="text-slate-600 mb-8 text-base">
                 Tolong pergi ke email untuk melanjutkan nya
             </p>
 
             <div class="pt-2">
                 <a href="{{ route('login') }}">
-                    <x-ui.button class="rounded-lg w-full text-lg py-2 shadow-md">
+                    <x-ui.button class="rounded-lg w-full py-2 shadow-md">
                         Kembali ke Login
                     </x-ui.button>
                 </a>

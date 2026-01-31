@@ -1,4 +1,4 @@
-<div class="bg-white p-2 border border-slate-200 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative z-30">
+<div class="bg-white p-2 border border-gray-200 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative z-30">
     <div class="flex items-center gap-2">
         {{-- Search Input --}}
         <div class="flex-1">
@@ -18,7 +18,7 @@
         </div>
 
         {{-- Divider --}}
-        <div class="w-px h-8 bg-slate-200 hidden sm:block"></div>
+        <div class="w-px h-8 bg-gray-200 hidden sm:block"></div>
 
         {{-- Location Dropdown --}}
         <div class="relative hidden sm:block" x-data="{ open: false }" @click.outside="open = false">
@@ -34,15 +34,15 @@
             </x-ui.button>
             {{-- Dropdown Menu --}}
             <div x-show="open" x-transition.origin.top x-cloak
-                class="absolute top-full right-0 mt-4 w-56 bg-white rounded-xl shadow-xl shadow-slate-200/50 border border-slate-100 z-50 overflow-hidden py-1">
+                class="absolute top-full right-0 mt-4 w-56 bg-white rounded-xl shadow-xl shadow-slate-200/50 border border-gray-100 z-50 overflow-hidden py-1">
                 <div @click="selectedLocation = ''; open = false"
-                    class="px-5 py-3 text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-primary cursor-pointer flex items-center justify-between transition-colors">
+                    class="px-5 py-3 text-base font-medium text-slate-600 hover:bg-gray-50 hover:text-primary cursor-pointer flex items-center justify-between transition-colors">
                     <span>{{translate('Semua')}}</span>
                     <x-icons.ui-check x-show="selectedLocation === ''" class="w-4 h-4 text-primary" />
                 </div>
                 @foreach($regions as $region)
                     <div @click="selectedLocation = '{{ $region }}'; open = false"
-                        class="px-5 py-3 text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-primary cursor-pointer flex items-center justify-between transition-colors">
+                        class="px-5 py-3 text-base font-medium text-slate-600 hover:bg-gray-50 hover:text-primary cursor-pointer flex items-center justify-between transition-colors">
                         <span>{{ $region }}</span>
                         <x-icons.ui-check x-show="selectedLocation === '{{ $region }}'"
                             class="w-4 h-4 text-primary" />
@@ -53,7 +53,7 @@
 
         {{-- Search Button --}}
         <x-ui.button type="button" variant="default" size="icon"
-            class="rounded-full w-10 h-10 bg-[#FFC107] text-slate-900 shadow-sm min-w-[2.5rem] border-none outline-none">
+            class="rounded-full w-10 h-10 bg-brand-yellow text-slate-900 shadow-sm min-w-[2.5rem] border-none outline-none">
             <x-icons.map-pin-search class="h-5 w-5 text-slate-900" />
         </x-ui.button>
     </div>

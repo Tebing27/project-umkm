@@ -12,8 +12,8 @@
                 <a href="{{ request()->fullUrlWithQuery(['status' => $tab['id'] == 'all' ? null : $tab['id']]) }}"
                     class="px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 border whitespace-nowrap
                     {{ $currentStatus == $tab['id'] || ($tab['id'] == 'all' && !$currentStatus)
-                        ? 'bg-[#004a85] text-white border-[#004a85] shadow-md'
-                        : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50' }}">
+                        ? 'bg-brand-blue-dark text-white border-brand-blue-dark shadow-md'
+                        : 'bg-white text-slate-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50' }}">
                     {{ translate($tab['label']) }}
                 </a>
             @endforeach

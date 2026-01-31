@@ -27,7 +27,9 @@
                 <div class="flex flex-row flex-wrap items-center gap-3 justify-start">
                     <h3 class="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight break-words max-w-full">
                         {{ $shop->name ?? 'Nama Toko' }}</h3>
-                    <x-ui.badge class="px-2.5 py-1">{!! $shop->business_type ?? 'Kategori' !!}</x-ui.badge>
+                    <x-ui.badge variant="outline" class="border-slate-200 text-base text-slate-600 py-1 bg-slate-50">
+                        <span>{{ $shop->business_type ?? 'Kategori' }}</span>
+                    </x-ui.badge>
                 </div>
             </div>
 
@@ -39,7 +41,7 @@
 
             {{-- Divider & Detail --}}
             @if (!empty($shop->licenses_array) || $shop->has_socials)
-                
+
                 <div class="w-full h-px bg-slate-100"></div>
 
                 <div class="space-y-2">
@@ -58,13 +60,14 @@
                     @if ($shop->has_socials)
                         <div
                             class="{{ !empty($shop->licenses_array) ? 'border-t border-slate-200/60 pt-3' : '' }} grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4">
-                            
+
                             {{-- IG --}}
                             @if ($shop->social_instagram)
                                 <a href="https://instagram.com/{{ $shop->instagram_username }}" target="_blank"
                                     class="flex items-center gap-2 hover:opacity-80 transition-opacity">
                                     <x-icons.social-instagram class="text-red-500" />
-                                    <span class="font-medium text-slate-900">{{ '@' . $shop->instagram_username }}</span>
+                                    <span
+                                        class="font-medium text-slate-900">{{ '@' . $shop->instagram_username }}</span>
                                 </a>
                             @endif
 
@@ -81,15 +84,15 @@
                             @if ($shop->social_facebook)
                                 <a href="https://facebook.com/{{ $shop->facebook_username }}" target="_blank"
                                     class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                                    <x-icons.social-facebook class="text-[#1877F2]" />
+                                    <x-icons.social-facebook class="text-social-facebook" />
                                     <span class="font-medium text-slate-900">{{ $shop->facebook_username }}</span>
                                 </a>
                             @endif
 
                             {{-- Website --}}
                             @if ($shop->social_website)
-                                <a href="{{ $shop->website_url }}"
-                                    target="_blank" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                                <a href="{{ $shop->website_url }}" target="_blank"
+                                    class="flex items-center gap-2 hover:opacity-80 transition-opacity">
                                     <x-icons.map-globe class="text-slate-900" />
                                     <span class="font-medium text-slate-900">Website</span>
                                 </a>

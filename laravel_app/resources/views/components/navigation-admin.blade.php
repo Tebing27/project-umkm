@@ -1,5 +1,5 @@
 <aside
-    class="fixed inset-y-0 left-0 z-50 bg-white text-slate-800 transition-all duration-300 ease-in-out border-r border-slate-200 flex flex-col shadow-2xl shadow-slate-200/50"
+    class="fixed inset-y-0 left-0 z-50 bg-white text-slate-800 transition-all duration-300 ease-in-out border-r border-gray-200 flex flex-col shadow-2xl shadow-gray-200/50"
     x-bind:class="[
         sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         sidebarExpanded ? 'lg:w-72' : 'lg:w-24',
@@ -47,7 +47,7 @@
                 class="group flex items-center px-4 py-3.5 rounded-2xl transition-all duration-300 relative overflow-hidden gap-4
                   {{ request()->is(ltrim($menu['url'], '/')) || request()->is(ltrim($menu['url'], '/') . '/*')
                       ? 'text-[#00509D]'
-                      : 'text-slate-500 hover:bg-slate-50 hover:text-primary' }}"
+                      : 'text-slate-500 hover:bg-gray-50 hover:text-primary' }}"
                 x-bind:class="sidebarExpanded ? 'justify-start' : 'justify-center'" title="{{ $menu['name'] }}">
 
                 {{-- Background Effect (Active) --}}
@@ -71,10 +71,10 @@
                 </span>
 
                 {{-- Tooltip (Desktop Collapsed) --}}
-                <div class="hidden lg:group-hover:block absolute left-full ml-4 px-3 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-200 z-50 whitespace-nowrap pointer-events-none translate-x-2 group-hover:translate-x-0"
+                <div class="hidden lg:group-hover:block absolute left-full ml-4 px-3 py-2 bg-gray-800 text-white text-xs font-semibold rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-200 z-50 whitespace-nowrap pointer-events-none translate-x-2 group-hover:translate-x-0"
                     x-show="!sidebarExpanded">
                     {{ $menu['name'] }}
-                    <div class="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-slate-800 rotate-45">
+                    <div class="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-gray-800 rotate-45">
                     </div>
                 </div>
             </a>
@@ -84,7 +84,7 @@
 
     {{-- FOOTER SIDEBAR --}}
     <div class="p-4 mt-auto mb-2">
-        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 shadow-sm relative overflow-hidden group">
+        <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100 shadow-sm relative overflow-hidden group">
 
             {{-- Decorative Background --}}
             <div
@@ -92,7 +92,7 @@
             </div>
 
             {{-- Profile --}}
-            <div class="flex items-center gap-3 mb-3 pb-3 border-b border-slate-200 relative z-10"
+            <div class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-200 relative z-10"
      x-bind:class="sidebarExpanded ? 'justify-start' : 'lg:justify-center justify-start'">
     
     <div class="relative shrink-0 cursor-pointer group">
