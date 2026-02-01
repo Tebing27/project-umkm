@@ -9,17 +9,21 @@
                 <div>
                     {{-- Logo --}}
                     <div class="flex items-center gap-2 mb-6">
-                        @if(isset($content['logo_show_image']->value) && $content['logo_show_image']->value == '1' && isset($content['logo_image']->value) && $content['logo_image']->value)
-                            <img src="{{ Storage::url($content['logo_image']->value) }}" alt="Logo" class="h-10 w-auto object-contain">
+                        @if (isset($content['logo_show_image']->value) &&
+                                $content['logo_show_image']->value == '1' &&
+                                isset($content['logo_image']->value) &&
+                                $content['logo_image']->value)
+                            <img src="{{ Storage::url($content['logo_image']->value) }}" alt="Logo"
+                                class="h-10 w-auto object-contain">
                         @endif
-                        
-                        @if(isset($content['logo_show_text']->value) && $content['logo_show_text']->value == '1')
+
+                        @if (isset($content['logo_show_text']->value) && $content['logo_show_text']->value == '1')
                             <span class="font-bold text-2xl tracking-tight">
                                 {{ $content['logo_text']->value ?? 'Sasuma UMKM' }}
                             </span>
                         @endif
                     </div>
-                    
+
                     <p class="text-white/80 text-sm mb-4 max-w-xs">
                         {{ $content['footer_about']->value ?? 'Small change. Big change.' }}
                     </p>
@@ -32,13 +36,15 @@
                     {{-- Section 1 --}}
                     <ul class="space-y-4">
                         <li>
-                            <a href="{{ url('/') }}" class="text-white hover:text-brand-yellow transition-colors font-medium">
-                                {{translate('Beranda')}}
+                            <a href="{{ url('/') }}"
+                                class="text-white hover:text-brand-yellow transition-colors font-medium">
+                                {{ translate('Beranda') }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url('#regions') }}" class="text-white hover:text-brand-yellow transition-colors font-medium">
-                                {{translate('Wilayah')}}
+                            <a href="{{ url('#regions') }}"
+                                class="text-white hover:text-brand-yellow transition-colors font-medium">
+                                {{ translate('Wilayah') }}
                             </a>
                         </li>
                     </ul>
@@ -47,13 +53,15 @@
                     {{-- Section 2 --}}
                     <ul class="space-y-4">
                         <li>
-                            <a href="{{ url('#locations') }}" class="text-white hover:text-brand-yellow transition-colors font-medium">
-                                {{translate('Lokasi')}}
+                            <a href="{{ url('#locations') }}"
+                                class="text-white hover:text-brand-yellow transition-colors font-medium">
+                                {{ translate('Lokasi') }}
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url('/umkm') }}" class="text-white hover:text-brand-yellow transition-colors font-medium">
-                                {{translate('UMKM')}}
+                            <a href="{{ url('/umkm') }}"
+                                class="text-white hover:text-brand-yellow transition-colors font-medium">
+                                {{ translate('UMKM') }}
                             </a>
                         </li>
                     </ul>
@@ -62,12 +70,12 @@
 
             {{-- CTA Button --}}
             <div class="md:col-span-3 flex flex-col items-start md:items-end">
-                 @if(isset($content['footer_cta_text']->value) && $content['footer_cta_text']->value)
-                    <a href="{{ url($content['footer_cta_link']->value ?? '#') }}" 
-                       class="inline-block bg-brand-yellow hover:bg-brand-yellow-hover text-brand-navy font-bold py-3 px-8 rounded-lg shadow-lg transition-all transform hover:-translate-y-1">
+                @if (isset($content['footer_cta_text']->value) && $content['footer_cta_text']->value)
+                    <a href="{{ url($content['footer_cta_link']->value ?? '#') }}"
+                        class="inline-block bg-brand-yellow hover:bg-brand-yellow-hover text-brand-navy font-bold py-3 px-8 rounded-lg shadow-lg transition-all transform hover:-translate-y-1">
                         {{ translate($content['footer_cta_text']->value) }}
                     </a>
-                 @endif
+                @endif
             </div>
         </div>
 
@@ -79,27 +87,30 @@
             {{-- Copyright --}}
             <div class="text-center md:text-left">
                 <p class="text-white/60 text-sm">
-                    {{ $content['footer_copyright']->value ?? 'Copyright © 2026' }}
+                    &copy; {{ date('Y') }} SASUMA UMKM. All rights reserved.
                 </p>
             </div>
 
             {{-- Social Icons --}}
             <div class="flex items-center gap-4">
-                @if(isset($content['footer_social_instagram']->value) && $content['footer_social_instagram']->value !== '#')
-                    <a href="{{ $content['footer_social_instagram']->value }}" class="text-white hover:text-brand-yellow transition-colors">
-                        <x-icons.social-instagram/>
-                    </a>
-                @endif
-                
-                @if(isset($content['footer_social_facebook']->value) && $content['footer_social_facebook']->value !== '#')
-                    <a href="{{ $content['footer_social_facebook']->value }}" class="text-white hover:text-brand-yellow transition-colors">
-                        <x-icons.social-facebook/>
+                @if (isset($content['footer_social_instagram']->value) && $content['footer_social_instagram']->value !== '#')
+                    <a href="{{ $content['footer_social_instagram']->value }}"
+                        class="text-white hover:text-brand-yellow transition-colors">
+                        <x-icons.social-instagram />
                     </a>
                 @endif
 
-                @if(isset($content['footer_social_tiktok']->value) && $content['footer_social_tiktok']->value !== '#')
-                    <a href="{{ $content['footer_social_tiktok']->value }}" class="text-white hover:text-brand-yellow transition-colors">
-                        <x-icons.social-tiktok/>
+                @if (isset($content['footer_social_facebook']->value) && $content['footer_social_facebook']->value !== '#')
+                    <a href="{{ $content['footer_social_facebook']->value }}"
+                        class="text-white hover:text-brand-yellow transition-colors">
+                        <x-icons.social-facebook />
+                    </a>
+                @endif
+
+                @if (isset($content['footer_social_tiktok']->value) && $content['footer_social_tiktok']->value !== '#')
+                    <a href="{{ $content['footer_social_tiktok']->value }}"
+                        class="text-white hover:text-brand-yellow transition-colors">
+                        <x-icons.social-tiktok />
                     </a>
                 @endif
             </div>

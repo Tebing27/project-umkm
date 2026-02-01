@@ -152,7 +152,6 @@ class ContentController extends Controller
             ],
             'footer' => [
                 'footer_about' => ['label' => 'About Text', 'type' => 'textarea', 'value' => 'Small change. Big change.'],
-                'footer_copyright' => ['label' => 'Copyright Text', 'type' => 'text', 'value' => 'Copyright © 2026'],
                 'footer_cta_text' => ['label' => 'CTA Button Text', 'type' => 'text', 'value' => 'CONTACT US'],
                 'footer_cta_link' => ['label' => 'CTA Button Link', 'type' => 'text', 'value' => '/contact'],
                 'footer_section_1_title' => ['label' => 'Link Section 1 Title', 'type' => 'text', 'value' => 'Home'],
