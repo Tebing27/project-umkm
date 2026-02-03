@@ -1,6 +1,6 @@
-# UMKM Management System (Sasuma)
+# Sistem Manajemen UMKM (Sasuma)
 
-> Sistem Manajemen UMKM (Usaha Mikro Kecil Menengah) - Small Business Directory Platform
+> Sistem Manajemen UMKM (Usaha Mikro Kecil Menengah) - Platform Direktori Usaha Kecil
 
 ![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=flat&logo=laravel&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat&logo=php&logoColor=white)
@@ -9,298 +9,298 @@
 
 ---
 
-## 📋 Table of Contents
+## Daftar Isi
 
-1. [Project Overview](#-project-overview)
-2. [Features](#-features)
-   - [User Features](#user-features)
-   - [Admin Features](#admin-features)
-   - [Public Features](#public-features)
-   - [Business & Monetization Features](#business--monetization-features)
-   - [System Features](#system-features)
-3. [Technology Stack](#-technology-stack)
-4. [Database Schema & ERD](#-database-schema--erd)
-5. [Environment Configuration](#-environment-configuration)
-6. [Installation](#-installation)
-   - [Local Development (Docker)](#local-development-docker)
-   - [Shared Hosting Deployment](#shared-hosting-deployment)
-7. [Application Logic & Flow](#-application-logic--flow)
-8. [Cronjob Configuration](#-cronjob-configuration)
-9. [Commands Reference](#-commands-reference)
-10. [Project Structure](#-project-structure)
-11. [API & External Services](#-api--external-services)
-12. [Troubleshooting](#-troubleshooting)
-
----
-
-## 🎯 Project Overview
-
-**UMKM Management System** is a comprehensive Laravel-based platform for managing small businesses (UMKM - Usaha Mikro Kecil Menengah) in Indonesia. The system provides a complete ecosystem for business registration, verification, product management, and public discovery.
-
-### Key Capabilities
-
-- **Business Directory:** Public listing of verified small businesses
-- **Admin Verification:** Quality control through manual shop verification
-- **Product Showcase:** Multi-image product galleries with categories
-- **Geographic Search:** Region-based filtering and interactive maps
-- **Multi-language:** Indonesian and English support with AI translation
-- **Real-time Updates:** Live notifications via Firebase Realtime Database
-- **SEO Optimized:** Automated sitemap generation and meta tags
-- **Cloud Storage:** Cloudinary integration for scalable image hosting
-
-### Target Users
-
-1. **UMKM Owners:** Register and manage their business profiles
-2. **Administrators:** Verify and moderate business listings
-3. **Public Visitors:** Discover and explore local businesses
+1. [Gambaran Proyek](#-gambaran-proyek)
+2. [Fitur](#-fitur)
+   - [Fitur Pengguna](#fitur-pengguna)
+   - [Fitur Admin](#fitur-admin)
+   - [Fitur Publik](#fitur-publik)
+   - [Fitur Bisnis & Monetisasi](#fitur-bisnis--monetisasi)
+   - [Fitur Sistem](#fitur-sistem)
+3. [Stack Teknologi](#-stack-teknologi)
+4. [Skema Database & ERD](#-skema-database--erd)
+5. [Konfigurasi Environment](#-konfigurasi-environment)
+6. [Instalasi](#-instalasi)
+   - [Development Lokal (Docker)](#development-lokal-docker)
+   - [Deployment Shared Hosting](#deployment-shared-hosting)
+7. [Logika & Alur Aplikasi](#-logika--alur-aplikasi)
+8. [Konfigurasi Cronjob](#-konfigurasi-cronjob)
+9. [Referensi Perintah](#-referensi-perintah)
+10. [Struktur Proyek](#-struktur-proyek)
+11. [API & Layanan Eksternal](#-api--layanan-eksternal)
+12. [Pemecahan Masalah](#-pemecahan-masalah)
 
 ---
 
-## ✨ Features
+## Gambaran Proyek
 
-### User Features
+**Sistem Manajemen UMKM** adalah platform berbasis Laravel yang komprehensif untuk mengelola usaha kecil (UMKM - Usaha Mikro Kecil Menengah) di Indonesia. Sistem ini menyediakan ekosistem lengkap untuk pendaftaran bisnis, verifikasi, manajemen produk, dan pencarian publik.
 
-✅ **Account Management**
+### Kemampuan Utama
 
-- Email verification required
-- Profile with personal details (name, phone, birth date, address)
-- Password reset functionality
+- **Direktori Bisnis:** Daftar publik usaha kecil yang terverifikasi
+- **Verifikasi Admin:** Kontrol kualitas melalui verifikasi toko secara manual
+- **Showcase Produk:** Galeri produk multi-gambar dengan kategori
+- **Pencarian Geografis:** Filter berbasis wilayah dan peta interaktif
+- **Multi-bahasa:** Dukungan Bahasa Indonesia dan Inggris dengan terjemahan AI
+- **Update Real-time:** Notifikasi langsung via Firebase Realtime Database
+- **Optimasi SEO:** Pembuatan sitemap otomatis dan meta tag
+- **Penyimpanan Cloud:** Integrasi Cloudinary untuk hosting gambar yang skalabel
 
-✅ **Shop Management**
+### Target Pengguna
 
-- Single shop per user account
-- Business details (name, description, type, revenue range)
-- Geographic location with map pinning
-- Social media links (Instagram, TikTok, Facebook, Website)
-- Business license uploads
-- Shop logo upload (Cloudinary-hosted)
+1. **Pemilik UMKM:** Mendaftar dan mengelola profil bisnis mereka
+2. **Administrator:** Memverifikasi dan memoderasi daftar bisnis
+3. **Pengunjung Publik:** Menemukan dan menjelajahi bisnis lokal
 
-✅ **Product Management**
+---
 
-- Unlimited products per shop
-- Product details (name, price, category, variant, description)
-- Multi-image gallery per product
-- Active/inactive status toggle
-- Best seller highlighting
-- Batch image upload support
+## Fitur
 
-✅ **Photo Gallery**
+### Fitur Pengguna
 
-- Up to 5 shop photos
-- Drag-and-drop ordering
-- Cloudinary CDN delivery
-- Responsive image srcsets
+**Manajemen Akun**
 
-### Admin Features
+- Verifikasi email diperlukan
+- Profil dengan detail pribadi (nama, telepon, tanggal lahir, alamat)
+- Fungsi reset password
 
-✅ **Shop Verification System**
+**Manajemen Toko**
 
-- Review pending shops
-- Approve/reject with reasons
-- Automatic completeness checking
-- Verification status tracking
+- Satu toko per akun pengguna
+- Detail bisnis (nama, deskripsi, jenis, rentang omzet)
+- Lokasi geografis dengan penandaan peta
+- Link media sosial (Instagram, TikTok, Facebook, Website)
+- Upload izin usaha
+- Upload logo toko (dihost di Cloudinary)
 
-✅ **User Management**
+**Manajemen Produk**
 
-- View all registered users
-- User detail inspection
-- Shop association tracking
+- Produk tak terbatas per toko
+- Detail produk (nama, harga, kategori, varian, deskripsi)
+- Galeri multi-gambar per produk
+- Toggle status aktif/tidak aktif
+- Penandaan produk terlaris
+- Dukungan upload gambar batch
 
-✅ **Content Management (CMS)**
+**Galeri Foto**
 
-- Dynamic business types
-- Logo fallbacks per business type
-- Hero images for homepage
-- UMKM index banner images
-- Text content blocks
+- Hingga 5 foto toko
+- Pengurutan drag-and-drop
+- Pengiriman CDN Cloudinary
+- Srcset gambar responsif
 
-✅ **Region Management**
+### Fitur Admin
 
-- Geographic area configuration
-- Featured shop selection per region
-- Region images and coordinates
-- Hero carousel ordering
+**Sistem Verifikasi Toko**
 
-✅ **Featured Region Slider (Monetization Ready)**
+- Review toko yang menunggu
+- Setuju/tolak dengan alasan
+- Pengecekan kelengkapan otomatis
+- Pelacakan status verifikasi
 
-- Custom shop highlight per region for homepage hero slider
-- Admin can select specific UMKM to feature from each region
-- Configurable display order for hero carousel
-- **Business Potential:** Can be monetized as "sponsored placement" or "premium listing"
-- Shops can pay to be featured prominently on homepage per their region
+**Manajemen Pengguna**
 
-### Public Features
+- Lihat semua pengguna terdaftar
+- Inspeksi detail pengguna
+- Pelacakan asosiasi toko
 
-✅ **Business Discovery**
+**Manajemen Konten (CMS)**
 
-- Searchable shop directory
-- Filter by business type
-- Filter by region
-- Verified badge display
-- View counter tracking
+- Jenis bisnis dinamis
+- Fallback logo per jenis bisnis
+- Gambar hero untuk homepage
+- Gambar banner index UMKM
+- Blok konten teks
 
-✅ **Shop Detail Pages**
+**Manajemen Wilayah**
 
-- Complete business information
-- Photo gallery slider
-- Product catalog with images
-- Social media links
-- Map with exact location
+- Konfigurasi area geografis
+- Pemilihan toko unggulan per wilayah
+- Gambar wilayah dan koordinat
+- Pengurutan carousel hero
 
-✅ **Homepage**
+**Slider Wilayah Unggulan (Siap Monetisasi)**
 
-- Hero carousel with featured shops
-- Region showcase with shop counts
-- Interactive map with all verified shops
-- Business type categories
+- Highlight toko kustom per wilayah untuk slider hero homepage
+- Admin dapat memilih UMKM spesifik untuk ditampilkan dari setiap wilayah
+- Urutan tampilan yang dapat dikonfigurasi untuk carousel hero
+- **Potensi Bisnis:** Dapat dimonetisasi sebagai "penempatan bersponsor" atau "listing premium"
+- Toko dapat membayar untuk ditampilkan secara menonjol di homepage per wilayah mereka
 
-### Business & Monetization Features
+### Fitur Publik
 
-✅ **Featured Region Slider System**
+**Penemuan Bisnis**
 
-The Featured Region Slider (`featured-region-card.blade.php`) is a powerful admin feature that enables business monetization:
+- Direktori toko yang dapat dicari
+- Filter berdasarkan jenis bisnis
+- Filter berdasarkan wilayah
+- Tampilan badge terverifikasi
+- Pelacakan penghitung tampilan
 
-**How It Works:**
+**Halaman Detail Toko**
+
+- Informasi bisnis lengkap
+- Slider galeri foto
+- Katalog produk dengan gambar
+- Link media sosial
+- Peta dengan lokasi tepat
+
+**Homepage**
+
+- Carousel hero dengan toko unggulan
+- Showcase wilayah dengan jumlah toko
+- Peta interaktif dengan semua toko terverifikasi
+- Kategori jenis bisnis
+
+### Fitur Bisnis & Monetisasi
+
+**Sistem Slider Wilayah Unggulan**
+
+Slider Wilayah Unggulan (`featured-region-card.blade.php`) adalah fitur admin yang powerful yang memungkinkan monetisasi bisnis:
+
+**Cara Kerjanya:**
 
 ```
-Admin Panel → Content Management → Region Configuration
+Panel Admin → Manajemen Konten → Konfigurasi Wilayah
                      ↓
    ┌─────────────────────────────────────────────────────────────┐
-   │  REGION CARD (per region)                                   │
+   │  KARTU WILAYAH (per wilayah)                                │
    │  ┌───────────────────────────────────────────────────────┐  │
-   │  │ [Region Image] [Region Name]           Urutan: [#1]   │  │
+   │  │ [Gambar Wilayah] [Nama Wilayah]         Urutan: [#1]  │  │
    │  │                                                       │  │
-   │  │ Featured Shop: [▼ Select UMKM from this region    ]   │  │
+   │  │ Toko Unggulan: [▼ Pilih UMKM dari wilayah ini     ]   │  │
    │  │                                                       │  │
-   │  │                                     [Simpan Button]   │  │
+   │  │                                     [Tombol Simpan]   │  │
    │  └───────────────────────────────────────────────────────┘  │
    └─────────────────────────────────────────────────────────────┘
                      ↓
-   Homepage Hero Slider displays featured shops in order
+   Slider Hero Homepage menampilkan toko unggulan secara berurutan
 ```
 
-**Key Features:**
+**Fitur Utama:**
 
-| Feature | Description | Business Value |
-|---------|-------------|----------------|
-| **Custom Shop Selection** | Admin can manually select which shop appears as "featured" for each region | Premium placement for paying UMKM |
-| **Display Order Control** | Set `hero_order` to control slider sequence | Priority positioning (#1, #2, etc.) |
-| **Random/None Option** | "Acak / Tidak Ada" option for default behavior | Free tier or rotating display |
-| **Region-Scoped** | Only shows shops belonging to that specific region | Location-based advertising |
-| **Real-time Search** | Searchable dropdown for easy shop selection | Admin efficiency |
+| Fitur | Deskripsi | Nilai Bisnis |
+|-------|-----------|--------------|
+| **Pemilihan Toko Kustom** | Admin dapat memilih secara manual toko mana yang muncul sebagai "unggulan" untuk setiap wilayah | Penempatan premium untuk UMKM berbayar |
+| **Kontrol Urutan Tampilan** | Atur `hero_order` untuk mengontrol urutan slider | Posisi prioritas (#1, #2, dll.) |
+| **Opsi Acak/Tidak Ada** | Opsi "Acak / Tidak Ada" untuk perilaku default | Tier gratis atau tampilan berputar |
+| **Berbasis Wilayah** | Hanya menampilkan toko yang berada di wilayah tersebut | Iklan berbasis lokasi |
+| **Pencarian Real-time** | Dropdown yang dapat dicari untuk pemilihan toko yang mudah | Efisiensi admin |
 
-**Monetization Strategies:**
+**Strategi Monetisasi:**
 
-1. **Sponsored Placement Package**
-   - Charge UMKM monthly/annually to be featured on homepage
-   - Example: Rp 100.000/month for "Featured Business" status
+1. **Paket Penempatan Bersponsor**
+   - Kenakan biaya bulanan/tahunan kepada UMKM untuk ditampilkan di homepage
+   - Contoh: Rp 100.000/bulan untuk status "Bisnis Unggulan"
 
-2. **Priority Region Listing**
-   - Higher `hero_order` numbers = later in carousel
-   - Sell "Position #1" premium spots per region
+2. **Listing Wilayah Prioritas**
+   - Nomor `hero_order` lebih tinggi = lebih belakang di carousel
+   - Jual spot premium "Posisi #1" per wilayah
 
-3. **Rotating Spotlight**
-   - Use "Acak" for free tier users
-   - Guaranteed placement for paying customers
+3. **Spotlight Berputar**
+   - Gunakan "Acak" untuk pengguna tier gratis
+   - Penempatan terjamin untuk pelanggan berbayar
 
-4. **Regional Campaigns**
-   - Partner with local governments or associations
-   - Feature multiple businesses from a region during festivals/events
+4. **Kampanye Regional**
+   - Bermitra dengan pemerintah atau asosiasi lokal
+   - Tampilkan beberapa bisnis dari satu wilayah selama festival/event
 
-**Technical Implementation:**
+**Implementasi Teknis:**
 
-Located in: `laravel_app/resources/views/admin/content/partials/featured-regions/`
-- `featured-region-card.blade.php` - Main card component with Alpine.js state
-- `featured-region-header.blade.php` - Region name, image, and order input
-- `featured-region-dropdown.blade.php` - Searchable shop selector dropdown
-- `featured-region-submit.blade.php` - Save button with loading state
+Terletak di: `laravel_app/resources/views/admin/content/partials/featured-regions/`
+- `featured-region-card.blade.php` - Komponen kartu utama dengan state Alpine.js
+- `featured-region-header.blade.php` - Nama wilayah, gambar, dan input urutan
+- `featured-region-dropdown.blade.php` - Dropdown pemilih toko yang dapat dicari
+- `featured-region-submit.blade.php` - Tombol simpan dengan state loading
 
 Controller: `App\Http\Controllers\Admin\RegionController@updateFeaturedShop`
-Model: `Region` with `featured_shop_id` foreign key to `shops` table
+Model: `Region` dengan foreign key `featured_shop_id` ke tabel `shops`
 
 ---
 
-### System Features
+### Fitur Sistem
 
-✅ **Multi-language Support**
+**Dukungan Multi-bahasa**
 
-- Indonesian (default)
-- English translation via OpenRouter AI
-- Automatic shop description translation
-- Cached translations for performance
+- Bahasa Indonesia (default)
+- Terjemahan Bahasa Inggris via OpenRouter AI
+- Terjemahan deskripsi toko otomatis
+- Terjemahan yang di-cache untuk performa
 
-✅ **SEO Optimization**
+**Optimasi SEO**
 
-- Dynamic sitemap.xml generation
-- Robots.txt configuration
-- Meta tags for all pages
-- Canonical URLs
-- Structured data support
+- Pembuatan sitemap.xml dinamis
+- Konfigurasi robots.txt
+- Meta tag untuk semua halaman
+- URL kanonik
+- Dukungan structured data
 
-✅ **Real-time Updates**
+**Update Real-time**
 
-- Firebase Realtime Database integration for live notifications
-- Shop verification status updates
-- Content update broadcasts
-- User status changes
+- Integrasi Firebase Realtime Database untuk notifikasi langsung
+- Update status verifikasi toko
+- Broadcast update konten
+- Perubahan status pengguna
 
-✅ **Performance**
+**Performa**
 
-- Database query optimization
-- Eager loading relationships
-- Image CDN delivery
+- Optimasi query database
+- Eager loading relationship
+- Pengiriman gambar via CDN
 - Response caching
-- Index optimization on high-traffic columns
+- Optimasi index pada kolom dengan traffic tinggi
 
 ---
 
-## 🛠 Technology Stack
+## Stack Teknologi
 
 ### Backend
 
 - **Framework:** Laravel 12.x (PHP 8.2+)
 - **Database:** MySQL 8.0
-- **Queue System:** Database-driven queues
-- **Cache:** Database cache driver
-- **Session:** Database session storage
+- **Sistem Queue:** Queue berbasis database
+- **Cache:** Driver cache database
+- **Session:** Penyimpanan session database
 
 ### Frontend
 
 - **Template Engine:** Blade
-- **CSS Framework:** Tailwind CSS 4.x
-- **JavaScript:** Alpine.js (lightweight reactivity)
+- **Framework CSS:** Tailwind CSS 4.x
+- **JavaScript:** Alpine.js (reaktivitas ringan)
 - **Build Tool:** Vite
-- **Icons:** Heroicons
+- **Ikon:** Heroicons
 
-### External Services
+### Layanan Eksternal
 
-- **Image Storage:** Cloudinary (cloud CDN)
-- **Real-time:** Firebase Realtime Database (WebSocket notifications)
-- **Email:** SMTP (Gmail configured)
-- **AI Translation:** OpenRouter API
-- **Database (optional):** Firebase Realtime Database
+- **Penyimpanan Gambar:** Cloudinary (CDN cloud)
+- **Real-time:** Firebase Realtime Database (notifikasi WebSocket)
+- **Email:** SMTP (Gmail dikonfigurasi)
+- **Terjemahan AI:** OpenRouter API
+- **Database (opsional):** Firebase Realtime Database
 
-### Development Tools
+### Alat Development
 
 - **Containerization:** Docker + Docker Compose
 - **Package Manager:** Composer (PHP), NPM (JavaScript)
-- **Code Quality:** Laravel Pint (code style)
+- **Kualitas Kode:** Laravel Pint (code style)
 - **Testing:** PHPUnit
-- **Database Admin:** phpMyAdmin (Docker)
+- **Admin Database:** phpMyAdmin (Docker)
 
-### Production Requirements
+### Kebutuhan Production
 
 - **PHP:** >= 8.2
-- **MySQL:** >= 8.0 (or MariaDB >= 10.3)
-- **Extensions:** BCMath, Ctype, Fileinfo, JSON, Mbstring, OpenSSL, PDO, Tokenizer, XML
-- **Composer:** Latest version
-- **Node.js:** >= 18 (for asset compilation)
+- **MySQL:** >= 8.0 (atau MariaDB >= 10.3)
+- **Ekstensi:** BCMath, Ctype, Fileinfo, JSON, Mbstring, OpenSSL, PDO, Tokenizer, XML
+- **Composer:** Versi terbaru
+- **Node.js:** >= 18 (untuk kompilasi aset)
 
 ---
 
-## 📊 Database Schema & ERD
+## Skema Database & ERD
 
-### Entity-Relationship Diagram
+### Diagram Entity-Relationship
 
 ```
 ┌──────────────┐         ┌──────────────┐         ┌──────────────┐
@@ -340,7 +340,7 @@ Model: `Region` with `featured_shop_id` foreign key to `shops` table
 
 ┌──────────────┐         ┌──────────────┐
 │   REGIONS    │1      ∞ │    SHOPS     │
-│──────────────│◀────────│ (see above)  │
+│──────────────│◀────────│ (lihat atas) │
 │ id (PK)      │         └──────────────┘
 │ name         │
 │ image        │         ┌──────────────┐
@@ -364,66 +364,66 @@ Model: `Region` with `featured_shop_id` foreign key to `shops` table
 └──────────────┘
 ```
 
-### Table Descriptions
+### Deskripsi Tabel
 
-#### 1. **users** - User Accounts
+#### 1. **users** - Akun Pengguna
 
-| Column            | Type            | Nullable | Description                  |
+| Kolom             | Tipe            | Nullable | Deskripsi                    |
 | ----------------- | --------------- | -------- | ---------------------------- |
 | id                | BIGINT UNSIGNED | NO       | Primary key (auto-increment) |
-| name              | VARCHAR(255)    | NO       | Full name                    |
-| email             | VARCHAR(255)    | NO       | Unique email address         |
-| password          | VARCHAR(255)    | NO       | Hashed password (bcrypt)     |
-| phone_number      | VARCHAR(20)     | YES      | Contact number               |
-| role              | VARCHAR(50)     | NO       | 'admin' or 'users'           |
-| email_verified_at | TIMESTAMP       | YES      | Email verification timestamp |
-| place_of_birth    | VARCHAR(255)    | YES      | Birth place                  |
-| date_of_birth     | DATE            | YES      | Birth date                   |
-| domicile_address  | TEXT            | YES      | Current address              |
-| remember_token    | VARCHAR(100)    | YES      | Session token                |
-| created_at        | TIMESTAMP       | YES      | Record creation              |
-| updated_at        | TIMESTAMP       | YES      | Last update                  |
+| name              | VARCHAR(255)    | NO       | Nama lengkap                 |
+| email             | VARCHAR(255)    | NO       | Alamat email unik            |
+| password          | VARCHAR(255)    | NO       | Password ter-hash (bcrypt)   |
+| phone_number      | VARCHAR(20)     | YES      | Nomor kontak                 |
+| role              | VARCHAR(50)     | NO       | 'admin' atau 'users'         |
+| email_verified_at | TIMESTAMP       | YES      | Timestamp verifikasi email   |
+| place_of_birth    | VARCHAR(255)    | YES      | Tempat lahir                 |
+| date_of_birth     | DATE            | YES      | Tanggal lahir                |
+| domicile_address  | TEXT            | YES      | Alamat sekarang              |
+| remember_token    | VARCHAR(100)    | YES      | Token session                |
+| created_at        | TIMESTAMP       | YES      | Pembuatan record             |
+| updated_at        | TIMESTAMP       | YES      | Update terakhir              |
 
-**Indexes:**
+**Index:**
 
 - PRIMARY KEY: `id`
 - UNIQUE: `email`
 
-**Relationships:**
+**Relationship:**
 
 - Has One: `shops`
 
 ---
 
-#### 2. **shops** - Business Profiles
+#### 2. **shops** - Profil Bisnis
 
-| Column           | Type            | Nullable | Description                                |
+| Kolom            | Tipe            | Nullable | Deskripsi                                  |
 | ---------------- | --------------- | -------- | ------------------------------------------ |
 | id               | BIGINT UNSIGNED | NO       | Primary key (auto-increment)               |
-| user_id          | BIGINT UNSIGNED | NO       | Foreign key to users                       |
-| name             | VARCHAR(255)    | NO       | Business name                              |
-| description      | TEXT            | YES      | Business description                       |
-| product_type     | VARCHAR(255)    | YES      | Main product category                      |
-| business_type    | VARCHAR(255)    | YES      | Business classification                    |
-| region_id        | BIGINT UNSIGNED | YES      | Foreign key to regions                     |
-| address          | TEXT            | YES      | Full address                               |
-| latitude         | DECIMAL(10,8)   | YES      | GPS latitude                               |
-| longitude        | DECIMAL(11,8)   | YES      | GPS longitude                              |
-| omset_min        | BIGINT          | YES      | Minimum revenue                            |
-| omset_max        | BIGINT          | YES      | Maximum revenue                            |
-| logo             | VARCHAR(500)    | YES      | Logo image path (Cloudinary)               |
-| is_verified      | BOOLEAN         | NO       | Admin verification status (default: false) |
-| rejection_reason | TEXT            | YES      | Admin rejection message                    |
-| licenses         | JSON            | YES      | Business licenses array                    |
-| social_instagram | VARCHAR(255)    | YES      | Instagram URL/username                     |
-| social_tiktok    | VARCHAR(255)    | YES      | TikTok URL/username                        |
-| social_facebook  | VARCHAR(255)    | YES      | Facebook URL/username                      |
-| social_website   | VARCHAR(255)    | YES      | Website URL                                |
-| views            | INTEGER         | NO       | View counter (default: 0)                  |
-| created_at       | TIMESTAMP       | YES      | Record creation                            |
-| updated_at       | TIMESTAMP       | YES      | Last update                                |
+| user_id          | BIGINT UNSIGNED | NO       | Foreign key ke users                       |
+| name             | VARCHAR(255)    | NO       | Nama bisnis                                |
+| description      | TEXT            | YES      | Deskripsi bisnis                           |
+| product_type     | VARCHAR(255)    | YES      | Kategori produk utama                      |
+| business_type    | VARCHAR(255)    | YES      | Klasifikasi bisnis                         |
+| region_id        | BIGINT UNSIGNED | YES      | Foreign key ke regions                     |
+| address          | TEXT            | YES      | Alamat lengkap                             |
+| latitude         | DECIMAL(10,8)   | YES      | Latitude GPS                               |
+| longitude        | DECIMAL(11,8)   | YES      | Longitude GPS                              |
+| omset_min        | BIGINT          | YES      | Omzet minimum                              |
+| omset_max        | BIGINT          | YES      | Omzet maksimum                             |
+| logo             | VARCHAR(500)    | YES      | Path gambar logo (Cloudinary)              |
+| is_verified      | BOOLEAN         | NO       | Status verifikasi admin (default: false)   |
+| rejection_reason | TEXT            | YES      | Pesan penolakan admin                      |
+| licenses         | JSON            | YES      | Array izin usaha                           |
+| social_instagram | VARCHAR(255)    | YES      | URL/username Instagram                     |
+| social_tiktok    | VARCHAR(255)    | YES      | URL/username TikTok                        |
+| social_facebook  | VARCHAR(255)    | YES      | URL/username Facebook                      |
+| social_website   | VARCHAR(255)    | YES      | URL Website                                |
+| views            | INTEGER         | NO       | Penghitung tampilan (default: 0)           |
+| created_at       | TIMESTAMP       | YES      | Pembuatan record                           |
+| updated_at       | TIMESTAMP       | YES      | Update terakhir                            |
 
-**Indexes:**
+**Index:**
 
 - PRIMARY KEY: `id`
 - FOREIGN KEY: `user_id` → users(id) ON DELETE CASCADE
@@ -433,173 +433,173 @@ Model: `Region` with `featured_shop_id` foreign key to `shops` table
 - INDEX: `views` (sorting)
 - FULLTEXT: `name, description` (search)
 
-**Relationships:**
+**Relationship:**
 
 - Belongs To: `users`, `regions`
 - Has Many: `products`, `shop_photos`
 
 ---
 
-#### 3. **products** - Shop Products
+#### 3. **products** - Produk Toko
 
-| Column         | Type            | Nullable | Description                       |
+| Kolom          | Tipe            | Nullable | Deskripsi                         |
 | -------------- | --------------- | -------- | --------------------------------- |
 | id             | BIGINT UNSIGNED | NO       | Primary key (auto-increment)      |
-| shop_id        | BIGINT UNSIGNED | NO       | Foreign key to shops              |
-| name           | VARCHAR(255)    | NO       | Product name                      |
-| price          | DECIMAL(12,2)   | NO       | Product price                     |
-| category       | VARCHAR(255)    | NO       | Product category                  |
-| image          | VARCHAR(500)    | YES      | Main image path (Cloudinary)      |
-| variant        | VARCHAR(255)    | YES      | Product variant                   |
-| description    | TEXT            | YES      | Product description               |
-| is_active      | BOOLEAN         | NO       | Active status (default: true)     |
-| is_best_seller | BOOLEAN         | NO       | Best seller flag (default: false) |
-| created_at     | TIMESTAMP       | YES      | Record creation                   |
-| updated_at     | TIMESTAMP       | YES      | Last update                       |
+| shop_id        | BIGINT UNSIGNED | NO       | Foreign key ke shops              |
+| name           | VARCHAR(255)    | NO       | Nama produk                       |
+| price          | DECIMAL(12,2)   | NO       | Harga produk                      |
+| category       | VARCHAR(255)    | NO       | Kategori produk                   |
+| image          | VARCHAR(500)    | YES      | Path gambar utama (Cloudinary)    |
+| variant        | VARCHAR(255)    | YES      | Varian produk                     |
+| description    | TEXT            | YES      | Deskripsi produk                  |
+| is_active      | BOOLEAN         | NO       | Status aktif (default: true)      |
+| is_best_seller | BOOLEAN         | NO       | Flag best seller (default: false) |
+| created_at     | TIMESTAMP       | YES      | Pembuatan record                  |
+| updated_at     | TIMESTAMP       | YES      | Update terakhir                   |
 
-**Indexes:**
+**Index:**
 
 - PRIMARY KEY: `id`
 - FOREIGN KEY: `shop_id` → shops(id) ON DELETE CASCADE
 - INDEX: `is_active` (filtering)
 - INDEX: `is_best_seller` (filtering)
 
-**Relationships:**
+**Relationship:**
 
 - Belongs To: `shops`
 - Has Many: `product_images`
 
 ---
 
-#### 4. **product_images** - Product Gallery
+#### 4. **product_images** - Galeri Produk
 
-| Column     | Type            | Nullable | Description                  |
+| Kolom      | Tipe            | Nullable | Deskripsi                    |
 | ---------- | --------------- | -------- | ---------------------------- |
 | id         | BIGINT UNSIGNED | NO       | Primary key (auto-increment) |
-| product_id | BIGINT UNSIGNED | NO       | Foreign key to products      |
-| image      | VARCHAR(500)    | NO       | Image path (Cloudinary)      |
-| sort_order | INTEGER         | NO       | Display order (default: 0)   |
-| created_at | TIMESTAMP       | YES      | Record creation              |
-| updated_at | TIMESTAMP       | YES      | Last update                  |
+| product_id | BIGINT UNSIGNED | NO       | Foreign key ke products      |
+| image      | VARCHAR(500)    | NO       | Path gambar (Cloudinary)     |
+| sort_order | INTEGER         | NO       | Urutan tampilan (default: 0) |
+| created_at | TIMESTAMP       | YES      | Pembuatan record             |
+| updated_at | TIMESTAMP       | YES      | Update terakhir              |
 
-**Indexes:**
+**Index:**
 
 - PRIMARY KEY: `id`
 - FOREIGN KEY: `product_id` → products(id) ON DELETE CASCADE
 - INDEX: `sort_order` (ordering)
 
-**Relationships:**
+**Relationship:**
 
 - Belongs To: `products`
 
 ---
 
-#### 5. **shop_photos** - Shop Photo Gallery
+#### 5. **shop_photos** - Galeri Foto Toko
 
-| Column     | Type            | Nullable | Description                  |
+| Kolom      | Tipe            | Nullable | Deskripsi                    |
 | ---------- | --------------- | -------- | ---------------------------- |
 | id         | BIGINT UNSIGNED | NO       | Primary key (auto-increment) |
-| shop_id    | BIGINT UNSIGNED | NO       | Foreign key to shops         |
-| path       | VARCHAR(500)    | NO       | Image path (Cloudinary)      |
-| order      | INTEGER         | NO       | Display order (default: 0)   |
-| created_at | TIMESTAMP       | YES      | Record creation              |
-| updated_at | TIMESTAMP       | YES      | Last update                  |
+| shop_id    | BIGINT UNSIGNED | NO       | Foreign key ke shops         |
+| path       | VARCHAR(500)    | NO       | Path gambar (Cloudinary)     |
+| order      | INTEGER         | NO       | Urutan tampilan (default: 0) |
+| created_at | TIMESTAMP       | YES      | Pembuatan record             |
+| updated_at | TIMESTAMP       | YES      | Update terakhir              |
 
-**Indexes:**
+**Index:**
 
 - PRIMARY KEY: `id`
 - FOREIGN KEY: `shop_id` → shops(id) ON DELETE CASCADE
 - INDEX: `order` (ordering)
 
-**Relationships:**
+**Relationship:**
 
 - Belongs To: `shops`
 
 ---
 
-#### 6. **regions** - Geographic Areas
+#### 6. **regions** - Area Geografis
 
-| Column           | Type            | Nullable | Description                  |
+| Kolom            | Tipe            | Nullable | Deskripsi                    |
 | ---------------- | --------------- | -------- | ---------------------------- |
 | id               | BIGINT UNSIGNED | NO       | Primary key (auto-increment) |
-| name             | VARCHAR(255)    | NO       | Region name                  |
-| image            | VARCHAR(500)    | YES      | Region image (Cloudinary)    |
-| latitude         | DECIMAL(10,8)   | YES      | GPS latitude                 |
-| longitude        | DECIMAL(11,8)   | YES      | GPS longitude                |
-| featured_shop_id | BIGINT UNSIGNED | YES      | Foreign key to shops         |
-| hero_order       | INTEGER         | YES      | Homepage carousel order      |
-| created_at       | TIMESTAMP       | YES      | Record creation              |
-| updated_at       | TIMESTAMP       | YES      | Last update                  |
+| name             | VARCHAR(255)    | NO       | Nama wilayah                 |
+| image            | VARCHAR(500)    | YES      | Gambar wilayah (Cloudinary)  |
+| latitude         | DECIMAL(10,8)   | YES      | Latitude GPS                 |
+| longitude        | DECIMAL(11,8)   | YES      | Longitude GPS                |
+| featured_shop_id | BIGINT UNSIGNED | YES      | Foreign key ke shops         |
+| hero_order       | INTEGER         | YES      | Urutan carousel homepage     |
+| created_at       | TIMESTAMP       | YES      | Pembuatan record             |
+| updated_at       | TIMESTAMP       | YES      | Update terakhir              |
 
-**Indexes:**
+**Index:**
 
 - PRIMARY KEY: `id`
 - FOREIGN KEY: `featured_shop_id` → shops(id) ON DELETE SET NULL
 - INDEX: `hero_order` (ordering)
 
-**Relationships:**
+**Relationship:**
 
 - Has Many: `shops`
 - Belongs To: `shops` (featured shop)
 
 ---
 
-#### 7. **contents** - CMS Content
+#### 7. **contents** - Konten CMS
 
-| Column     | Type            | Nullable | Description                   |
+| Kolom      | Tipe            | Nullable | Deskripsi                     |
 | ---------- | --------------- | -------- | ----------------------------- |
 | id         | BIGINT UNSIGNED | NO       | Primary key (auto-increment)  |
-| key        | VARCHAR(255)    | NO       | Unique content identifier     |
-| value      | LONGTEXT        | YES      | Content value                 |
-| type       | VARCHAR(50)     | NO       | 'text', 'image', 'json', etc. |
-| group      | VARCHAR(100)    | YES      | Content grouping              |
-| label      | VARCHAR(255)    | YES      | Human-readable label          |
-| created_at | TIMESTAMP       | YES      | Record creation               |
-| updated_at | TIMESTAMP       | YES      | Last update                   |
+| key        | VARCHAR(255)    | NO       | Identifier konten unik        |
+| value      | LONGTEXT        | YES      | Nilai konten                  |
+| type       | VARCHAR(50)     | NO       | 'text', 'image', 'json', dll. |
+| group      | VARCHAR(100)    | YES      | Pengelompokan konten          |
+| label      | VARCHAR(255)    | YES      | Label yang mudah dibaca       |
+| created_at | TIMESTAMP       | YES      | Pembuatan record              |
+| updated_at | TIMESTAMP       | YES      | Update terakhir               |
 
-**Indexes:**
+**Index:**
 
 - PRIMARY KEY: `id`
 - UNIQUE: `key`
 - INDEX: `group` (filtering)
 
-**Relationships:**
+**Relationship:**
 
-- None (standalone content)
+- Tidak ada (konten mandiri)
 
 ---
 
-#### 8. **translations** - Translation Cache
+#### 8. **translations** - Cache Terjemahan
 
-| Column     | Type            | Nullable | Description                  |
+| Kolom      | Tipe            | Nullable | Deskripsi                    |
 | ---------- | --------------- | -------- | ---------------------------- |
 | id         | BIGINT UNSIGNED | NO       | Primary key (auto-increment) |
-| text       | TEXT            | NO       | Original text                |
-| language   | VARCHAR(10)     | NO       | Target language code         |
-| translated | TEXT            | NO       | Translated text              |
-| created_at | TIMESTAMP       | YES      | Record creation              |
-| updated_at | TIMESTAMP       | YES      | Last update                  |
+| text       | TEXT            | NO       | Teks asli                    |
+| language   | VARCHAR(10)     | NO       | Kode bahasa target           |
+| translated | TEXT            | NO       | Teks terjemahan              |
+| created_at | TIMESTAMP       | YES      | Pembuatan record             |
+| updated_at | TIMESTAMP       | YES      | Update terakhir              |
 
-**Indexes:**
+**Index:**
 
 - PRIMARY KEY: `id`
-- UNIQUE: `text (hash), language` (prevent duplicates)
+- UNIQUE: `text (hash), language` (mencegah duplikat)
 
-**Relationships:**
+**Relationship:**
 
-- None (translation cache)
+- Tidak ada (cache terjemahan)
 
 ---
 
-### Laravel System Tables
+### Tabel Sistem Laravel
 
-- **cache** & **cache_locks** - Cache storage
-- **sessions** - User session storage
-- **jobs** & **job_batches** - Queue system
-- **failed_jobs** - Failed queue job logging
-- **password_reset_tokens** - Password reset storage
+- **cache** & **cache_locks** - Penyimpanan cache
+- **sessions** - Penyimpanan session pengguna
+- **jobs** & **job_batches** - Sistem queue
+- **failed_jobs** - Log job queue yang gagal
+- **password_reset_tokens** - Penyimpanan reset password
 
-### Database Relationships Summary
+### Ringkasan Relationship Database
 
 ```
 users (1) ────▶ shops (1) ────▶ products (∞) ────▶ product_images (∞)
@@ -610,90 +610,90 @@ regions (1) ──────┘
 
 regions (1) ──featured──▶ shops (1)
 
-contents (standalone)
-translations (standalone)
+contents (mandiri)
+translations (mandiri)
 ```
 
 ---
 
-## ⚙️ Environment Configuration
+## Konfigurasi Environment
 
-### Required .env Variables
+### Variabel .env yang Diperlukan
 
-#### Application Settings
+#### Pengaturan Aplikasi
 
 ```env
 APP_NAME="UMKM Sasuma"
 APP_ENV=production                    # local, staging, production
 APP_KEY=base64:YOUR_32_CHAR_KEY      # php artisan key:generate
-APP_DEBUG=false                       # MUST be false in production
-APP_URL=https://yourdomain.com        # Your actual domain
+APP_DEBUG=false                       # HARUS false di production
+APP_URL=https://yourdomain.com        # Domain Anda yang sebenarnya
 
-APP_LOCALE=id                         # Default language (id/en)
-APP_FALLBACK_LOCALE=en               # Fallback language
+APP_LOCALE=id                         # Bahasa default (id/en)
+APP_FALLBACK_LOCALE=en               # Bahasa fallback
 ```
 
-#### Database Configuration
+#### Konfigurasi Database
 
 ```env
 DB_CONNECTION=mysql
-DB_HOST=127.0.0.1                    # Or your MySQL host
+DB_HOST=127.0.0.1                    # Atau host MySQL Anda
 DB_PORT=3306
-DB_DATABASE=your_database_name
-DB_USERNAME=your_database_user
-DB_PASSWORD=your_database_password
+DB_DATABASE=nama_database_anda
+DB_USERNAME=user_database_anda
+DB_PASSWORD=password_database_anda
 ```
 
-#### Mail Configuration (Email Verification)
+#### Konfigurasi Mail (Verifikasi Email)
 
 ```env
 MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com             # Or your SMTP provider
+MAIL_HOST=smtp.gmail.com             # Atau provider SMTP Anda
 MAIL_PORT=587
-MAIL_USERNAME=your_email@gmail.com
-MAIL_PASSWORD=your_app_password      # Gmail: App Password required
+MAIL_USERNAME=email_anda@gmail.com
+MAIL_PASSWORD=app_password_anda      # Gmail: App Password diperlukan
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=your_email@gmail.com
+MAIL_FROM_ADDRESS=email_anda@gmail.com
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
-**Gmail Setup:**
+**Setup Gmail:**
 
-1. Enable 2-Factor Authentication
+1. Aktifkan 2-Factor Authentication
 2. Generate App Password: https://myaccount.google.com/apppasswords
-3. Use App Password in `MAIL_PASSWORD`
+3. Gunakan App Password di `MAIL_PASSWORD`
 
-#### Cloudinary Configuration (Image Storage)
+#### Konfigurasi Cloudinary (Penyimpanan Gambar)
 
 ```env
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+CLOUDINARY_CLOUD_NAME=cloud_name_anda
+CLOUDINARY_API_KEY=api_key_anda
+CLOUDINARY_API_SECRET=api_secret_anda
 CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name
 ```
 
-**Get Credentials:**
+**Dapatkan Kredensial:**
 
-1. Sign up at https://cloudinary.com
+1. Daftar di https://cloudinary.com
 2. Dashboard → Account Details
-3. Copy Cloud Name, API Key, API Secret
+3. Salin Cloud Name, API Key, API Secret
 
-**Get Credentials:**
+**Dapatkan Kredensial:**
 
-1. Sign up at https://Firebase
-2. Create new app → Select cluster
-3. Copy App ID, Key, Secret from App Keys tab
+1. Daftar di https://Firebase
+2. Buat app baru → Pilih cluster
+3. Salin App ID, Key, Secret dari tab App Keys
 
-#### Firebase Realtime Database Configuration
+#### Konfigurasi Firebase Realtime Database
 
 ```env
 FIREBASE_DATABASE_URL=https://your-project.firebaseio.com
-FIREBASE_API_KEY=your_firebase_api_key
+FIREBASE_API_KEY=firebase_api_key_anda
 FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
 FIREBASE_PROJECT_ID=your-project-id
 FIREBASE_STORAGE_BUCKET=your-project.appspot.com
-FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-FIREBASE_APP_ID=your_app_id
+FIREBASE_MESSAGING_SENDER_ID=sender_id_anda
+FIREBASE_APP_ID=app_id_anda
 
 VITE_FIREBASE_API_KEY="${FIREBASE_API_KEY}"
 VITE_FIREBASE_AUTH_DOMAIN="${FIREBASE_AUTH_DOMAIN}"
@@ -704,42 +704,42 @@ VITE_FIREBASE_MESSAGING_SENDER_ID="${FIREBASE_MESSAGING_SENDER_ID}"
 VITE_FIREBASE_APP_ID="${FIREBASE_APP_ID}"
 ```
 
-**Get Credentials:**
+**Dapatkan Kredensial:**
 
-1. Go to https://console.firebase.google.com
-2. Create or select your project
+1. Buka https://console.firebase.google.com
+2. Buat atau pilih proyek Anda
 3. Project Settings → General → Your apps
-4. Click "Add app" (Web) if you haven't already
-5. Copy your Firebase configuration values
-6. Enable Realtime Database in Firebase Console → Build → Realtime Database
+4. Klik "Add app" (Web) jika belum
+5. Salin nilai konfigurasi Firebase Anda
+6. Aktifkan Realtime Database di Firebase Console → Build → Realtime Database
 
 ---
 
-#### OpenRouter API (AI Translation)
+#### OpenRouter API (Terjemahan AI)
 
 ```env
-OPENROUTER_API_KEY=sk-or-v1-your_api_key
+OPENROUTER_API_KEY=sk-or-v1-api_key_anda
 ```
 
-**Get API Key:**
+**Dapatkan API Key:**
 
-1. Sign up at https://openrouter.ai
+1. Daftar di https://openrouter.ai
 2. Account → API Keys → Create Key
-3. Add credits to account
+3. Tambahkan kredit ke akun
 
 #### Session & Cache
 
 ```env
-SESSION_DRIVER=database               # Use database for shared hosting
-SESSION_LIFETIME=120                  # Minutes
+SESSION_DRIVER=database               # Gunakan database untuk shared hosting
+SESSION_LIFETIME=120                  # Menit
 
-CACHE_STORE=database                  # Use database for shared hosting
+CACHE_STORE=database                  # Gunakan database untuk shared hosting
 ```
 
-#### Queue Configuration
+#### Konfigurasi Queue
 
 ```env
-QUEUE_CONNECTION=database             # Use database for shared hosting
+QUEUE_CONNECTION=database             # Gunakan database untuk shared hosting
 ```
 
 ```env
@@ -748,18 +748,18 @@ FIREBASE_DATABASE_URL=https://your-project.firebaseio.com
 
 ---
 
-### Optional .env Variables
+### Variabel .env Opsional
 
 ```env
 # Logging
 LOG_CHANNEL=stack
 LOG_LEVEL=error                       # debug, info, warning, error
 
-# Security
-BCRYPT_ROUNDS=12                      # Password hashing cost
+# Keamanan
+BCRYPT_ROUNDS=12                      # Biaya hashing password
 
-# File Storage
-FILESYSTEM_DISK=local                 # local or cloudinary
+# Penyimpanan File
+FILESYSTEM_DISK=local                 # local atau cloudinary
 
 # Vite (Development)
 VITE_DEV_SERVER_URL=http://localhost:5173
@@ -767,39 +767,39 @@ VITE_DEV_SERVER_URL=http://localhost:5173
 
 ---
 
-## 📦 Installation
+## Instalasi
 
-### Local Development (Docker)
+### Development Lokal (Docker)
 
-#### Prerequisites
+#### Prasyarat
 
-- Docker Desktop installed
-- Docker Compose installed
+- Docker Desktop terinstal
+- Docker Compose terinstal
 - Git
 
-#### Steps
+#### Langkah-langkah
 
 **1. Clone Repository**
 
 ```bash
-git clone <your-repo-url>
+git clone <url-repo-anda>
 cd umkm_project
 ```
 
-**2. Start Docker Containers**
+**2. Mulai Container Docker**
 
 ```bash
 docker-compose up -d
 ```
 
-This starts:
+Ini memulai:
 
 - **Laravel App:** http://localhost:8000
 - **MySQL:** localhost:3307
 - **phpMyAdmin:** http://localhost:8001
 - **Vite Dev Server:** http://localhost:5174
 
-**3. Access Laravel Container**
+**3. Akses Container Laravel**
 
 ```bash
 docker exec -it laravel_app bash
@@ -808,19 +808,19 @@ docker exec -it laravel_app bash
 **4. Install Dependencies**
 
 ```bash
-# Inside container
+# Di dalam container
 composer install
 npm install
 ```
 
-**5. Configure Environment**
+**5. Konfigurasi Environment**
 
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-Edit `.env` with Docker settings (already configured):
+Edit `.env` dengan pengaturan Docker (sudah dikonfigurasi):
 
 ```env
 DB_CONNECTION=mysql
@@ -831,19 +831,19 @@ DB_USERNAME=umkm
 DB_PASSWORD=umkm_sasuma
 ```
 
-**6. Run Migrations**
+**6. Jalankan Migrasi**
 
 ```bash
 php artisan migrate
 ```
 
-**7. Seed Database** (Creates test user)
+**7. Seed Database** (Membuat user test)
 
 ```bash
 php artisan db:seed
 ```
 
-Default credentials:
+Kredensial default:
 
 - Email: `test@example.com`
 - Password: `password`
@@ -854,50 +854,50 @@ Default credentials:
 php artisan storage:link
 ```
 
-**9. Build Frontend Assets**
+**9. Build Aset Frontend**
 
 ```bash
 npm run build
 ```
 
-**10. Start Queue Worker** (Optional, for background jobs)
+**10. Mulai Queue Worker** (Opsional, untuk background jobs)
 
 ```bash
-# In separate terminal inside container
+# Di terminal terpisah di dalam container
 php artisan queue:work
 ```
 
-**11. Access Application**
+**11. Akses Aplikasi**
 
 - Frontend: http://localhost:8000
 - phpMyAdmin: http://localhost:8001 (user: `umkm`, pass: `umkm_sasuma`)
 
 ---
 
-### Shared Hosting Deployment
+### Deployment Shared Hosting
 
-#### Prerequisites
+#### Prasyarat
 
-- cPanel or similar hosting panel
+- cPanel atau panel hosting serupa
 - PHP >= 8.2
 - MySQL >= 8.0
-- Composer access (SSH or panel)
-- Domain configured
+- Akses Composer (SSH atau panel)
+- Domain dikonfigurasi
 
-#### Steps
+#### Langkah-langkah
 
-**1. Prepare Local Build**
+**1. Siapkan Build Lokal**
 
 ```bash
-# On your local machine
+# Di mesin lokal Anda
 composer install --optimize-autoloader --no-dev
 npm install
 npm run build
 ```
 
-**2. Upload Files via FTP/SFTP**
+**2. Upload File via FTP/SFTP**
 
-Upload these directories:
+Upload direktori ini:
 
 ```
 ├── app/
@@ -916,36 +916,36 @@ Upload these directories:
 └── composer.lock
 ```
 
-**DO NOT upload:**
+**JANGAN upload:**
 
-- `.env` (create manually)
+- `.env` (buat secara manual)
 - `node_modules/`
 - `.git/`
 - `tests/`
 - `docker/`
 - `docker-compose.yml`
 
-**3. Configure Document Root**
+**3. Konfigurasi Document Root**
 
-Point your domain to `/public` directory:
+Arahkan domain Anda ke direktori `/public`:
 
 ```
 Domain: yourdomain.com → /public_html/public
 ```
 
-**4. Create .env File**
+**4. Buat File .env**
 
-In hosting file manager or SSH:
+Di file manager hosting atau SSH:
 
 ```bash
 cd /home/yourusername/public_html
 cp .env.example .env
-nano .env  # or use file manager editor
+nano .env  # atau gunakan editor file manager
 ```
 
-Fill in production values (see Environment Configuration section).
+Isi dengan nilai production (lihat bagian Konfigurasi Environment).
 
-**5. Set Directory Permissions**
+**5. Set Permissions Direktori**
 
 ```bash
 chmod -R 755 storage bootstrap/cache
@@ -958,17 +958,17 @@ chmod -R 775 storage/logs
 php artisan key:generate
 ```
 
-**7. Create Database**
+**7. Buat Database**
 
-In cPanel → MySQL Databases:
+Di cPanel → MySQL Databases:
 
-1. Create database: `yourusername_umkm`
-2. Create user: `yourusername_umkm`
-3. Set password (strong password)
-4. Grant all privileges to user
-5. Update `.env` with credentials
+1. Buat database: `yourusername_umkm`
+2. Buat user: `yourusername_umkm`
+3. Set password (password kuat)
+4. Berikan semua privileges ke user
+5. Update `.env` dengan kredensial
 
-**8. Run Migrations**
+**8. Jalankan Migrasi**
 
 ```bash
 php artisan migrate --force
@@ -980,7 +980,7 @@ php artisan migrate --force
 php artisan db:seed --force
 ```
 
-**10. Reset Auto-Increment (Important!)**
+**10. Reset Auto-Increment (Penting!)**
 
 ```bash
 php artisan db:reset-autoincrement
@@ -992,7 +992,7 @@ php artisan db:reset-autoincrement
 php artisan storage:link
 ```
 
-**12. Clear & Cache Configuration**
+**12. Clear & Cache Konfigurasi**
 
 ```bash
 php artisan config:cache
@@ -1000,15 +1000,15 @@ php artisan route:cache
 php artisan view:cache
 ```
 
-**13. Set Ownership** (if using SSH)
+**13. Set Ownership** (jika menggunakan SSH)
 
 ```bash
 chown -R yourusername:yourusername /home/yourusername/public_html
 ```
 
-**14. Configure .htaccess** (Usually automatic)
+**14. Konfigurasi .htaccess** (Biasanya otomatis)
 
-If needed, create `/public/.htaccess`:
+Jika diperlukan, buat `/public/.htaccess`:
 
 ```apache
 <IfModule mod_rewrite.c>
@@ -1019,43 +1019,43 @@ If needed, create `/public/.htaccess`:
 </IfModule>
 ```
 
-**15. Test Application**
+**15. Test Aplikasi**
 
-Visit: `https://yourdomain.com`
-
----
-
-#### Post-Deployment Checklist
-
-- ✅ Homepage loads without errors
-- ✅ Registration works
-- ✅ Email verification sends
-- ✅ Login works
-- ✅ Images upload to Cloudinary
-- ✅ Admin panel accessible
-- ✅ Database connections stable
-- ✅ Sitemap generates: `/sitemap.xml`
-- ✅ Robots.txt exists: `/robots.txt`
+Kunjungi: `https://yourdomain.com`
 
 ---
 
-#### Updating Application
+#### Checklist Pasca-Deployment
+
+- Homepage dimuat tanpa error
+- Registrasi berfungsi
+- Verifikasi email terkirim
+- Login berfungsi
+- Gambar terupload ke Cloudinary
+- Panel admin dapat diakses
+- Koneksi database stabil
+- Sitemap ter-generate: `/sitemap.xml`
+- Robots.txt ada: `/robots.txt`
+
+---
+
+#### Mengupdate Aplikasi
 
 ```bash
 # 1. Backup database (cPanel → phpMyAdmin → Export)
 
-# 2. Upload new files (overwrite existing)
+# 2. Upload file baru (timpa yang ada)
 
-# 3. Run migrations
+# 3. Jalankan migrasi
 php artisan migrate --force
 
-# 4. Clear caches
+# 4. Clear cache
 php artisan config:clear
 php artisan route:clear
 php artisan view:clear
 php artisan cache:clear
 
-# 5. Rebuild caches
+# 5. Rebuild cache
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
@@ -1063,345 +1063,345 @@ php artisan view:cache
 
 ---
 
-## 🔄 Application Logic & Flow
+## Logika & Alur Aplikasi
 
-### User Registration & Verification Flow
-
-```
-1. User visits /register
-   ↓
-2. Fills registration form (name, email, password, phone, birth details, address)
-   ↓
-3. System creates User account (role = 'users', unverified)
-   ↓
-4. System creates empty Shop record (associated with user_id)
-   ↓
-5. System sends verification email
-   ↓
-6. User clicks email link → email_verified_at set
-   ↓
-7. User redirected to /users/dashboard
-```
-
-### Shop Creation & Verification Flow
+### Alur Registrasi & Verifikasi Pengguna
 
 ```
-User (Verified) → Dashboard
+1. Pengguna mengunjungi /register
    ↓
-1. Navigate to "Lokasi" (Location)
-   - Select region from dropdown
-   - Enter full address
-   - Pin location on map (lat/long)
+2. Mengisi form registrasi (nama, email, password, telepon, detail lahir, alamat)
+   ↓
+3. Sistem membuat akun User (role = 'users', belum terverifikasi)
+   ↓
+4. Sistem membuat record Shop kosong (terasosiasi dengan user_id)
+   ↓
+5. Sistem mengirim email verifikasi
+   ↓
+6. Pengguna klik link email → email_verified_at di-set
+   ↓
+7. Pengguna diarahkan ke /users/dashboard
+```
+
+### Alur Pembuatan & Verifikasi Toko
+
+```
+Pengguna (Terverifikasi) → Dashboard
+   ↓
+1. Navigasi ke "Lokasi"
+   - Pilih wilayah dari dropdown
+   - Masukkan alamat lengkap
+   - Pin lokasi di peta (lat/long)
    - Submit
    ↓
-2. Navigate to "Edit Toko" (Edit Shop)
-   - Enter shop name
-   - Enter description
-   - Select business type
-   - Select product type
-   - Enter revenue range (omset_min, omset_max)
+2. Navigasi ke "Edit Toko"
+   - Masukkan nama toko
+   - Masukkan deskripsi
+   - Pilih jenis bisnis
+   - Pilih jenis produk
+   - Masukkan rentang omzet (omset_min, omset_max)
    - Upload logo
-   - Add social media links
-   - Upload business licenses
-   - Submit → TranslateShopAttributes job dispatched
+   - Tambahkan link media sosial
+   - Upload izin usaha
+   - Submit → Job TranslateShopAttributes di-dispatch
    ↓
-3. Navigate to "Foto" (Photos)
-   - Upload up to 5 shop photos
-   - Reorder photos by dragging
+3. Navigasi ke "Foto"
+   - Upload hingga 5 foto toko
+   - Urutkan ulang foto dengan drag
    - Submit
    ↓
-4. Navigate to "Toko" (Products)
-   - Click "Tambah Produk" (Add Product)
-   - Enter product details (name, price, category, variant, description)
-   - Upload product image
-   - Upload additional images (multi-image)
+4. Navigasi ke "Toko" (Produk)
+   - Klik "Tambah Produk"
+   - Masukkan detail produk (nama, harga, kategori, varian, deskripsi)
+   - Upload gambar produk
+   - Upload gambar tambahan (multi-image)
    - Submit
    ↓
-5. System checks completeness:
-   ✓ Shop name exists
-   ✓ Description exists
-   ✓ Address exists
-   ✓ Lat/Long exists
-   ✓ Region selected
-   ✓ Business type selected
-   ✓ Omset entered
-   ✓ At least 1 product
-   ✓ At least 1 shop photo
+5. Sistem mengecek kelengkapan:
+   ✓ Nama toko ada
+   ✓ Deskripsi ada
+   ✓ Alamat ada
+   ✓ Lat/Long ada
+   ✓ Wilayah dipilih
+   ✓ Jenis bisnis dipilih
+   ✓ Omzet dimasukkan
+   ✓ Minimal 1 produk
+   ✓ Minimal 1 foto toko
    ↓
-6. If complete:
-   - Shop appears in admin verification queue
-   - Shop status: pending (is_verified = false)
+6. Jika lengkap:
+   - Toko muncul di queue verifikasi admin
+   - Status toko: pending (is_verified = false)
    ↓
-7. Admin reviews shop:
-   Option A: APPROVE
+7. Admin mereview toko:
+   Opsi A: SETUJU
      - Set is_verified = true
-     - ShopUpdated event dispatched (Firebase Realtime Database notification)
-     - UserUpdated event dispatched
-     - Shop appears on public listing
+     - Event ShopUpdated di-dispatch (notifikasi Firebase Realtime Database)
+     - Event UserUpdated di-dispatch
+     - Toko muncul di listing publik
 
-   Option B: REJECT
-     - Set rejection_reason = "Admin message"
-     - ShopUpdated event dispatched
-     - User sees rejection reason in dashboard
-     - User can edit and resubmit
+   Opsi B: TOLAK
+     - Set rejection_reason = "Pesan Admin"
+     - Event ShopUpdated di-dispatch
+     - Pengguna melihat alasan penolakan di dashboard
+     - Pengguna dapat mengedit dan mengirim ulang
 ```
 
-### Admin Verification Logic
+### Logika Verifikasi Admin
 
-**Automatic Checks (before admin review):**
+**Pengecekan Otomatis (sebelum review admin):**
 
-- `Shop::isComplete()` method validates:
-  - All required fields filled
-  - Minimum 1 product exists
-  - Minimum 1 photo exists
+- Method `Shop::isComplete()` memvalidasi:
+  - Semua field wajib terisi
+  - Minimal 1 produk ada
+  - Minimal 1 foto ada
 
-**Admin Actions:**
+**Aksi Admin:**
 
-- Approve: Shop goes live immediately
-- Reject: User notified, can edit and resubmit
+- Setuju: Toko langsung tayang
+- Tolak: Pengguna diberitahu, dapat mengedit dan mengirim ulang
 
-**Auto-Revocation Rule:**
-If verified shop becomes incomplete (e.g., user deletes all photos):
+**Aturan Pencabutan Otomatis:**
+Jika toko terverifikasi menjadi tidak lengkap (misal, pengguna menghapus semua foto):
 
-- `is_verified` automatically set to `false`
-- Requires admin re-verification
+- `is_verified` otomatis di-set ke `false`
+- Memerlukan re-verifikasi admin
 
-### Translation Logic
+### Logika Terjemahan
 
-**Automatic Translation (Background Job):**
+**Terjemahan Otomatis (Background Job):**
 
 ```
-Shop updated/created
+Toko diupdate/dibuat
    ↓
-TranslateShopAttributes job dispatched
+Job TranslateShopAttributes di-dispatch
    ↓
-Check if description translation exists in DB
+Cek apakah terjemahan deskripsi ada di DB
    ↓
-If not: Call OpenRouter API (AI translation)
+Jika tidak: Panggil OpenRouter API (terjemahan AI)
    ↓
-Save translation to translations table
+Simpan terjemahan ke tabel translations
    ↓
-Cached for future use
+Di-cache untuk penggunaan selanjutnya
 ```
 
-### Real-time Notification Logic (Firebase Realtime Database)
+### Logika Notifikasi Real-time (Firebase Realtime Database)
 
-**Events & Channels:**
+**Event & Channel:**
 
 ```
 Event: ShopUpdated
    ↓
-Broadcast to channel: shop.{shop_id}
+Broadcast ke channel: shop.{shop_id}
    ↓
-Listeners: Admin dashboard, User dashboard
+Listener: Dashboard Admin, Dashboard User
    ↓
-Action: Refresh verification status, update UI
+Aksi: Refresh status verifikasi, update UI
 
 Event: UserUpdated
    ↓
-Broadcast to channel: user.{user_id}
+Broadcast ke channel: user.{user_id}
    ↓
-Listeners: User dashboard
+Listener: Dashboard User
    ↓
-Action: Show notification, refresh data
+Aksi: Tampilkan notifikasi, refresh data
 ```
 
-### Image Upload Logic
+### Logika Upload Gambar
 
-**Cloudinary Upload Flow:**
+**Alur Upload Cloudinary:**
 
 ```
-User selects image (form input)
+Pengguna memilih gambar (input form)
    ↓
-Validate file type (image only) and size
+Validasi tipe file (hanya gambar) dan ukuran
    ↓
-Upload to Cloudinary via Laravel facade
+Upload ke Cloudinary via Laravel facade
    ↓
-Cloudinary returns:
+Cloudinary mengembalikan:
    - public_id
    - secure_url
    - format
    - dimensions
    ↓
-Save secure_url to database
+Simpan secure_url ke database
    ↓
-Display using storage_url() helper
+Tampilkan menggunakan helper storage_url()
 ```
 
-### SEO Sitemap Logic
+### Logika SEO Sitemap
 
-**Command: `php artisan sitemap:generate`**
+**Perintah: `php artisan sitemap:generate`**
 
 ```
-1. Fetch all verified shops
-2. Fetch all active products (with verified shops)
-3. Fetch all business types
-4. Generate XML with:
-   - Static pages (/, /umkm, /login, /register)
-   - Business type pages (/umkm?category=X)
-   - Shop detail pages (/umkm/{id})
-   - Product detail pages (/umkm/product/{id})
-5. Add lastmod timestamps
-6. Save to /public/sitemap.xml
-7. Generate /public/robots.txt with sitemap reference
+1. Ambil semua toko terverifikasi
+2. Ambil semua produk aktif (dengan toko terverifikasi)
+3. Ambil semua jenis bisnis
+4. Generate XML dengan:
+   - Halaman statis (/, /umkm, /login, /register)
+   - Halaman jenis bisnis (/umkm?category=X)
+   - Halaman detail toko (/umkm/{id})
+   - Halaman detail produk (/umkm/product/{id})
+5. Tambahkan timestamp lastmod
+6. Simpan ke /public/sitemap.xml
+7. Generate /public/robots.txt dengan referensi sitemap
 ```
 
-**Run Frequency:** Daily via cronjob
+**Frekuensi Eksekusi:** Harian via cronjob
 
 ---
 
-## ⏰ Cronjob Configuration
+## Konfigurasi Cronjob
 
-### Required Cronjobs for Shared Hosting
+### Cronjob yang Diperlukan untuk Shared Hosting
 
-Laravel requires a single cron entry to run the scheduler, which manages all scheduled tasks.
+Laravel memerlukan satu entri cron untuk menjalankan scheduler, yang mengelola semua task terjadwal.
 
-#### 1. Laravel Task Scheduler (Required)
+#### 1. Laravel Task Scheduler (Wajib)
 
-Add this to your crontab:
+Tambahkan ini ke crontab Anda:
 
 ```cron
 * * * * * cd /home/yourusername/public_html && php artisan schedule:run >> /dev/null 2>&1
 ```
 
-**cPanel Setup:**
+**Setup cPanel:**
 
 1. cPanel → Advanced → Cron Jobs
-2. Common Settings: "Every Minute" (\*/1)
+2. Common Settings: "Every Minute" (*/1)
 3. Command: `cd /home/yourusername/public_html && php artisan schedule:run >> /dev/null 2>&1`
 4. Save
 
-**What it does:**
+**Apa yang dilakukan:**
 
-- Runs every minute
-- Checks if any scheduled tasks should execute
-- Minimal resource usage
+- Berjalan setiap menit
+- Mengecek apakah ada task terjadwal yang harus dieksekusi
+- Penggunaan resource minimal
 
 ---
 
-#### 2. Scheduler Configuration (Sitemap & Maintenance)
+#### 2. Konfigurasi Scheduler (Sitemap & Maintenance)
 
-The application uses Laravel's scheduler to handle background tasks like sitemap generation and database cleanup.
+Aplikasi menggunakan scheduler Laravel untuk menangani background task seperti pembuatan sitemap dan pembersihan database.
 
-**Single Cron Job Setup:**
+**Setup Cron Job Tunggal:**
 
-Add this **one** line to your server's crontab (e.g., via CPanel or `crontab -e`) to run all scheduled tasks:
+Tambahkan **satu** baris ini ke crontab server Anda (misal, via CPanel atau `crontab -e`) untuk menjalankan semua task terjadwal:
 
 ```cron
 * * * * * cd /home/yourusername/public_html && php artisan schedule:run >> /dev/null 2>&1
 ```
 
-_Replace `/home/yourusername/public_html` with the actual path to your project._
+_Ganti `/home/yourusername/public_html` dengan path aktual ke proyek Anda._
 
-**What this handles:**
+**Yang ditangani:**
 
-1. **Sitemap Generation:** Runs daily at 02:00 AM.
-2. **Translation Cleanup:** Runs weekly (Sundays at 03:00 AM).
+1. **Pembuatan Sitemap:** Berjalan harian pukul 02:00.
+2. **Pembersihan Terjemahan:** Berjalan mingguan (Minggu pukul 03:00).
 
-**Manual Triggers:**
+**Trigger Manual:**
 
 ```bash
-# Generate Sitemap Immediately
+# Generate Sitemap Segera
 php artisan sitemap:generate
 
-# Clean Translations Immediately
+# Bersihkan Terjemahan Segera
 php artisan translations:clean
 ```
 
 **Output:**
 
-- `/public/sitemap.xml` (Google submission)
-- `/public/robots.txt` (SEO configuration)
+- `/public/sitemap.xml` (pengiriman Google)
+- `/public/robots.txt` (konfigurasi SEO)
 
 ---
 
-#### 3. Queue Worker (For Background Jobs)
+#### 3. Queue Worker (Untuk Background Jobs)
 
-**Option A: Continuous Worker (Recommended for VPS)**
+**Opsi A: Worker Terus-menerus (Direkomendasikan untuk VPS)**
 
 ```bash
-# Keep running in background
+# Jalankan terus di background
 nohup php artisan queue:work --sleep=3 --tries=3 --daemon > /dev/null 2>&1 &
 ```
 
-**Option B: Cron-based (Recommended for Shared Hosting)**
+**Opsi B: Berbasis Cron (Direkomendasikan untuk Shared Hosting)**
 
 ```cron
 */5 * * * * cd /home/yourusername/public_html && php artisan queue:work --stop-when-empty >> /dev/null 2>&1
 ```
 
-**What it processes:**
+**Yang diproses:**
 
-- `TranslateShopAttributes` job (shop description translation)
-- Email sending (if using queue for mail)
-- Image optimization tasks
+- Job `TranslateShopAttributes` (terjemahan deskripsi toko)
+- Pengiriman email (jika menggunakan queue untuk mail)
+- Task optimasi gambar
 
 ---
 
-### Verify Cronjobs are Running
+### Verifikasi Cronjob Berjalan
 
-**Check Laravel logs:**
+**Cek log Laravel:**
 
 ```bash
 tail -f storage/logs/laravel.log
 ```
 
-**Test manually:**
+**Test manual:**
 
 ```bash
-php artisan schedule:list  # View all scheduled tasks
-php artisan schedule:run   # Manually trigger scheduler
+php artisan schedule:list  # Lihat semua task terjadwal
+php artisan schedule:run   # Trigger scheduler manual
 ```
 
 ---
 
-## 📝 Commands Reference
+## Referensi Perintah
 
-### Database Management
+### Manajemen Database
 
 ```bash
-# Run migrations
+# Jalankan migrasi
 php artisan migrate
 
-# Run migrations (force, no confirmation - production)
+# Jalankan migrasi (force, tanpa konfirmasi - production)
 php artisan migrate --force
 
-# Rollback last migration
+# Rollback migrasi terakhir
 php artisan migrate:rollback
 
-# Rollback all migrations and re-run
+# Rollback semua migrasi dan jalankan ulang
 php artisan migrate:fresh
 
-# Seed database with sample data
+# Seed database dengan data sampel
 php artisan db:seed
 
-# Seed specific seeder
+# Seed seeder spesifik
 php artisan db:seed --class=DatabaseSeeder
 
 ```
 
 ---
 
-### Application Maintenance
+### Maintenance Aplikasi
 
 ```bash
 # Generate application key
 php artisan key:generate
 
-# Link storage directory
+# Link direktori storage
 php artisan storage:link
 
-# Clear all caches
+# Clear semua cache
 php artisan optimize:clear
-# Equivalent to:
+# Sama dengan:
 # php artisan cache:clear
 # php artisan config:clear
 # php artisan route:clear
 # php artisan view:clear
 
-# Build optimized caches (production)
+# Build cache teroptimasi (production)
 php artisan optimize
-# Equivalent to:
+# Sama dengan:
 # php artisan config:cache
 # php artisan route:cache
 # php artisan view:cache
@@ -1409,55 +1409,55 @@ php artisan optimize
 
 ---
 
-### Cache Management
+### Manajemen Cache
 
 ```bash
-# Clear application cache
+# Clear cache aplikasi
 php artisan cache:clear
 
-# Clear configuration cache
+# Clear cache konfigurasi
 php artisan config:clear
 
-# Clear route cache
+# Clear cache route
 php artisan route:clear
 
-# Clear compiled views cache
+# Clear cache view yang dikompilasi
 php artisan view:clear
 
-# Cache configuration (production)
+# Cache konfigurasi (production)
 php artisan config:cache
 
-# Cache routes (production)
+# Cache route (production)
 php artisan route:cache
 
-# Cache views (production)
+# Cache view (production)
 php artisan view:cache
 ```
 
 ---
 
-### Queue Management
+### Manajemen Queue
 
 ```bash
-# Start queue worker (foreground)
+# Mulai queue worker (foreground)
 php artisan queue:work
 
-# Start queue worker with options
+# Mulai queue worker dengan opsi
 php artisan queue:work --sleep=3 --tries=3 --timeout=90
 
-# Process all jobs then stop (shared hosting)
+# Proses semua job lalu stop (shared hosting)
 php artisan queue:work --stop-when-empty
 
-# List failed jobs
+# Daftar job yang gagal
 php artisan queue:failed
 
-# Retry all failed jobs
+# Retry semua job yang gagal
 php artisan queue:retry all
 
-# Retry specific failed job
+# Retry job gagal spesifik
 php artisan queue:retry {id}
 
-# Flush all failed jobs
+# Flush semua job yang gagal
 php artisan queue:flush
 ```
 
@@ -1466,7 +1466,7 @@ php artisan queue:flush
 ### SEO & Sitemap
 
 ```bash
-# Generate sitemap.xml and robots.txt
+# Generate sitemap.xml dan robots.txt
 php artisan sitemap:generate
 ```
 
@@ -1477,62 +1477,62 @@ php artisan sitemap:generate
 
 ---
 
-### Development Tools
+### Alat Development
 
 ```bash
-# Start development server
+# Mulai development server
 php artisan serve
-# Access at: http://localhost:8000
+# Akses di: http://localhost:8000
 
-# Watch logs in real-time
+# Lihat log real-time
 php artisan pail
 
-# List all routes
+# Daftar semua route
 php artisan route:list
 
-# List all scheduled tasks
+# Daftar semua task terjadwal
 php artisan schedule:list
 
-# Run scheduler manually (testing)
+# Jalankan scheduler manual (testing)
 php artisan schedule:run
 
 # Laravel Tinker (REPL)
 php artisan tinker
 
-# Run tests
+# Jalankan test
 php artisan test
 ```
 
 ---
 
-### Composer Commands
+### Perintah Composer
 
 ```bash
 # Install dependencies
 composer install
 
-# Install dependencies (production, optimized)
+# Install dependencies (production, teroptimasi)
 composer install --optimize-autoloader --no-dev
 
 # Update dependencies
 composer update
 
-# Dump autoload (after adding new classes)
+# Dump autoload (setelah menambah class baru)
 composer dump-autoload
 ```
 
 ---
 
-### NPM Commands
+### Perintah NPM
 
 ```bash
 # Install dependencies
 npm install
 
-# Development build (watch for changes)
+# Development build (watch perubahan)
 npm run dev
 
-# Production build (optimized)
+# Production build (teroptimasi)
 npm run build
 
 # Preview production build
@@ -1541,23 +1541,23 @@ npm run preview
 
 ---
 
-## 📁 Project Structure
+## Struktur Proyek
 
 ```
 umkm_project/
-├── docker/                      # Docker configuration files
+├── docker/                      # File konfigurasi Docker
 │   └── php/
 │       └── Dockerfile
-├── docker-compose.yml           # Docker orchestration
+├── docker-compose.yml           # Orkestrasi Docker
 │
-└── laravel_app/                 # Laravel application root
+└── laravel_app/                 # Root aplikasi Laravel
     ├── app/
     │   ├── Console/
     │   │   ├── Commands/
-    │   │   │   ├── GenerateSitemap.php        # SEO sitemap generator
-    │   │   │   └── CleanTranslations.php      # Translation cleanup
+    │   │   │   ├── GenerateSitemap.php        # Generator sitemap SEO
+    │   │   │   └── CleanTranslations.php      # Pembersihan terjemahan
     │   │
-    │   ├── Events/                # Firebase Realtime Database broadcast events
+    │   ├── Events/                # Event broadcast Firebase Realtime Database
     │   │   ├── ContentUpdated.php
     │   │   ├── ProductUpdated.php
     │   │   ├── SettingsUpdated.php
@@ -1565,30 +1565,30 @@ umkm_project/
     │   │   └── UserUpdated.php
     │   │
     │   ├── Helpers/
-    │   │   └── helpers.php         # Global helper functions
+    │   │   └── helpers.php         # Fungsi helper global
     │   │
     │   ├── Http/
     │   │   ├── Controllers/
     │   │   │   ├── Admin/
-    │   │   │   │   ├── ContentController.php   # CMS management
-    │   │   │   │   └── RegionController.php    # Region management
-    │   │   │   ├── Auth/                      # Laravel Breeze auth
+    │   │   │   │   ├── ContentController.php   # Manajemen CMS
+    │   │   │   │   └── RegionController.php    # Manajemen wilayah
+    │   │   │   ├── Auth/                      # Auth Laravel Breeze
     │   │   │   ├── AdminDashboardController.php
     │   │   │   ├── HomeController.php
     │   │   │   ├── ProfileController.php
-    │   │   │   ├── PublicController.php       # Shop directory
+    │   │   │   ├── PublicController.php       # Direktori toko
     │   │   │   └── UserDashboardController.php
     │   │   │
     │   │   ├── Middleware/
-    │   │   │   └── CheckRole.php              # Role-based access
+    │   │   │   └── CheckRole.php              # Akses berbasis role
     │   │   │
     │   │   └── Requests/
     │   │       └── ProfileUpdateRequest.php
     │   │
     │   ├── Jobs/
-    │   │   └── TranslateShopAttributes.php    # Background translation
+    │   │   └── TranslateShopAttributes.php    # Terjemahan background
     │   │
-    │   ├── Models/                # Eloquent models
+    │   ├── Models/                # Model Eloquent
     │   │   ├── Content.php
     │   │   ├── Product.php
     │   │   ├── ProductImage.php
@@ -1599,121 +1599,121 @@ umkm_project/
     │   │   └── User.php
     │   │
     │   └── Services/
-    │       ├── ImageService.php               # Cloudinary integration
-    │       └── TranslationService.php         # OpenRouter AI translation
+    │       ├── ImageService.php               # Integrasi Cloudinary
+    │       └── TranslationService.php         # Terjemahan AI OpenRouter
     │
-    ├── bootstrap/                # Application bootstrap
+    ├── bootstrap/                # Bootstrap aplikasi
     │   ├── app.php
-    │   └── cache/                # Framework cache
+    │   └── cache/                # Cache framework
     │
-    ├── config/                   # Configuration files
+    ├── config/                   # File konfigurasi
     │   ├── app.php
-    │   ├── cloudinary.php         # Cloudinary config
+    │   ├── cloudinary.php         # Konfigurasi Cloudinary
     │   ├── database.php
     │   ├── services.php
     │   └── ...
     │
     ├── database/
-    │   ├── migrations/           # Database migrations (32 files)
+    │   ├── migrations/           # Migrasi database (32 file)
     │   └── seeders/
     │       └── DatabaseSeeder.php
     │
-    ├── lang/                     # Translations (id, en)
+    ├── lang/                     # Terjemahan (id, en)
     │   ├── en/
     │   └── id/
     │
-    ├── public/                   # Web server document root
-    │   ├── build/                # Compiled assets (Vite)
-    │   ├── images/               # Static images
-    │   ├── robots.txt            # SEO robots file
-    │   ├── sitemap.xml           # Generated sitemap
-    │   └── index.php             # Application entry point
+    ├── public/                   # Document root web server
+    │   ├── build/                # Aset terkompilasi (Vite)
+    │   ├── images/               # Gambar statis
+    │   ├── robots.txt            # File robots SEO
+    │   ├── sitemap.xml           # Sitemap ter-generate
+    │   └── index.php             # Entry point aplikasi
     │
     ├── resources/
     │   ├── css/
     │   │   └── app.css           # Tailwind CSS
     │   ├── js/
     │   │   ├── app.js
-    │   │   └── bootstrap.js      # Firebase Realtime Database initialization
-    │   └── views/                # Blade templates
-    │       ├── admin/            # Admin panel views
-    │       ├── auth/             # Authentication views (Breeze)
-    │       ├── components/       # Reusable components
+    │   │   └── bootstrap.js      # Inisialisasi Firebase Realtime Database
+    │   └── views/                # Template Blade
+    │       ├── admin/            # View panel admin
+    │       ├── auth/             # View autentikasi (Breeze)
+    │       ├── components/       # Komponen reusable
     │       ├── home/             # Homepage
-    │       ├── umkm/             # Public shop directory
-    │       └── users/            # User dashboard
+    │       ├── umkm/             # Direktori toko publik
+    │       └── users/            # Dashboard pengguna
     │
     ├── routes/
-    │   ├── console.php           # Artisan commands
-    │   └── web.php               # Web routes
+    │   ├── console.php           # Perintah Artisan
+    │   └── web.php               # Route web
     │
-    ├── storage/                  # Storage directory (writable)
+    ├── storage/                  # Direktori storage (writable)
     │   ├── app/
     │   ├── framework/
     │   └── logs/
     │
-    ├── tests/                    # PHPUnit tests
+    ├── tests/                    # Test PHPUnit
     │
-    ├── .env.example              # Environment template
-    ├── artisan                   # Artisan CLI
-    ├── composer.json             # PHP dependencies
-    ├── package.json              # NPM dependencies
-    ├── vite.config.js            # Vite build config
-    └── README.md                 # This file
+    ├── .env.example              # Template environment
+    ├── artisan                   # CLI Artisan
+    ├── composer.json             # Dependencies PHP
+    ├── package.json              # Dependencies NPM
+    ├── vite.config.js            # Konfigurasi build Vite
+    └── README.md                 # File ini
 ```
 
 ---
 
-## 🔌 API & External Services
+## API & Layanan Eksternal
 
-### Cloudinary (Image CDN)
+### Cloudinary (CDN Gambar)
 
-**Purpose:** Cloud-based image storage and delivery
+**Tujuan:** Penyimpanan dan pengiriman gambar berbasis cloud
 
-**Configuration:**
+**Konfigurasi:**
 
 ```env
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+CLOUDINARY_CLOUD_NAME=cloud_name_anda
+CLOUDINARY_API_KEY=api_key_anda
+CLOUDINARY_API_SECRET=api_secret_anda
 ```
 
-**Usage in Code:**
+**Penggunaan dalam Kode:**
 
 ```php
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
-// Upload image
+// Upload gambar
 $result = Cloudinary::upload($request->file('image')->getRealPath());
 $url = $result->getSecurePath();
 
-// Delete image
+// Hapus gambar
 Cloudinary::destroy($publicId);
 ```
 
-**Features Used:**
+**Fitur yang Digunakan:**
 
 - Auto format (WebP)
-- Auto quality optimization
-- Responsive srcsets
-- Transformation on-the-fly
+- Optimasi kualitas otomatis
+- Srcset responsif
+- Transformasi on-the-fly
 
-**Documentation:** https://cloudinary.com/documentation/laravel_integration
+**Dokumentasi:** https://cloudinary.com/documentation/laravel_integration
 
 ---
 
-### Firebase Realtime Database (Real-time Notifications)
+### Firebase Realtime Database (Notifikasi Real-time)
 
-**Purpose:** WebSocket-based real-time notifications
+**Tujuan:** Notifikasi real-time berbasis WebSocket
 
-**Events Broadcast:**
+**Event yang Di-broadcast:**
 
-- `ShopUpdated` - Shop verification status changes
-- `UserUpdated` - User profile updates
-- `ContentUpdated` - CMS content changes
-- `ProductUpdated` - Product modifications
+- `ShopUpdated` - Perubahan status verifikasi toko
+- `UserUpdated` - Update profil pengguna
+- `ContentUpdated` - Perubahan konten CMS
+- `ProductUpdated` - Modifikasi produk
 
-**Usage in Code:**
+**Penggunaan dalam Kode:**
 
 ```php
 // Broadcasting event
@@ -1723,27 +1723,27 @@ event(new ShopUpdated($shop));
 ```
 
 ```javascript
-// Listening in frontend
+// Listening di frontend
 window.Echo.channel("shop." + shopId).listen("ShopUpdated", (e) => {
   // Update UI
 });
 ```
 
-**Documentation:** https://Firebase/docs/channels
+**Dokumentasi:** https://Firebase/docs/channels
 
 ---
 
-### OpenRouter AI (Translation)
+### OpenRouter AI (Terjemahan)
 
-**Purpose:** AI-powered language translation
+**Tujuan:** Terjemahan bahasa bertenaga AI
 
-**Configuration:**
+**Konfigurasi:**
 
 ```env
-OPENROUTER_API_KEY=sk-or-v1-your_api_key
+OPENROUTER_API_KEY=sk-or-v1-api_key_anda
 ```
 
-**Usage in Code:**
+**Penggunaan dalam Kode:**
 
 ```php
 use App\Services\TranslationService;
@@ -1752,349 +1752,349 @@ $translationService = new TranslationService();
 $translated = $translationService->translate($text, 'en');
 ```
 
-**Features:**
+**Fitur:**
 
-- Indonesian to English translation
-- Cached translations (database)
-- Background job processing
+- Terjemahan Indonesia ke Inggris
+- Terjemahan yang di-cache (database)
+- Pemrosesan background job
 
-**Documentation:** https://openrouter.ai/docs
+**Dokumentasi:** https://openrouter.ai/docs
 
 ---
 
 ### Gmail SMTP (Email)
 
-**Purpose:** Email verification and notifications
+**Tujuan:** Verifikasi email dan notifikasi
 
-**Configuration:**
+**Konfigurasi:**
 
 ```env
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
-MAIL_USERNAME=your_email@gmail.com
-MAIL_PASSWORD=your_app_password  # App Password!
+MAIL_USERNAME=email_anda@gmail.com
+MAIL_PASSWORD=app_password_anda  # App Password!
 ```
 
 **Setup:**
 
-1. Enable 2FA on Gmail
+1. Aktifkan 2FA di Gmail
 2. Generate App Password: https://myaccount.google.com/apppasswords
-3. Use App Password in `.env`
+3. Gunakan App Password di `.env`
 
-**Emails Sent:**
+**Email yang Dikirim:**
 
-- Email verification
-- Password reset
-- Shop verification notifications
+- Verifikasi email
+- Reset password
+- Notifikasi verifikasi toko
 
-**Documentation:** https://support.google.com/accounts/answer/185833
+**Dokumentasi:** https://support.google.com/accounts/answer/185833
 
 ---
 
-### Firebase Realtime Database (Optional)
+### Firebase Realtime Database (Opsional)
 
-**Purpose:** Optional real-time data sync
+**Tujuan:** Sinkronisasi data real-time opsional
 
-**Configuration:**
+**Konfigurasi:**
 
 ```env
 FIREBASE_DATABASE_URL=https://your-project.firebaseio.com
 ```
 
-**Note:** Currently optional and not required for core functionality.
+**Catatan:** Saat ini opsional dan tidak diperlukan untuk fungsionalitas inti.
 
 ---
 
-## 🐛 Troubleshooting
+## Pemecahan Masalah
 
-### Common Issues
+### Masalah Umum
 
-#### 1. **Images not uploading / Cloudinary error**
+#### 1. **Gambar tidak terupload / error Cloudinary**
 
-**Symptoms:**
+**Gejala:**
 
-- Upload button doesn't work
+- Tombol upload tidak berfungsi
 - Error: "Cloudinary credentials not configured"
 
-**Solutions:**
+**Solusi:**
 
 ```bash
-# Check .env has Cloudinary credentials
+# Cek .env memiliki kredensial Cloudinary
 grep CLOUDINARY .env
 
-# Clear config cache
+# Clear cache konfigurasi
 php artisan config:clear
 php artisan config:cache
 
-# Test Cloudinary connection
+# Test koneksi Cloudinary
 php artisan tinker
 > Cloudinary::upload('/path/to/test-image.jpg');
 ```
 
 ---
 
-#### 2. **Auto-increment gaps after deletion**
+#### 2. **Gap auto-increment setelah penghapusan**
 
-**Symptoms:**
+**Gejala:**
 
-- IDs jump (e.g., 1, 2, 10, 15)
-- Deleted IDs not reused
+- ID loncat (misal, 1, 2, 10, 15)
+- ID yang dihapus tidak digunakan ulang
 
-**Solution:**
+**Solusi:**
 
 ```bash
-# Reset auto-increment counters
+# Reset counter auto-increment
 php artisan db:reset-autoincrement
 
-# Preview changes first
+# Preview perubahan dulu
 php artisan db:reset-autoincrement --dry-run
 
-# Reset specific table
+# Reset tabel spesifik
 php artisan db:reset-autoincrement --table=shops
 ```
 
 ---
 
-#### 3. **Queue jobs not processing**
+#### 3. **Job queue tidak diproses**
 
-**Symptoms:**
+**Gejala:**
 
-- Translation jobs stuck
-- Jobs table growing
+- Job terjemahan macet
+- Tabel jobs membesar
 
-**Solutions:**
+**Solusi:**
 
 ```bash
-# Check jobs table
+# Cek tabel jobs
 php artisan queue:failed
 
-# Start queue worker
+# Mulai queue worker
 php artisan queue:work
 
-# Retry failed jobs
+# Retry job yang gagal
 php artisan queue:retry all
 
-# For shared hosting, add cronjob:
+# Untuk shared hosting, tambahkan cronjob:
 */5 * * * * cd /path/to/app && php artisan queue:work --stop-when-empty
 ```
 
 ---
 
-#### 4. **Email verification not sending**
+#### 4. **Verifikasi email tidak terkirim**
 
-**Symptoms:**
+**Gejala:**
 
-- No email received
-- Email stuck in queue
+- Tidak ada email diterima
+- Email macet di queue
 
-**Solutions:**
+**Solusi:**
 
 ```bash
-# Check mail configuration
+# Cek konfigurasi mail
 grep MAIL .env
 
-# Test email sending
+# Test pengiriman email
 php artisan tinker
 > Mail::raw('Test', function($msg) { $msg->to('test@example.com')->subject('Test'); });
 
-# Check logs
+# Cek log
 tail -f storage/logs/laravel.log
 
-# For Gmail: Use App Password, not regular password
+# Untuk Gmail: Gunakan App Password, bukan password biasa
 ```
 
 ---
 
-#### 5. **Firebase Realtime Database notifications not working**
+#### 5. **Notifikasi Firebase Realtime Database tidak berfungsi**
 
-**Symptoms:**
+**Gejala:**
 
-- No real-time updates
-- Console errors: "Firebase Realtime Database connection failed"
+- Tidak ada update real-time
+- Error console: "Firebase Realtime Database connection failed"
 
-**Solutions:**
+**Solusi:**
 
 ```bash
-# Rebuild frontend assets
+# Rebuild aset frontend
 npm run build
 
-# Check browser console for errors
+# Cek console browser untuk error
 
-# Verify Firebase Realtime Database app is active on Firebase dashboard
+# Verifikasi app Firebase Realtime Database aktif di dashboard Firebase
 ```
 
 ---
 
-#### 6. **404 errors on shared hosting**
+#### 6. **Error 404 di shared hosting**
 
-**Symptoms:**
+**Gejala:**
 
-- Homepage works, other pages show 404
-- `.htaccess` not working
+- Homepage berfungsi, halaman lain tampil 404
+- `.htaccess` tidak berfungsi
 
-**Solutions:**
+**Solusi:**
 
 ```bash
-# Ensure document root points to /public
-# In cPanel: Domains → domain → Document Root: /public_html/public
+# Pastikan document root mengarah ke /public
+# Di cPanel: Domains → domain → Document Root: /public_html/public
 
-# Check .htaccess exists in /public
+# Cek .htaccess ada di /public
 cat public/.htaccess
 
-# Enable mod_rewrite (contact hosting support if disabled)
+# Aktifkan mod_rewrite (hubungi support hosting jika nonaktif)
 
-# Clear route cache
+# Clear cache route
 php artisan route:clear
 php artisan route:cache
 ```
 
 ---
 
-#### 7. **Permission denied errors**
+#### 7. **Error permission denied**
 
-**Symptoms:**
+**Gejala:**
 
-- "Permission denied" when writing logs
+- "Permission denied" saat menulis log
 - "Failed to create directory"
 
-**Solutions:**
+**Solusi:**
 
 ```bash
-# Fix permissions
+# Perbaiki permissions
 chmod -R 755 storage bootstrap/cache
 chmod -R 775 storage/logs
 
-# Fix ownership (SSH only)
+# Perbaiki ownership (hanya SSH)
 chown -R yourusername:yourusername storage bootstrap/cache
 ```
 
 ---
 
-#### 8. **Database connection refused**
+#### 8. **Koneksi database ditolak**
 
-**Symptoms:**
+**Gejala:**
 
 - "Connection refused"
 - "SQLSTATE[HY000] [2002]"
 
-**Solutions:**
+**Solusi:**
 
 ```bash
-# Check database credentials in .env
+# Cek kredensial database di .env
 grep DB_ .env
 
-# Verify database exists
+# Verifikasi database ada
 mysql -u username -p
 > SHOW DATABASES;
 
-# Check MySQL is running
+# Cek MySQL berjalan
 service mysql status  # VPS
-# Contact hosting support for shared hosting
+# Hubungi support hosting untuk shared hosting
 
-# Clear config cache
+# Clear cache konfigurasi
 php artisan config:clear
 ```
 
 ---
 
-#### 9. **Sitemap not generating**
+#### 9. **Sitemap tidak ter-generate**
 
-**Symptoms:**
+**Gejala:**
 
-- `/sitemap.xml` returns 404
-- Command fails silently
+- `/sitemap.xml` mengembalikan 404
+- Perintah gagal diam-diam
 
-**Solutions:**
+**Solusi:**
 
 ```bash
-# Run sitemap generation manually
+# Jalankan pembuatan sitemap manual
 php artisan sitemap:generate
 
-# Check permissions on /public
+# Cek permissions di /public
 chmod 755 public
 
-# Verify shops exist
+# Verifikasi toko ada
 php artisan tinker
 > Shop::where('is_verified', true)->count();
 
-# Check logs
+# Cek log
 tail -f storage/logs/laravel.log
 ```
 
 ---
 
-#### 10. **Translation not working**
+#### 10. **Terjemahan tidak berfungsi**
 
-**Symptoms:**
+**Gejala:**
 
-- Shop descriptions not translated
-- OpenRouter API errors
+- Deskripsi toko tidak diterjemahkan
+- Error API OpenRouter
 
-**Solutions:**
+**Solusi:**
 
 ```bash
-# Check API key
+# Cek API key
 grep OPENROUTER_API_KEY .env
 
-# Test translation
+# Test terjemahan
 php artisan tinker
 > $service = new App\Services\TranslationService();
 > $service->translate('Test teks', 'en');
 
-# Check OpenRouter credits at openrouter.ai
+# Cek kredit OpenRouter di openrouter.ai
 
-# Manually trigger translation job
+# Trigger job terjemahan manual
 php artisan tinker
 > dispatch(new App\Jobs\TranslateShopAttributes($shop));
 ```
 
 ---
 
-### Getting Help
+### Mendapatkan Bantuan
 
-If issues persist:
+Jika masalah berlanjut:
 
-1. **Check Laravel logs:**
+1. **Cek log Laravel:**
 
    ```bash
    tail -f storage/logs/laravel.log
    ```
 
-2. **Enable debug mode temporarily:**
+2. **Aktifkan mode debug sementara:**
 
    ```env
-   APP_DEBUG=true  # .env file
+   APP_DEBUG=true  # file .env
    ```
 
-   **Remember to disable after debugging!**
+   **Ingat untuk menonaktifkan setelah debugging!**
 
-3. **Check server requirements:**
+3. **Cek kebutuhan server:**
 
    ```bash
-   php -v  # Should be >= 8.2
-   php -m  # Check extensions
+   php -v  # Harus >= 8.2
+   php -m  # Cek ekstensi
    composer diagnose
    ```
 
-4. **Contact Information:**
-   - Project Repository: [Your GitHub URL]
-   - Laravel Documentation: https://laravel.com/docs
-   - Stack Overflow: Tag questions with `laravel` and `umkm-sasuma`
+4. **Informasi Kontak:**
+   - Repository Proyek: [URL GitHub Anda]
+   - Dokumentasi Laravel: https://laravel.com/docs
+   - Stack Overflow: Tag pertanyaan dengan `laravel` dan `umkm-sasuma`
 
 ---
 
-## 📄 License
+## Lisensi
 
-This project is licensed under the MIT License.
+Proyek ini dilisensikan di bawah MIT License.
 
 ---
 
-## 👥 Credits
+## Kredit
 
-**Developed by:** [Your Name/Team]
+**Dikembangkan oleh:** [Nama/Tim Anda]
 
-**Built with:**
+**Dibangun dengan:**
 
 - Laravel Framework - https://laravel.com
 - Tailwind CSS - https://tailwindcss.com
@@ -2105,16 +2105,16 @@ This project is licensed under the MIT License.
 
 ---
 
-## 📞 Support
+## Dukungan
 
-For deployment support or questions:
+Untuk dukungan deployment atau pertanyaan:
 
 - **Email:** [your-email@example.com]
-- **Documentation:** This README.md
-- **Issues:** [Your GitHub Issues URL]
+- **Dokumentasi:** README.md ini
+- **Issues:** [URL GitHub Issues Anda]
 
 ---
 
-**Last Updated:** February 03, 2026
+**Terakhir Diupdate:** 03 Februari 2026
 
-**Version:** 1.1.0
+**Versi:** 1.1.0
