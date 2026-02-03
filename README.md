@@ -13,6 +13,11 @@
 
 1. [Project Overview](#-project-overview)
 2. [Features](#-features)
+   - [User Features](#user-features)
+   - [Admin Features](#admin-features)
+   - [Public Features](#public-features)
+   - [Business & Monetization Features](#business--monetization-features)
+   - [System Features](#system-features)
 3. [Technology Stack](#-technology-stack)
 4. [Database Schema & ERD](#-database-schema--erd)
 5. [Environment Configuration](#-environment-configuration)
@@ -116,6 +121,14 @@
 - Region images and coordinates
 - Hero carousel ordering
 
+✅ **Featured Region Slider (Monetization Ready)**
+
+- Custom shop highlight per region for homepage hero slider
+- Admin can select specific UMKM to feature from each region
+- Configurable display order for hero carousel
+- **Business Potential:** Can be monetized as "sponsored placement" or "premium listing"
+- Shops can pay to be featured prominently on homepage per their region
+
 ### Public Features
 
 ✅ **Business Discovery**
@@ -140,6 +153,72 @@
 - Region showcase with shop counts
 - Interactive map with all verified shops
 - Business type categories
+
+### Business & Monetization Features
+
+✅ **Featured Region Slider System**
+
+The Featured Region Slider (`featured-region-card.blade.php`) is a powerful admin feature that enables business monetization:
+
+**How It Works:**
+
+```
+Admin Panel → Content Management → Region Configuration
+                     ↓
+   ┌─────────────────────────────────────────────────────────────┐
+   │  REGION CARD (per region)                                   │
+   │  ┌───────────────────────────────────────────────────────┐  │
+   │  │ [Region Image] [Region Name]           Urutan: [#1]   │  │
+   │  │                                                       │  │
+   │  │ Featured Shop: [▼ Select UMKM from this region    ]   │  │
+   │  │                                                       │  │
+   │  │                                     [Simpan Button]   │  │
+   │  └───────────────────────────────────────────────────────┘  │
+   └─────────────────────────────────────────────────────────────┘
+                     ↓
+   Homepage Hero Slider displays featured shops in order
+```
+
+**Key Features:**
+
+| Feature | Description | Business Value |
+|---------|-------------|----------------|
+| **Custom Shop Selection** | Admin can manually select which shop appears as "featured" for each region | Premium placement for paying UMKM |
+| **Display Order Control** | Set `hero_order` to control slider sequence | Priority positioning (#1, #2, etc.) |
+| **Random/None Option** | "Acak / Tidak Ada" option for default behavior | Free tier or rotating display |
+| **Region-Scoped** | Only shows shops belonging to that specific region | Location-based advertising |
+| **Real-time Search** | Searchable dropdown for easy shop selection | Admin efficiency |
+
+**Monetization Strategies:**
+
+1. **Sponsored Placement Package**
+   - Charge UMKM monthly/annually to be featured on homepage
+   - Example: Rp 100.000/month for "Featured Business" status
+
+2. **Priority Region Listing**
+   - Higher `hero_order` numbers = later in carousel
+   - Sell "Position #1" premium spots per region
+
+3. **Rotating Spotlight**
+   - Use "Acak" for free tier users
+   - Guaranteed placement for paying customers
+
+4. **Regional Campaigns**
+   - Partner with local governments or associations
+   - Feature multiple businesses from a region during festivals/events
+
+**Technical Implementation:**
+
+Located in: `laravel_app/resources/views/admin/content/partials/featured-regions/`
+- `featured-region-card.blade.php` - Main card component with Alpine.js state
+- `featured-region-header.blade.php` - Region name, image, and order input
+- `featured-region-dropdown.blade.php` - Searchable shop selector dropdown
+- `featured-region-submit.blade.php` - Save button with loading state
+
+Controller: `App\Http\Controllers\Admin\RegionController@updateFeaturedShop`
+Model: `Region` with `featured_shop_id` foreign key to `shops` table
+
+---
 
 ### System Features
 
@@ -2036,6 +2115,6 @@ For deployment support or questions:
 
 ---
 
-**Last Updated:** January 28, 2026
+**Last Updated:** February 03, 2026
 
-**Version:** 1.0.0
+**Version:** 1.1.0

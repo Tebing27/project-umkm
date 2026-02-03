@@ -25,7 +25,7 @@
                     </div>
 
                     <p class="text-white/80 text-sm mb-4 max-w-xs">
-                        {{ $content['footer_about']->value ?? 'Small change. Big change.' }}
+                        {{ translate($content['footer_about']->value ?? 'Small change. Big change.') }}
                     </p>
                 </div>
             </div>
