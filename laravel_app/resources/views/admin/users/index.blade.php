@@ -1,6 +1,6 @@
 <x-layouts.admin :title="translate('Kelola User - UMKM Sasuma Admin')" :header-title="translate('Kelola User')" :header-subtitle="translate('Verifikasi & Data UMKM')">
-    @include('admin.users.partials.header-filters')
-    @include('admin.users.partials.shop-grid')
+    @include('admin.users.partials._header-filters')
+    @include('admin.users.partials._shop-grid')
 
     @push('scripts')
     <script type="module">

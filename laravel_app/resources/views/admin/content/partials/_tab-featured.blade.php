@@ -12,7 +12,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-24">
         @foreach ($regions as $region)
-            @include('admin.content.partials.featured-regions.featured-region-card')
+            @include('admin.content.partials.featured-regions._featured-region-card')
         @endforeach
     </div>
 @endif

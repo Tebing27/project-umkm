@@ -329,6 +329,6 @@
     </div>
 </div>
 
-@include('home.partials.location.icons')
+@include('home.partials.location._icons')
 
 

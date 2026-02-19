@@ -16,7 +16,7 @@
 
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             {{-- Section: Shop Header --}}
-            @include('umkm.detail.partials.header')
+            @include('umkm.detail.partials._header')
             {{-- End Section: Shop Header --}}
 
             {{-- Section: Tabs Navigation --}}
@@ -38,12 +38,12 @@
             <div>
                 {{-- Tab: Toko --}}
                 <div x-show="tab === 'toko'" x-transition.opacity>
-                    @include('umkm.detail.partials.tab-shop')
+                    @include('umkm.detail.partials._tab-shop')
                 </div>
 
                 {{-- Tab: Produk --}}
                 <div x-show="tab === 'produk'" x-transition.opacity>
-                    @include('umkm.detail.partials.products')
+                    @include('umkm.detail.partials._products')
                 </div>
             </div>
             {{-- End Section: Tab Contents --}}

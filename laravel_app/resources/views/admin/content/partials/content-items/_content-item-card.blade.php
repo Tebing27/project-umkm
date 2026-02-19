@@ -4,10 +4,10 @@
         @csrf @method('PUT')
 
         <div class="p-6 flex flex-col h-full gap-4">
-             @include('admin.content.partials.content-items.content-item-header')
+             @include('admin.content.partials.content-items._content-item-header')
              <div class="flex-1">
                  @if ($item->type === 'image')
-                     @include('admin.content.partials.content-items.content-item-image')
+                     @include('admin.content.partials.content-items._content-item-image')
                  @elseif ($item->type === 'textarea' || $item->key === 'home_hero_description')
                      <div class="relative group/input h-full">
                         <x-ui.textarea variant="soft" name="value" rows="5" class="h-full resize-none">{{ $item->value }}</x-ui.textarea>
@@ -18,7 +18,7 @@
                      </div>
                  @endif
              </div>
-             @include('admin.content.partials.content-items.content-item-footer')
+             @include('admin.content.partials.content-items._content-item-footer')
         </div>
     </form>
 </div>

@@ -4,17 +4,17 @@
     {{-- Section: Main Content (AlpineJS Store App) --}}
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20" x-data='storeApp(@json($shopsData))'>
         {{-- Section: Hero Banner --}}
-        @include('umkm.partials.hero')
+        @include('umkm.partials._hero')
         {{-- End Section: Hero Banner --}}
 
         {{-- Section: Store List Header (Filters) --}}
-        @include('umkm.partials.store-list-header')
+        @include('umkm.partials._store-list-header')
         {{-- End Section: Store List Header (Filters) --}}
 
         {{-- Section: Product Grid --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" id="store-list">
             <template x-for="item in paginatedItems" :key="item.id">
-                @include('umkm.partials.store-card')
+                @include('umkm.partials._store-card')
             </template>
         </div>
         {{-- End Section: Product Grid --}}

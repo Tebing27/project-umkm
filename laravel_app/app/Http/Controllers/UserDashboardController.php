@@ -2,6 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\StoreLocationRequest;
+use App\Http\Requests\User\UpdateShopRequest;
+use App\Http\Requests\User\UpdateUserProfileRequest;
+use App\Http\Requests\User\UpdatePasswordRequest;
+use App\Http\Requests\User\StoreShopPhotoRequest;
+use App\Http\Requests\User\StoreProductRequest;
+use App\Http\Requests\User\UpdateProductRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -96,25 +103,18 @@ class UserDashboardController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function storeLokasi(Request $request)
+    public function storeLokasi(StoreLocationRequest $request)
     {
-        // --- Section: Validasi Data ---
-        $request->validate([
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'address' => 'nullable|string',
-            'region_id' => 'required|exists:regions,id',
-        ]);
+        $validated = $request->validated();
 
         $user = Auth::user();
         $shop = $user->shop;
 
-        // --- Section: Update Database ---
         $shop->update([
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'address' => $request->address,
-            'region_id' => $request->region_id,
+            'latitude' => $validated['latitude'],
+            'longitude' => $validated['longitude'],
+            'address' => $validated['address'] ?? null,
+            'region_id' => $validated['region_id'],
         ]);
 
         // Memeriksa ulang status verifikasi karena data lokasi wajib diisi untuk verified shop
@@ -278,18 +278,9 @@ class UserDashboardController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateToko(Request $request)
+    public function updateToko(UpdateShopRequest $request)
     {
-        $request->validate([
-            'shop_name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'product_type' => 'required|string|max:255',
-            'business_type' => ['required', 'string', \Illuminate\Validation\Rule::in(\App\Models\Shop::getBusinessTypes())],
-            'omset_min' => 'nullable|string',
-            'omset_max' => 'nullable|string',
-            'logo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'delete_logo' => 'nullable|boolean', 
-        ]);
+        $validated = $request->validated();
 
         $user = Auth::user();
         $shop = $user->shop;
@@ -370,29 +361,18 @@ class UserDashboardController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateProfile(Request $request)
+    public function updateProfile(UpdateUserProfileRequest $request)
     {
+        $validated = $request->validated();
         $user = Auth::user();
 
-        // --- Section: Validasi Keamanan ---
-        // Validasi dan proteksi input length untuk menghindari Memory Exhaustion
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($user->id)],
-            'phone_number' => ['required', 'string', 'max:20'],
-            'place_of_birth' => ['nullable', 'string', 'max:100'],
-            'date_of_birth' => ['nullable', 'date'],
-            'domicile_address' => ['nullable', 'string', 'max:500'],
-            'current_password' => ['required', 'current_password'], // Konfirmasi kepemilikan akun sebelum update
-        ]);
-
         $user->fill([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone_number' => $request->phone_number,
-            'place_of_birth' => $request->place_of_birth,
-            'date_of_birth' => $request->date_of_birth,
-            'domicile_address' => $request->domicile_address,
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone_number' => $validated['phone_number'],
+            'place_of_birth' => $validated['place_of_birth'] ?? null,
+            'date_of_birth' => $validated['date_of_birth'] ?? null,
+            'domicile_address' => $validated['domicile_address'] ?? null,
         ]);
 
         // --- Section: Reset Verifikasi ---
@@ -418,17 +398,14 @@ class UserDashboardController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updatePassword(Request $request)
+    public function updatePassword(UpdatePasswordRequest $request)
     {
-        $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Rules\Password::min(8)->mixedCase()->numbers()],
-        ]);
+        $validated = $request->validated();
 
         $user = Auth::user();
 
         $user->update([
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($validated['password']),
         ]);
 
         return redirect()->back()->with('success', 'Password berhasil diperbarui.');
@@ -464,13 +441,9 @@ class UserDashboardController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function storePhoto(Request $request)
+    public function storePhoto(StoreShopPhotoRequest $request)
     {
-        $request->validate([
-            'photos.*' => 'image|max:2048',
-            'delete_ids' => 'nullable|array',
-            'delete_ids.*' => 'exists:shop_photos,id',
-        ]);
+        $validated = $request->validated();
 
         $user = Auth::user();
         $shop = $user->shop;
@@ -553,29 +526,9 @@ class UserDashboardController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function storeProduct(Request $request)
+    public function storeProduct(StoreProductRequest $request)
     {
-        // --- Section: Sanitasi Harga ---
-        if ($request->has('price')) {
-            $request->merge([
-                'price' => preg_replace('/[^0-9]/', '', $request->price)
-            ]);
-        }
-
-        $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                \Illuminate\Validation\Rule::unique('products')->where('shop_id', Auth::user()->shop->id)
-            ],
-            'price' => 'required|numeric',
-            'category' => 'required|string|max:255',
-            'images' => 'array|max:5',
-            'images.*' => 'image|max:2048',
-            'variant' => 'nullable|string',
-            'description' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
         try {
             DB::beginTransaction();
@@ -651,30 +604,9 @@ class UserDashboardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateProduct(Request $request, $id)
+    public function updateProduct(UpdateProductRequest $request, $id)
     {
-        // --- Section: Sanitasi Harga ---
-        if ($request->has('price')) {
-            $request->merge([
-                'price' => preg_replace('/[^0-9]/', '', $request->price)
-            ]);
-        }
-
-        $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                \Illuminate\Validation\Rule::unique('products')->where('shop_id', Auth::user()->shop->id)->ignore($id)
-            ],
-            'price' => 'required|numeric',
-            'category' => 'required|string|max:255',
-            'images' => 'array|max:5',
-            'images.*' => 'image|max:2048',
-            'delete_image_indices' => 'array',
-            'variant' => 'nullable|string',
-            'description' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
         try {
             DB::beginTransaction();

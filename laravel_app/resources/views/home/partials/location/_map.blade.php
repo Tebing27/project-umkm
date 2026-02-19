@@ -1,4 +1,4 @@
-<div class="relative flex-1 bg-gray-200 h-full w-full min-w-0">
+<div class="relative flex-1 h-full w-full min-w-0" style="background-color: #e0dcd0;">
 
     <div class="hidden md:flex absolute top-32 -left-4 z-45 transition-all duration-300" x-show="sidebarOpen"
         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-x-5"
@@ -23,7 +23,7 @@
         </x-ui.button>
     </div>
 
-    <div x-ref="mapContainer" class="w-full h-full outline-none z-10 bg-gray-100"></div>
+    <div x-ref="mapContainer" class="w-full h-full outline-none z-10" style="background-color: #e0dcd0;"></div>
 
     <div
         class="absolute bottom-4 md:bottom-8 right-8 flex flex-col bg-white rounded-md shadow-lg z-[400] overflow-hidden border border-gray-200">

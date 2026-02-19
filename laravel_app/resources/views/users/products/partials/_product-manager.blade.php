@@ -85,12 +85,12 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative min-h-[200px]">
 
                     {{-- Shortcut Tambah (Always Visible) --}}
-                    @include('users.products.partials.shortcut-card')
+                    @include('users.products.partials._shortcut-card')
 
                     {{-- Products List Container --}}
                     <div id="product-list-container" class="contents">
                         @foreach ($products as $product)
-                            @include('users.products.partials.product-card', [
+                            @include('users.products.partials._product-card', [
                                 'product' => $product,
                                 'initialActive' => $product->is_active ?? true,
                                 'image' => $product->image

@@ -3,20 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreRegionRequest;
+use App\Http\Requests\Admin\UpdateRegionDetailsRequest;
+use App\Http\Requests\Admin\UpdateRegionImageRequest;
+use App\Http\Requests\Admin\UpdateFeaturedShopRequest;
 use App\Models\Region;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class RegionController extends Controller
 {
-    public function updateImage(Request $request, $id)
+    public function updateImage(UpdateRegionImageRequest $request, $id)
     {
         $region = Region::findOrFail($id);
-
-        $request->validate([
-            'image' => 'required|image|max:2048', // 2MB Max
-        ]);
+        $validated = $request->validated();
 
         if ($request->hasFile('image')) {
             // Delete old image if exists
@@ -42,14 +44,10 @@ class RegionController extends Controller
         return redirect()->route('admin.contents.index', ['tab' => 'home_wilayah'])->with('success', translate('Gambar wilayah berhasil diperbarui.'));
     }
 
-    public function updateFeaturedShop(Request $request, $id)
+    public function updateFeaturedShop(UpdateFeaturedShopRequest $request, $id)
     {
         $region = Region::findOrFail($id);
-        
-        $request->validate([
-            'shop_id' => 'nullable|exists:shops,id',
-            'hero_order' => 'nullable|integer|min:0',
-        ]);
+        $validated = $request->validated();
 
         // Check for duplicate order if order > 0
         if ($request->hero_order > 0) {
@@ -154,8 +152,7 @@ class RegionController extends Controller
                 $file->storeAs($directory, $filename, 'public');
             }
         } catch (\Throwable $e) {
-            // Final fallback if anything inside GD fails
-            \Log::warning('Image resize failed: ' . $e->getMessage());
+            Log::warning('Image resize failed: ' . $e->getMessage());
             $directory = dirname($path);
             $filename = basename($path);
             $file->storeAs($directory, $filename, 'public');
@@ -176,14 +173,9 @@ class RegionController extends Controller
         return redirect()->route('admin.contents.index', ['tab' => 'home_wilayah'])->with('success', translate('Gambar wilayah berhasil dihapus.'));
     }
 
-    public function store(Request $request)
+    public function store(StoreRegionRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
-            'image' => 'required|image|max:2048', // Required for new regions
-        ]);
+        $validated = $request->validated();
 
         $region = new Region();
         $region->name = $request->name;
@@ -202,17 +194,12 @@ class RegionController extends Controller
         return redirect()->route('admin.contents.index', ['tab' => 'home_wilayah'])->with('success', translate('Wilayah baru berhasil ditambahkan.'));
     }
 
-    public function updateDetails(Request $request, $id)
+    public function updateDetails(UpdateRegionDetailsRequest $request, $id)
     {
         $region = Region::findOrFail($id);
-        
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'latitude' => 'nullable|numeric',
-            'longitude' => 'nullable|numeric',
-        ]);
+        $validated = $request->validated();
 
-        $region->update($request->only(['name', 'latitude', 'longitude']));
+        $region->update($validated);
 
         return redirect()->back()->with('success', translate('Detail wilayah berhasil diperbarui.'));
     }

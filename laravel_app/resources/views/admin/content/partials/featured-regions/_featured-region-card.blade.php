@@ -32,10 +32,10 @@ class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 hover:shadow-md
 
 <form x-ref="form" action="{{ route('admin.regions.update_featured_shop', $region->id) }}" method="POST" @submit.prevent="submitForm">
     @csrf @method('PUT')
-    @include('admin.content.partials.featured-regions.featured-region-header')
+    @include('admin.content.partials.featured-regions._featured-region-header')
     <div class="flex gap-2 items-center">
-            @include('admin.content.partials.featured-regions.featured-region-dropdown')
-            @include('admin.content.partials.featured-regions.featured-region-submit')
+            @include('admin.content.partials.featured-regions._featured-region-dropdown')
+            @include('admin.content.partials.featured-regions._featured-region-submit')
     </div>
 </form>
 </div>

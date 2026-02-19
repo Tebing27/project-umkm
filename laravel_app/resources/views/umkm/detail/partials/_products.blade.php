@@ -1,3 +1,3 @@
 <div>
-    @include('umkm.detail.partials.products-grid')
+    @include('umkm.detail.partials._products-grid')
 </div>

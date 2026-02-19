@@ -1,13 +1,13 @@
 <x-layouts.admin :title="translate('Setting Admin - UMKM Sasuma Admin')" :header-title="translate('Pengaturan')" :header-subtitle="translate('Kelola Akun & Sistem')">
     <div class="max-w-5xl mx-auto">
-        @include('admin.settings.partials.header')
-        @include('admin.settings.partials.alert')
+        @include('admin.settings.partials._header')
+        @include('admin.settings.partials._alert')
         
-        @include('admin.settings.partials.profile-form')
+        @include('admin.settings.partials._profile-form')
 
         <div class="border-t border-gray-200 my-12"></div>
 
-        @include('admin.settings.partials.password-form')
+        @include('admin.settings.partials._password-form')
     </div>
 
     @push('scripts')

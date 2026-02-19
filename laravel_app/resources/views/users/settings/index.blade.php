@@ -23,12 +23,12 @@
     @endpush
 
     <div class="max-w-5xl mx-auto">
-        @include('users.settings.partials.header')
-        @include('users.settings.partials.profile-form')
+        @include('users.settings.partials._header')
+        @include('users.settings.partials._profile-form')
         
         <div class="my-8 border-t border-gray-200"></div>
 
-        @include('users.settings.partials.password-form')
+        @include('users.settings.partials._password-form')
     </div>
 
 </x-layouts.guest>

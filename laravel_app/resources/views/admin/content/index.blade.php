@@ -17,8 +17,8 @@
         }
 }" class="w-full min-h-screen pb-24 bg-gray-50/50">
 
-    @include('admin.content.partials.notifications')
-    @include('admin.content.partials.tabs-nav')
+    @include('admin.content.partials._notifications')
+    @include('admin.content.partials._tabs-nav')
 
     <div class="w-full max-w-7xl mx-auto mt-6">
         @foreach ($contents as $group => $items)
@@ -31,16 +31,16 @@
                     <p class="text-slate-500 text-base mt-1">{{translate('Kelola konten untuk bagian ini.')}}</p>
                 </div>
 
-                @include('admin.content.partials.tab-regions')
+                @include('admin.content.partials._tab-regions')
                 @if($group !== 'logo' && $group !== 'business_types')
-                @include('admin.content.partials.tab-standard')
+                @include('admin.content.partials._tab-standard')
                 @endif
-                @include('admin.content.partials.tab-featured')
+                @include('admin.content.partials._tab-featured')
                 @if($group === 'business_types')
-                    @include('admin.content.partials.tab-business-types')
+                    @include('admin.content.partials._tab-business-types')
                 @endif
                 @if($group === 'logo')
-                    @include('admin.content.partials.tab-logo')
+                    @include('admin.content.partials._tab-logo')
                 @endif
             </div>
         @endforeach

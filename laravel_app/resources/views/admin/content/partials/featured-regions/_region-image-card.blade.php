@@ -5,8 +5,8 @@
         enctype="multipart/form-data" class="h-full">
         @csrf @method('PUT')
         
-        @include('admin.content.partials.featured-regions.region-image-display')
-        @include('admin.content.partials.featured-regions.region-input-file')
+        @include('admin.content.partials.featured-regions._region-image-display')
+        @include('admin.content.partials.featured-regions._region-input-file')
     </form>
     
     {{-- Edit/Delete Buttons Removed as per request to disable CRUD --}}

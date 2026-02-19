@@ -61,11 +61,11 @@
             </nav>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-                @include('umkm.product.partials.gallery')
-                @include('umkm.product.partials.info')
+                @include('umkm.product.partials._gallery')
+                @include('umkm.product.partials._info')
             </div>
 
-            @include('umkm.product.partials.related')
+            @include('umkm.product.partials._related')
 
         </main>
     </div>

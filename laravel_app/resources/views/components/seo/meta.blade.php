@@ -5,24 +5,30 @@
     'type' => 'website',
     'product' => null,
     'shop' => null,
+    'canonical' => null,
 ])
+
+@php
+    // Use provided canonical URL or default to clean URL without query params
+    $canonicalUrl = $canonical ?? request()->url();
+@endphp
 
 <!-- SEO Meta Tags -->
 <title>{{ $title }}</title>
 <meta name="description" content="{{ $description }}">
 <meta name="author" content="UMKM Sasuma">
-<link rel="canonical" href="{{ url()->current() }}">
+<link rel="canonical" href="{{ $canonicalUrl }}">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="{{ $type }}">
-<meta property="og:url" content="{{ url()->current() }}">
+<meta property="og:url" content="{{ $canonicalUrl }}">
 <meta property="og:title" content="{{ $title }}">
 <meta property="og:description" content="{{ $description }}">
 <meta property="og:image" content="{{ $image }}">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="{{ url()->current() }}">
+<meta name="twitter:url" content="{{ $canonicalUrl }}">
 <meta name="twitter:title" content="{{ $title }}">
 <meta name="twitter:description" content="{{ $description }}">
 <meta name="twitter:image" content="{{ $image }}">
@@ -32,11 +38,30 @@
     $schemas = [];
 
     if ($product) {
+        // Collect all product images for better Google Image indexing
+        $productImages = [];
+        
+        // Add primary image first
+        if ($image) {
+            $productImages[] = $image;
+        }
+        
+        // Add additional images from product.images relation
+        if ($product->relationLoaded('images') && $product->images->count() > 0) {
+            foreach ($product->images as $img) {
+                $imgUrl = storage_url($img->image);
+                // Avoid duplicates
+                if ($imgUrl !== $image && !in_array($imgUrl, $productImages)) {
+                    $productImages[] = $imgUrl;
+                }
+            }
+        }
+        
         $schemas[] = [
             '@context' => 'https://schema.org/',
             '@type' => 'Product',
             'name' => $product->name,
-            'image' => [ $image ],
+            'image' => $productImages,
             'description' => $description,
             'sku' => $product->id,
             'brand' => [
@@ -45,7 +70,7 @@
             ],
             'offers' => [
                 '@type' => 'Offer',
-                'url' => url()->current(),
+                'url' => $canonicalUrl,
                 'priceCurrency' => 'IDR',
                 'price' => $product->price,
                 'itemCondition' => 'https://schema.org/NewCondition',
@@ -68,7 +93,7 @@
                 'addressRegion' => 'Jawa Barat',
                 'addressCountry' => 'ID'
             ],
-            'url' => url()->current(),
+            'url' => $canonicalUrl,
             'priceRange' => '$$'
         ];
     }

@@ -12,4 +12,4 @@ Allow: /umkm
 Allow: /products
 
 # Sitemap
-# Sitemap: https://umkmsasuma.com/sitemap.xml
+Sitemap: https://umkmsasuma.com/sitemap.xml

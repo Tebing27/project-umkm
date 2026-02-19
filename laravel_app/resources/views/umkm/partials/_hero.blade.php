@@ -9,7 +9,7 @@
         </p>
 
         <div class="w-full lg:max-w-xl space-y-6">
-            @include('umkm.partials.hero-search')
+            @include('umkm.partials._hero-search')
             
             {{-- Mobile Filter --}}
             <div class="flex md:hidden items-center gap-3 mt-4 relative z-20">
@@ -57,6 +57,6 @@
         </div>
     </div>
 
-    @include('umkm.partials.hero-banner')
+    @include('umkm.partials._hero-banner')
 </div>
 

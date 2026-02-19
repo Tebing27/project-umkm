@@ -19,26 +19,26 @@
     @keydown.right.window="if(galleryOpen) nextImage()"
     @keydown.left.window="if(galleryOpen) prevImage()">
 
-        @include('admin.users.partials.header')
+        @include('admin.users.partials._header')
 
         {{-- Content Grid --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {{-- ================= KOLOM KIRI (Data Teks) ================= --}}
             <div class="lg:col-span-2 space-y-8">
-                @include('admin.users.partials.card-owner')
-                @include('admin.users.partials.card-business')
-                @include('admin.users.partials.card-license')
+                @include('admin.users.partials._card-owner')
+                @include('admin.users.partials._card-business')
+                @include('admin.users.partials._card-license')
             </div>
 
             {{-- ================= KOLOM KANAN (Social Media & Foto) ================= --}}
             <div class="space-y-8">
-                @include('admin.users.partials.card-social')
-                @include('admin.users.partials.card-photos')
+                @include('admin.users.partials._card-social')
+                @include('admin.users.partials._card-photos')
             </div>
         </div>
 
-        @include('admin.users.partials.modal-reject')
-        @include('admin.users.partials.modal-gallery')
+        @include('admin.users.partials._modal-reject')
+        @include('admin.users.partials._modal-gallery')
 
     </div>
 

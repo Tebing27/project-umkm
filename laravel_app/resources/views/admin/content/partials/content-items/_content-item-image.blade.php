@@ -32,7 +32,7 @@
         </div>
     @endif
 
-    @include('admin.content.partials.content-items.content-item-image-overlay')
+    @include('admin.content.partials.content-items._content-item-image-overlay')
 </div>
 
 <div class="mt-3 flex justify-between items-center px-1">
@@ -43,5 +43,5 @@
         @click="$refs.photo_{{ $item->id }}.click()"
         class="lg:hidden text-base text-brand-blue-dark font-bold underline">{{translate('Unggah')}}</button>
 </div>
-@include('admin.content.partials.content-items.content-item-image-input')
+@include('admin.content.partials.content-items._content-item-image-input')
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegistrationRequest;
 use App\Models\Shop;
 use App\Models\User;
 use App\Models\Region;
@@ -37,65 +38,9 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(RegistrationRequest $request): RedirectResponse
     {
-        // --- Section: Validasi Input ---
-        $request->validate([
-            // --- Group: Data User (Pemilik) ---
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', Rules\Password::min(8)->mixedCase()->numbers()],
-            'phone_number' => ['required', 'string', 'max:20'],
-            'place_of_birth' => ['required', 'string', 'max:100'],
-            'date_of_birth' => ['required', 'date'],
-            'domicile_address' => ['required', 'string'],
-
-            // --- Group: Data Toko (Usaha) ---
-            'shop_name' => ['required', 'string', 'max:255'],
-            'product_type' => ['required', 'string', 'max:255'],
-            'business_type' => ['required', 'string', 'max:255'],
-            'shop_address' => ['required', 'string'],
-            'latitude' => ['nullable', 'numeric'],
-            'longitude' => ['nullable', 'numeric'],
-            'region_id' => ['required', 'exists:regions,id'],
-            
-            // --- Group: Izin Usaha (Array) ---
-            'license_type.*' => ['nullable', 'string'],
-            'license_number.*' => ['nullable', 'string'],
-
-            // --- Group: Social Media (Nullable) ---
-            'social_instagram' => ['nullable', 'url'],
-            'social_tiktok' => ['nullable', 'url'],
-            'social_facebook' => ['nullable', 'url'],
-            'social_website' => ['nullable', 'url'],
-        ], [
-            // Custom Messages (Bahasa Indonesia)
-            'required' => translate(':attribute wajib diisi.'),
-            'string' => translate(':attribute harus berupa teks.'),
-            'numeric' => translate(':attribute harus berupa angka.'),
-            'email' => translate(':attribute harus berupa email yang valid.'),
-            'max' => translate(':attribute tidak boleh lebih dari :max karakter.'),
-            'unique' => translate(':attribute sudah terdaftar.'),
-            'confirmed' => translate('Konfirmasi :attribute tidak cocok.'),
-            'date' => translate(':attribute bukan tanggal yang valid.'),
-            'url' => translate(':attribute harus berupa URL yang valid (awali dengan http:// atau https://).'),
-        ], [
-            // Custom Attribute Names
-            'name' => translate('Nama Pemilik'),
-            'email' => translate('Email'),
-            'password' => translate('Kata Sandi'),
-            'phone_number' => translate('Nomor Handphone'),
-            'place_of_birth' => translate('Tempat Lahir'),
-            'date_of_birth' => translate('Tanggal Lahir'),
-            'domicile_address' => translate('Alamat Domisili'),
-            'shop_name' => translate('Nama Usaha'),
-            'product_type' => translate('Jenis Produk'),
-            'business_type' => translate('Jenis Usaha'),
-            'shop_address' => translate('Alamat Usaha'),
-            'latitude' => translate('Latitude'),
-            'longitude' => translate('Longitude'),
-            'region_id' => translate('Wilayah'),
-        ]);
+        $validated = $request->validated();
 
         try {
             // --- Section: Database Transaction ---

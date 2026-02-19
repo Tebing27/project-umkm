@@ -118,6 +118,7 @@ class PublicController extends Controller
                 'id' => $shop->id,
                 'name' => $shop->name,
                 'location' => optional($shop->region)->name ?? '',
+                'region' => optional($shop->region)->name ?? '', 
                 'category' => $shop->business_type,
                 'badge' => $shop->business_type, // Frontend expects 'badge'
                 'product_type' => $shop->product_type,

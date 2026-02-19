@@ -14,7 +14,7 @@
         class="absolute inset-0 bg-cover bg-center z-10 transition-opacity duration-300"
         :style="'background-image: url(\'' + photoPreview + '\');'"></div>
 
-    @include('admin.content.partials.featured-regions.region-overlay-info')
-    @include('admin.content.partials.featured-regions.region-overlay-actions')
+    @include('admin.content.partials.featured-regions._region-overlay-info')
+    @include('admin.content.partials.featured-regions._region-overlay-actions')
 </div>
 

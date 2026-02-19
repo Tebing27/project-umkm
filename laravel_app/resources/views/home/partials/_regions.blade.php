@@ -32,9 +32,9 @@
 
 
         <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
-            @include('home.partials.regions.info-panel', ['subtitle' => $subtitle, 'desc' => $desc])
+            @include('home.partials.regions._info-panel', ['subtitle' => $subtitle, 'desc' => $desc])
             
-            @include('home.partials.regions.slider')
+            @include('home.partials.regions._slider')
         </div>
     </div>
 </section>

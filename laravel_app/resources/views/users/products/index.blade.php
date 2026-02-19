@@ -71,9 +71,9 @@
         @endif
 
         {{-- 3. SHOP PROFILE CARD --}}
-        @include('users.shop-profile.partials.shop-info-card', ['shop' => $shop])
+        @include('users.shop-profile.partials._shop-info-card', ['shop' => $shop])
 
-        @include('users.products.partials.product-manager')
+        @include('users.products.partials._product-manager')
 
         {{-- 4. FAB EDIT TOKO (MOBILE ONLY) --}}
         <div x-show="showFab" x-transition:enter="transition ease-out duration-300"
@@ -91,11 +91,11 @@
 
         {{-- 5. MODALS --}}
         <x-ui.modal show="addProductModal" maxWidth="2xl">
-            @include('users.products.partials.add-product-form')
+            @include('users.products.partials._add-product-form')
         </x-ui.modal>
 
         <x-ui.modal show="editProductModal" maxWidth="2xl">
-            @include('users.products.partials.edit-product-form')
+            @include('users.products.partials._edit-product-form')
         </x-ui.modal>
 
         {{-- Hidden Delete Form --}}

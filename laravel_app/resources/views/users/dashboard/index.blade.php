@@ -9,8 +9,8 @@
         chartColors: @js($chartColors)
     })">
         {{-- Welcome Section --}}
-        @include('users.dashboard.partials.welcome')
-        @include('users.dashboard.partials.stats-card')
+        @include('users.dashboard.partials._welcome')
+        @include('users.dashboard.partials._stats-card')
     </div>
 
     @push('scripts')

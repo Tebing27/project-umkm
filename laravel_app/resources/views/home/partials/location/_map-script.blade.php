@@ -29,6 +29,22 @@
                 markers: [],
                 geoJsonLayer: null,
 
+                // Warna fill unik per kelurahan Sawangan (NAMOBJ -> fillColor)
+                // Mapping juga dari nama region DB ke NAMOBJ depok.json
+                sawanganColors: {
+                    'Sawangan': '#E74C3C',
+                    'Sawangan Baru': '#3498DB',
+                    'Pengasinan': '#2ECC71',
+                    'Cinangka': '#F39C12',
+                    'Kedaung': '#9B59B6',
+                    'Pasir Putih': '#1ABC9C',
+                    'Bedahan': '#E67E22'
+                },
+                // Alias: nama region di DB -> NAMOBJ di depok.json
+                regionAlias: {
+                    'Sawangan Lama': 'Sawangan'
+                },
+
                 // --- DATA UMKM (DITAMBAHKAN FIELD 'REGION') ---
                 // MODIFIED: Read from DOM for Real-time Updates support
                 umkms: [],
@@ -111,8 +127,12 @@
                         // 4. FILTER WILAYAH (DARI STORE) - INI KUNCINYA
                         // Jika store kosong, tampilkan semua. Jika ada isinya, harus cocok persis.
                         const currentRegion = this.$store.region.selected;
-                        const regionMatch = currentRegion === '' || item.region ===
-                            currentRegion;
+                        
+                        // FIX: Resolve Alias (Sawangan Lama <-> Sawangan) agar data tetap muncul
+                        const selectedResolved = this.regionAlias[currentRegion] || currentRegion;
+                        const itemResolved = this.regionAlias[item.region] || item.region;
+                        
+                        const regionMatch = currentRegion === '' || itemResolved === selectedResolved;
 
                         return searchMatch && catMatch && priceMatch && regionMatch;
                     });
@@ -139,22 +159,30 @@
                             this.markers.forEach(m => this.map.removeLayer(m.marker));
                             this.markers = [];
                             
-                            // Hapus sementara GeoJSON Layer agar tooltips tidak error "latLngToLayerPoint" saat animasi flyTo
+                            // FIX: Hanya close tooltip, JANGAN remove GeoJSON layer agar warna wilayah tetap terlihat
                             if (this.geoJsonLayer) {
-                                // FIX REVISI: Close tooltip per-layer secara manual (aman dari error undefined)
                                 this.geoJsonLayer.eachLayer(layer => {
                                     if (layer.closeTooltip) layer.closeTooltip();
+                                    if (layer.unbindTooltip) layer.unbindTooltip();
                                 });
-                                this.map.removeLayer(this.geoJsonLayer);
                             }
+
+                            // Update fill wilayah: hanya region terpilih yang berwarna
+                            this.updateGeoJsonStyle(val);
 
                             // 2. CALLBACK POST-ANIMATION
                             const restoreMapState = () => {
-                                // Restore GeoJSON
+                                // Rebind tooltip setelah animasi selesai
                                 if (this.geoJsonLayer) {
-                                    if (!this.map.hasLayer(this.geoJsonLayer)) {
-                                        this.map.addLayer(this.geoJsonLayer);
-                                    }
+                                    this.geoJsonLayer.eachLayer(layer => {
+                                        const name = layer.feature?.properties?.NAMOBJ;
+                                        if (name && !layer.getTooltip()) {
+                                            layer.bindTooltip(name, {
+                                                permanent: false,
+                                                direction: 'center'
+                                            });
+                                        }
+                                    });
                                 }
                                 // Restore/Update Markers
                                 this.updateMarkers();
@@ -163,36 +191,71 @@
                             // 3. DETERMINE FLIGHT LOGIC
                             // FIX: Wrap in setTimeout to ensure call stack clear after layer removal
                             setTimeout(() => {
-                                let isFlying = false;
+                                // Guard flag: prevent restoreMapState from being called twice
+                                // (once by moveend, once by safety timeout)
+                                let restored = false;
+                                const safeRestore = () => {
+                                    if (restored) return;
+                                    restored = true;
+                                    this.map.off('moveend', safeRestore);
+                                    restoreMapState();
+                                };
 
                                 if (val) {
-                                    const selectedRegionData = this.regionList.find(r => r.name === val);
-                                    
-                                    // VALIDASI STRICT
-                            if (selectedRegionData && selectedRegionData.lat && selectedRegionData.lng && 
-                                selectedRegionData.lat !== 0 && selectedRegionData.lng !== 0) {
-                                
-                                isFlying = true;
-                                this.map.flyTo([selectedRegionData.lat, selectedRegionData.lng], 14, {
-                                    animate: true,
-                                    duration: 1.5
-                                });
-                                this.map.once('moveend', restoreMapState);
-                            } else {
-                                // Fallback jika koordinat region tidak valid
-                                restoreMapState(); // Update markers immediately
-                                if (this.filteredList.length > 0) {
-                                    this.focusLocation(this.filteredList[0], true, false);
-                                }
-                            }
-                        } else {
-                            // Reset to default view (Semua Wilayah)
-                            isFlying = true;
-                            this.map.flyTo([-6.4025, 106.7720], 13, {
-                                animate: true,
-                                duration: 1.5
-                            });
-                                    this.map.once('moveend', restoreMapState);
+                                    // FIX: Gunakan fitBounds ke boundary GeoJSON wilayah
+                                    // agar zoom otomatis menyesuaikan luas wilayah (tidak ngezoom terlalu dekat)
+                                    const resolvedName = this.regionAlias[val] || val;
+                                    let regionBounds = null;
+
+                                    if (this.geoJsonLayer) {
+                                        this.geoJsonLayer.eachLayer(layer => {
+                                            const name = layer.feature?.properties?.NAMOBJ || '';
+                                            if (name === resolvedName) {
+                                                regionBounds = layer.getBounds();
+                                            }
+                                        });
+                                    }
+
+                                    if (regionBounds && regionBounds.isValid()) {
+                                        // fitBounds otomatis menentukan zoom level yang pas
+                                        const mobilePadding = window.innerWidth < 768 ? [30, 30] : [50, 50];
+                                        this.map.flyToBounds(regionBounds, {
+                                            padding: mobilePadding,
+                                            maxZoom: 15,
+                                            animate: true,
+                                            duration: 1.5
+                                        });
+                                    } else {
+                                        // Fallback: gunakan koordinat dari regionList jika GeoJSON belum dimuat
+                                        const selectedRegionData = this.regionList.find(r => r.name === val);
+                                        if (selectedRegionData && selectedRegionData.lat && selectedRegionData.lng &&
+                                            selectedRegionData.lat !== 0 && selectedRegionData.lng !== 0) {
+                                            this.map.flyTo([selectedRegionData.lat, selectedRegionData.lng], window.innerWidth < 768 ? 13 : 14, {
+                                                animate: true,
+                                                duration: 1.5
+                                            });
+                                        } else {
+                                            restoreMapState();
+                                            if (this.filteredList.length > 0) {
+                                                this.focusLocation(this.filteredList[0], true, false);
+                                            }
+                                            return; // skip moveend listener
+                                        }
+                                    }
+                                    this.map.once('moveend', safeRestore);
+                                    // Safety timeout: if moveend doesn't fire within 2.5s, restore anyway
+                                    setTimeout(safeRestore, 2500);
+                                } else {
+                                    // Reset to default view (Semua Wilayah)
+                                    // RESPONSIVE: Zoom lebih kecil di mobile agar semua wilayah terlihat
+                                    const resetZoom = window.innerWidth < 768 ? 12 : 14;
+                                    this.map.flyTo([-6.4003, 106.7680], resetZoom, {
+                                        animate: true,
+                                        duration: 1.5
+                                    });
+                                    this.map.once('moveend', safeRestore);
+                                    // Safety timeout: if moveend doesn't fire within 2.5s, restore anyway
+                                    setTimeout(safeRestore, 2500);
                                 }
                             }, 10); // Small delay for safety
                     });
@@ -218,10 +281,15 @@
                     });
 
                     // Animasi & Resize
+                    // FIX: Simpan center sebelum resize, lalu re-center setelah invalidateSize
                     this.$watch('sidebarOpen', () => {
+                        if (!this.map) return;
+                        const savedCenter = this.map.getCenter();
+                        const savedZoom = this.map.getZoom();
                         setTimeout(() => {
-                            if (this.map) this.map.invalidateSize();
-                        }, 300);
+                            this.map.invalidateSize({animate: false});
+                            this.map.setView(savedCenter, savedZoom, {animate: false});
+                        }, 350);
                     });
                     window.addEventListener('resize', () => {
                         this.itemsPerPage = window.innerWidth < 768 ? 1 : 4;
@@ -328,13 +396,13 @@
                         this.map.remove();
                     }
                     // Default Focus (Kecamatan Sawangan Tengah)
-                    let centerLat = -6.3970;
-                    let centerLng = 106.7600;
+                    let centerLat = -6.4003;
+                    let centerLng = 106.7680;
 
-                    const latMin = -6.4500; // Selatan (Before: -6.44)
-                    const latMax = -6.3300; // Utara (Before: -6.35) -> Buffer buat Kedaung
-                    const lngMin = 106.7200; // Barat (Before: 106.73)
-                    const lngMax = 106.8100; // Timur (Before: 106.795)
+                    const latMin = -6.4700; // Selatan (seluruh Depok)
+                    const latMax = -6.3100; // Utara (seluruh Depok)
+                    const lngMin = 106.7100; // Barat (seluruh Depok)
+                    const lngMax = 106.9300; // Timur (seluruh Depok)
 
                     const southWest = L.latLng(latMin, lngMin);
                     const northEast = L.latLng(latMax, lngMax);
@@ -342,14 +410,20 @@
 
                     // 3. INISIALISASI
                     // FIX: Menggunakan this.$refs.mapContainer karena tidak ada id='map'
+                    // RESPONSIVE ZOOM: Mobile lebih kecil agar terlihat seluruh wilayah Sawangan
+                    const isMobile = window.innerWidth < 768;
+                    const defaultZoom = isMobile ? 12 : 14;
+
                     this.map = L.map(this.$refs.mapContainer, {
                         zoomControl: false,
                         maxBounds: myBounds,
                         maxBoundsViscosity: 1.0, 
-                        minZoom: 13,
+                        minZoom: 12,
                         maxZoom: 18,
                         center: [centerLat, centerLng],
-                        zoom: 13
+                        zoom: defaultZoom,
+                        scrollWheelZoom: false,       // Disable scroll zoom agar user bisa scroll halaman
+                        tap: true
                     });
 
                     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -357,9 +431,11 @@
                         attribution: '© OpenStreetMap'
                     }).addTo(this.map);
 
+                    this.addLegend();
+
                     // 4. GARIS BATAS WILAYAH (BOUNDARY LINES)
                     // Menggunakan GeoJSON Asset
-                    const geoJsonUrl = "{{ asset('maps/sawangan.geojson') }}";
+                    const geoJsonUrl = "{{ asset('maps/depok.json') }}";
 
                     fetch(geoJsonUrl)
                         .then(response => {
@@ -372,40 +448,173 @@
                             }
                             this.geoJsonLayer = L.geoJSON(data, {
                                 // Style untuk garis batas (melingkari wilayah)
-                                style: function(feature) {
+                                style: (feature) => {
+                                    const name = feature.properties?.NAMOBJ || '';
+                                    const isSawangan = this.sawanganColors.hasOwnProperty(name);
                                     return {
-                                        color: '#FF0000', // Warna Garis Merah
-                                        weight: 2, // Tebal Garis
-                                        opacity: 0.8, // Transparansi Garis
-                                        dashArray: '10, 10', // Garis Putus-putus
-                                        fillColor: 'red', // Warna Isi
-                                        fillOpacity: 0.03 // Transparansi Isi (0.05 = sangat transparan)
+                                        color: isSawangan ? '#000000' : 'transparent',
+                                        weight: isSawangan ? 2 : 0,
+                                        opacity: isSawangan ? 0.4 : 0,
+                                        fillColor: isSawangan ? this.sawanganColors[name] : 'transparent',
+                                        fillOpacity: isSawangan ? 0.5 : 0
                                     };
                                 },
                                 // Optional: Menambahkan label saat mouse di atas wilayah
                                 onEachFeature: (feature, layer) => {
                                     if (feature.properties && feature.properties
-                                        .village) {
-                                        layer.bindTooltip(feature.properties.village, {
+                                        .NAMOBJ) {
+                                        layer.bindTooltip(feature.properties.NAMOBJ, {
                                             permanent: false,
                                             direction: 'center'
                                         });
                                     }
                                 }
                             }).addTo(this.map);
+
+                            // FIT BOUNDS: Pada mobile, auto-fit semua region Sawangan agar terlihat semua
+                            if (window.innerWidth < 768) {
+                                const sawanganBounds = L.latLngBounds([]);
+                                this.geoJsonLayer.eachLayer(layer => {
+                                    const name = layer.feature?.properties?.NAMOBJ || '';
+                                    if (this.sawanganColors.hasOwnProperty(name)) {
+                                        sawanganBounds.extend(layer.getBounds());
+                                    }
+                                });
+                                if (sawanganBounds.isValid()) {
+                                    this.map.fitBounds(sawanganBounds, { padding: [20, 20], maxZoom: 13 });
+                                }
+                            }
                         })
                         .catch(error => {});
                     
                     // 5. RESIZE OBSERVER (PENTING AGAR MAP TIDAK GREY/BLANK SAAT RESIZE)
+                    // OPTIMIZED: Debounce agar invalidateSize hanya dipanggil sekali setelah resize selesai
                     if (window.ResizeObserver && this.$refs.mapContainer) {
+                        let resizeTimer;
                         new ResizeObserver(() => {
-                            if (this.map) {
-                                this.map.invalidateSize();
-                            }
+                            clearTimeout(resizeTimer);
+                            resizeTimer = setTimeout(() => {
+                                if (this.map) this.map.invalidateSize();
+                            }, 150);
                         }).observe(this.$refs.mapContainer);
                     }
 
                     this.updateMarkers();
+                },
+
+                addLegend() {
+                    // FIX: Pindah ke bottomleft agar tidak tertiban oleh tombol +/- zoom di bottomright
+                    const legend = L.control({ position: 'bottomleft' });
+                    
+                    legend.onAdd = (map) => {
+                        const div = L.DomUtil.create('div', 'map-legend');
+                        // Prevent map scroll/drag saat interaksi di legend
+                        L.DomEvent.disableClickPropagation(div);
+                        L.DomEvent.disableScrollPropagation(div);
+
+                        div.innerHTML = `
+                            <div style="background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); font-size: 12px; max-height: 260px; overflow-y: auto;">
+                                <div style="font-weight: 600; margin-bottom: 8px; color: #374151;">Wilayah Sawangan</div>
+                                <div class="legend-item" data-region="" style="display: flex; align-items: center; margin-bottom: 4px; padding: 3px 6px; border-radius: 4px; cursor: pointer; transition: background 0.2s; background: #EBF5FF;">
+                                    <span style="width: 16px; height: 16px; background: linear-gradient(135deg, #E74C3C, #3498DB, #2ECC71); border-radius: 3px; margin-right: 8px; display: inline-block;"></span>
+                                    <span style="color: #1D4ED8; font-weight: 600;">Semua Wilayah</span>
+                                </div>
+                                ${Object.entries(this.sawanganColors).map(([name, color]) => `
+                                    <div class="legend-item" data-region="${name}" style="display: flex; align-items: center; margin-bottom: 4px; padding: 3px 6px; border-radius: 4px; cursor: pointer; transition: background 0.2s;">
+                                        <span style="width: 16px; height: 16px; background: ${color}; border-radius: 3px; margin-right: 8px; display: inline-block; flex-shrink: 0;"></span>
+                                        <span style="color: #4B5563;">${name}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+
+                        // Event listener: klik legend item untuk filter wilayah
+                        div.querySelectorAll('.legend-item').forEach(el => {
+                            el.addEventListener('mouseenter', () => {
+                                el.style.background = '#F3F4F6';
+                            });
+                            el.addEventListener('mouseleave', () => {
+                                const currentRegion = Alpine.store('region').selected;
+                                const itemRegion = el.getAttribute('data-region');
+                                if ((currentRegion === '' && itemRegion === '') || currentRegion === itemRegion) {
+                                    el.style.background = '#EBF5FF';
+                                } else {
+                                    el.style.background = 'transparent';
+                                }
+                            });
+                            el.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                const regionName = el.getAttribute('data-region');
+                                // Toggle: klik yang sudah aktif = reset ke semua
+                                if (Alpine.store('region').selected === regionName && regionName !== '') {
+                                    Alpine.store('region').set('');
+                                } else {
+                                    Alpine.store('region').set(regionName);
+                                }
+                                // Update highlight style semua item
+                                this.updateLegendHighlight(div);
+                            });
+                        });
+
+                        return div;
+                    };
+                    
+                    legend.addTo(this.map);
+                },
+
+                updateLegendHighlight(legendDiv) {
+                    if (!legendDiv) return;
+                    const currentRegion = Alpine.store('region').selected;
+                    legendDiv.querySelectorAll('.legend-item').forEach(el => {
+                        const itemRegion = el.getAttribute('data-region');
+                        if ((currentRegion === '' && itemRegion === '') || currentRegion === itemRegion) {
+                            el.style.background = '#EBF5FF';
+                            const textSpan = el.querySelector('span:last-child');
+                            if (textSpan) {
+                                textSpan.style.color = '#1D4ED8';
+                                textSpan.style.fontWeight = '600';
+                            }
+                        } else {
+                            el.style.background = 'transparent';
+                            const textSpan = el.querySelector('span:last-child');
+                            if (textSpan) {
+                                textSpan.style.color = '#4B5563';
+                                textSpan.style.fontWeight = '400';
+                            }
+                        }
+                    });
+                },
+
+                updateGeoJsonStyle(selectedRegion) {
+                    if (!this.geoJsonLayer) return;
+
+                    // Resolve alias: e.g. "Sawangan Lama" (DB) -> "Sawangan" (NAMOBJ)
+                    const resolvedName = this.regionAlias[selectedRegion] || selectedRegion;
+
+                    this.geoJsonLayer.eachLayer(layer => {
+                        const name = layer.feature?.properties?.NAMOBJ || '';
+                        const isSawangan = this.sawanganColors.hasOwnProperty(name);
+
+                        if (!isSawangan) {
+                            // Non-Sawangan kelurahan: always invisible
+                            return;
+                        }
+
+                        // Determine fill visibility
+                        let showFill;
+                        if (!selectedRegion || selectedRegion === '') {
+                            // "Semua Wilayah" -> all 7 kelurahan show fill
+                            showFill = true;
+                        } else {
+                            // Specific region selected -> only that one gets fill
+                            showFill = (name === resolvedName);
+                        }
+
+                        layer.setStyle({
+                            fillColor: this.sawanganColors[name],
+                            fillOpacity: showFill ? 0.5 : 0
+                        });
+                    });
                 },
 
                 updateMarkers() {

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreContentRequest;
+use App\Http\Requests\Admin\UpdateContentRequest;
 use App\Models\Content;
 use App\Models\Region;
 use App\Services\TranslationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use enshrined\svgSanitize\Sanitizer;
@@ -183,19 +186,9 @@ class ContentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(StoreContentRequest $request)
     {
-        $request->validate([
-            'key' => 'required|unique:contents,key',
-            'value' => 'nullable',
-            'type' => 'required|in:text,textarea,editor,image',
-            'group' => 'nullable|string',
-            'label' => 'nullable|string',
-            'image' => 'nullable|image|max:5048', 
-            'icon' => 'nullable|file|mimes:svg|max:1024',
-            'logo_fallback' => 'nullable|file|mimes:svg|max:1024',
-        ]);
-
+        $validated = $request->validated();
         $data = $request->only(['key', 'type', 'group', 'label']);
         
         // --- Section: Handle Content Value ---
@@ -241,21 +234,11 @@ class ContentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(UpdateContentRequest $request, $id)
     {
         $content = Content::findOrFail($id);
         
-        $rules = [
-            'value' => 'nullable',
-            'image' => 'nullable|image|max:5048',
-        ];
-        
-        if ($content->group === 'business_types') {
-             $rules['icon'] = 'nullable|file|mimes:svg|max:1024';
-             $rules['logo_fallback'] = 'nullable|file|mimes:svg|max:1024';
-        }
-
-        $request->validate($rules);
+        $validated = $request->validated();
 
         // --- Section: Update Content ---
         if ($content->type === 'image') {
@@ -371,7 +354,7 @@ class ContentController extends Controller
                 ]
             );
         } catch (\Exception $e) {
-            \Log::error('SFG Upload Failed: ' . $e->getMessage());
+            Log::error('SFG Upload Failed: ' . $e->getMessage());
             throw \Illuminate\Validation\ValidationException::withMessages([
                  'icon' => 'Gagal mengupload file SVG: ' . $e->getMessage()
             ]);
@@ -383,7 +366,7 @@ class ContentController extends Controller
         try {
             translate($text, 'en');
         } catch (\Exception $e) {
-            \Log::error('Auto translation failed: ' . $e->getMessage());
+            Log::error('Auto translation failed: ' . $e->getMessage());
         }
     }
 

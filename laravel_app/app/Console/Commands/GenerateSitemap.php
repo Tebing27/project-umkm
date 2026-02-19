@@ -38,7 +38,9 @@ class GenerateSitemap extends Command
         }
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
-        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
+        // Added image namespace for Google Image indexing
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"' . PHP_EOL;
+        $xml .= '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . PHP_EOL;
 
         // 1. Static Pages
         $staticPages = [
@@ -88,13 +90,15 @@ class GenerateSitemap extends Command
             $xml .= '    </url>' . PHP_EOL;
         }
 
-        // 4. Products
-        $this->info('Processing Products (Limited to latest 500)...');
+        // 4. Products with Image Sitemap Extension for Google Image indexing
+        $this->info('Processing Products with Images (Limited to latest 500)...');
         // Limit to 500 to prevent timeout on shared hosting
+        // Eager load images relation for image sitemap
         $products = Product::where('is_active', true)
             ->whereHas('shop', function($q){
                 $q->where('is_verified', true);
             })
+            ->with('images')
             ->latest()
             ->take(500)
             ->get();
@@ -105,6 +109,27 @@ class GenerateSitemap extends Command
             $xml .= '        <lastmod>' . Carbon::parse($product->updated_at)->toIso8601String() . '</lastmod>' . PHP_EOL;
             $xml .= '        <changefreq>daily</changefreq>' . PHP_EOL;
             $xml .= '        <priority>1.0</priority>' . PHP_EOL;
+            
+            // Add primary product image for Google Image indexing
+            if ($product->image) {
+                $imageUrl = storage_url($product->image);
+                $xml .= '        <image:image>' . PHP_EOL;
+                $xml .= '            <image:loc>' . htmlspecialchars($imageUrl, ENT_XML1, 'UTF-8') . '</image:loc>' . PHP_EOL;
+                $xml .= '        </image:image>' . PHP_EOL;
+            }
+            
+            // Add additional product images (max 1000 per URL per Google spec)
+            foreach ($product->images as $image) {
+                // Skip if same as primary image
+                if ($image->image === $product->image) {
+                    continue;
+                }
+                $imageUrl = storage_url($image->image);
+                $xml .= '        <image:image>' . PHP_EOL;
+                $xml .= '            <image:loc>' . htmlspecialchars($imageUrl, ENT_XML1, 'UTF-8') . '</image:loc>' . PHP_EOL;
+                $xml .= '        </image:image>' . PHP_EOL;
+            }
+            
             $xml .= '    </url>' . PHP_EOL;
         }
 

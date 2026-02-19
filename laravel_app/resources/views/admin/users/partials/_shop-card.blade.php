@@ -54,7 +54,7 @@
         </div>
         
         {{-- Stats and CTA ignored to save space if needed less than 50 lines? No, file is ~90 lines. I must split it further. --}}
-        @include('admin.users.partials.shop-card-stats')
+        @include('admin.users.partials._shop-card-stats')
         
     </div>
 
